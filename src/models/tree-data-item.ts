@@ -1,42 +1,39 @@
-import path = require('path');
 import * as vscode from 'vscode';
 import { Command, Uri } from 'vscode';
-import { icons } from '../consts/icons';
+import { CATEGORY_ICON, DARK_THEME, GITHUB_ICON, LIGHT_THEME } from '../consts/icons';
+import { VIEW_ITEM_CATEGORY, VIEW_ITEM_REPOSITORY } from '../consts/application';
+import path = require('path');
 
 export class TreeDataItem extends vscode.TreeItem {
 	children: TreeDataItem[] | undefined;
+	parentId!: string;
+	customId!: string;
 	url!: Uri;
-	isRoot: boolean = false;
-	parentId!: string | undefined;
 
-	constructor(label: string, children?: TreeDataItem[], parentId?: string, command?: Command) {
+	constructor(isRoot: boolean, label: string, children?: TreeDataItem[], command?: Command) {
 		super(
 			label,
-			parentId 
-				? vscode.TreeItemCollapsibleState.None
-				: vscode.TreeItemCollapsibleState.Expanded
-   	);   
-      
-		const isRoot = parentId ? false : true;
-		this.id = this.generateUniqueID();	
-		this.parentId = parentId;	
-		this.children = children;
-		this.contextValue = isRoot ? 'categoryItem' : 'treeItem';
+			isRoot 
+				? vscode.TreeItemCollapsibleState.Expanded
+				: vscode.TreeItemCollapsibleState.None
+   	);
 
-		const icon = isRoot ? icons.favorite : icons.github;
+		this.children = children;
+		this.contextValue = isRoot 
+			? VIEW_ITEM_CATEGORY 
+			: VIEW_ITEM_REPOSITORY;
+		
+		const icon = isRoot 
+			? CATEGORY_ICON 
+			: GITHUB_ICON;
+
 		this.iconPath = {
-			light: path.join(__filename, '..', '..', '..', 'resources', icons.light, icon),
-			dark: path.join(__filename, '..', '..', '..', 'resources', icons.dark, icon)
+			light: path.join(__filename, '..', '..', '..', 'resources', LIGHT_THEME, icon),
+			dark: path.join(__filename, '..', '..', '..', 'resources', DARK_THEME, icon)
 		};
 
    	if(command !== undefined) {
 			this.command = command;
 		} 
    }
-
-	generateUniqueID(){
-		return '_' + Math.random()
-		.toString(36).substr(2, 9);
-	};
 }
-

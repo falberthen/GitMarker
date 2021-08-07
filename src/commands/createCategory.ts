@@ -1,14 +1,16 @@
 import * as vscode from 'vscode';
-import { BookmarkManager } from '../services/bookmark-manager';
+import { TYPE_NAME_CATEGORY_MSG } from '../consts/messages';
+import BookmarkManager from '../services/bookmark-manager';
 
-export async function createCategory(manager: BookmarkManager) {
-   let categoryName = await vscode.window.showInputBox({
-      value: '',
-      placeHolder:  'Type a new name for the category',
+export async function createCategory() {
+	await vscode.window.showInputBox({
+		value: '',
+      placeHolder: TYPE_NAME_CATEGORY_MSG,
+   })
+	.then(name => {
+		if(name) {
+			BookmarkManager.instance
+            .addCategory(name);
+      }      
    });
-
-   if(typeof categoryName !== 'undefined' 
-      && categoryName) {
-      manager.addCategory(categoryName);
-   }
 }
