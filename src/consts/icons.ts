@@ -1,6 +1,4 @@
-export const icons = {
-	light: 'light',
-	dark: 'dark',
-	favorite: 'favorite.svg',
-	github: 'github.svg'
-};
+export const LIGHT_THEME = 'light';
+export const DARK_THEME = 'dark';
+export const CATEGORY_ICON = 'category.svg';
+export const GITHUB_ICON = 'github.svg';

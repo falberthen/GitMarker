@@ -1,103 +1,164 @@
 import * as vscode from 'vscode';
-import { storageKeys } from '../consts/storageKeys';
+import { FAVORITE_REPOS_KEY } from '../consts/application';
+import { CATEGORY_ALREADY_EXISTS_MSG } from '../consts/messages';
+import { Category } from '../models/category';
 import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
 import { LocalStorageService } from './local-storage-service';
-import { TreeDataItemProvider } from './tree-data-item-provider';
+import { TreeViewManager } from './tree-view-manager';
 
-export class BookmarkManager {
-
-	nodes: TreeDataItem[] | undefined;
+export default class BookmarkManager {
 	context: vscode.ExtensionContext;
 	localStorageSvc!: LocalStorageService;
-	dataProvider: TreeDataItemProvider;
-	treeView: any;
+	categories: Category[] = [];
+	treeViewManager: TreeViewManager;
+
+	private static _instance: BookmarkManager;
+
+	static init(context:  vscode.ExtensionContext): void {
+		BookmarkManager._instance = new BookmarkManager(context);
+	}
+	
+	static get instance(): BookmarkManager {
+		return BookmarkManager._instance;
+	}
 
 	constructor(context: vscode.ExtensionContext) {	
 		this.context = context;
-		this.localStorageSvc =  new LocalStorageService(context.workspaceState);
-		this.dataProvider = new TreeDataItemProvider();
-		this.treeView = vscode.window.createTreeView('gitmarkerView', {
-			showCollapseAll: true,
-			treeDataProvider: this.dataProvider,
-			canSelectMany: true
-		});
-
-		this.loadBookmarks();
-		this.treeView.onDidChangeSelection((e: { selection: TreeDataItem[]; }) => 
-			this.click(e.selection));
+		this.localStorageSvc = new LocalStorageService(context.workspaceState);
+		this.treeViewManager = new TreeViewManager(context);
+		this.loadStoredCategories();
 	}
 
 	addCategory(categoryName: string) {      
-		let newCategory = new TreeDataItem(categoryName);
-		this.nodes?.push(newCategory);
-		this.storeAndRefresh();
+		const newCategory = new Category(categoryName);
+		const existingCategory = this.categories
+			?.filter(n => n.name === categoryName)[0];
+
+		if(existingCategory) {
+			vscode.window
+				.showInformationMessage(`${categoryName} ${CATEGORY_ALREADY_EXISTS_MSG}`);
+			return;						
+		}
+
+		this.categories?.push(newCategory);
+		this.setRefresh();
 	}
 
-	addBookmark(category: TreeDataItem, selectedRepo: GithubRepository) { 
-		var existingNode = category
-			.children?.filter(n => n.id === selectedRepo.id)[0];
+	bookmarkRepository(dataItem: TreeDataItem, selectedRepository: GithubRepository) { 
+		const category = this.categories
+			?.filter(obj => obj.name === dataItem.label)[0];
 
-		if(!existingNode) {
-			let newNode = new TreeDataItem(selectedRepo.name, undefined, category.id);
-			newNode.url = selectedRepo.url;
-			newNode.description = selectedRepo.description;
-			newNode.tooltip = selectedRepo.description;
-			
-			if(category.children === undefined ) {
-				category.children = [];
-			}
-				
-			category.children.push(newNode);
-			this.storeAndRefresh();
+		const repository = category
+			?.repositories
+			.filter(obj => obj.id === selectedRepository.id)[0];
+
+		if(!repository) {
+			category.repositories
+				.push(selectedRepository);
+			this.setRefresh();
 		}
 	}
 
-	click(selected: TreeDataItem[]) {
-		selected.forEach(element => {
-			// Opens repository url
-			if(element.url) {
-				vscode.env.openExternal(element.url);
-			}
-		});
-	}
-
-	editBookmark(treeItem: TreeDataItem, newName: string) {
-		treeItem.label = newName;
-		this.storeAndRefresh();
-	}
-
-	loadBookmarks() {      
-		this.nodes = this.localStorageSvc
-			.getValue<TreeDataItem[]>(storageKeys.favoritedRepos);
-
-		if(!this.nodes) {
-			this.nodes = [];
-		}
-
-		this.dataProvider.setTreeItems(this.nodes);
-		this.dataProvider.refresh();
-	}
-
-	removeBookmark(node: TreeDataItem) {
-		let category = this.nodes?.filter(obj => 
-			obj.id === node.parentId)[0];
+	getRepositoryModel(dataItem: TreeDataItem) : GithubRepository | undefined {
+		let repository: GithubRepository | undefined;
+		const category = this.categories
+			?.filter(obj => obj.id === dataItem.parentId)[0];
 
 		if(category) {
-			let index = category.children?.findIndex(d => d.id === node.id); //find index in your array
-			category.children?.splice(index as number, 1);//remove element from array
+			repository = category.repositories
+				.find(r => r.id === dataItem.customId);
 		}
 
-		this.storeAndRefresh();
+		return repository;
 	}
 
-	storeAndRefresh() {
-		if(this.nodes) {
-			this.localStorageSvc
-				.setValue<TreeDataItem[]>(storageKeys.favoritedRepos, this.nodes);
+	loadStoredCategories() {
+		const storedCategories = this.localStorageSvc
+			.getValue<Category[]>(FAVORITE_REPOS_KEY);
 
-			this.dataProvider.setTreeItems(this.nodes);
-			this.dataProvider.refresh();
-		}	
+		this.categories = storedCategories 
+			? storedCategories 
+			: [];
+
+		vscode.commands.executeCommand('setContext', 'categoryCount', 
+			this.categories.length);
+		this.treeViewManager
+			.refreshDataProvider(this.categories);
+	}
+	
+	renameCategory(dataItem: TreeDataItem, newName: string) {
+		const category = this.categories
+			?.filter(obj => obj.name === dataItem.label)[0];
+
+		if(category) {
+			const existingCategory = this.categories
+			?.filter(n => n.name === newName)[0];
+
+			if(existingCategory && category?.name !== newName) {
+				vscode.window
+					.showErrorMessage(`${newName} already exists.`);
+				return;
+			}
+				
+			category.name = newName;
+			this.setRefresh();
+		}
+	}
+
+	removeCategory(dataItem: TreeDataItem) {
+		const category = this.categories
+			?.filter(obj => obj.id === dataItem.id)[0];
+
+		if(category) {
+			const index = this.categories
+				?.findIndex(d => d.id === dataItem.id);
+			this.categories
+				?.splice(index as number, 1);
+		}
+
+		this.setRefresh();
+	}
+
+	removeRepository(dataItem: TreeDataItem) {
+		const category = this.categories
+			?.filter(obj => obj.id === dataItem.parentId)[0];
+
+		if(category) {
+			const index = category.repositories
+				?.findIndex(d => d.id === dataItem.customId);
+
+			category.repositories
+				?.splice(index as number, 1);
+			this.setRefresh();
+		}
+	}
+
+	refreshRepository(repository: GithubRepository, dataItem: TreeDataItem) {
+		const existingCategory = this.categories
+			?.filter(obj => obj.id === dataItem.parentId)[0];
+
+		if(existingCategory) {
+			var repoInCategory = existingCategory.repositories
+				.find(r => r.id === repository.id);
+
+			if(repoInCategory) {
+				let index = existingCategory
+					.repositories.indexOf(repoInCategory);
+
+				existingCategory.repositories[index] = repository;
+				this.setRefresh();
+			}
+		}
+	}
+
+	private setRefresh(){
+		this.localStorageSvc
+			.setValue<Category[]>(FAVORITE_REPOS_KEY, this.categories);
+		this.treeViewManager
+			.refreshDataProvider(this.categories);
+
+		vscode.commands.executeCommand('setContext', 'categoryCount', 
+			this.categories.length);
 	}
 }
