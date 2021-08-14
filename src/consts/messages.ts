@@ -10,6 +10,8 @@ export const ACCESS_TOKEN_REQUIRED_MSG = 'A GitHub personal access token must be
 export const ACCESS_TOKEN_SET_MSG = 'GitHub personal access token set with success';
 export const CHECK_GITHUB_DOC_MSG = 'Check the GitHub documentation';
 export const SET_TOKEN_NOW_MSG = 'Setup it now';
+export const ERROR_IMPORTING_MSG = 'An error ocurred when importing the file. The content format is invalid.';
+export const ERROR_EXPORTING_MSG = 'An error ocurred when exporting your bookmarks.';
 export const YES_MSG = 'Yes';
 export const NO_MSG = 'No';
 

@@ -37,6 +37,7 @@ export class GitHubApiClient {
 						id: val.id,
 						name: val.name,
 						fullName: val.full_name,
+						ownerName: val.owner?.login,
 						description: val.description,
 						url: val.html_url,
 						stargazersCount: val.stargazers_count,
@@ -44,14 +45,11 @@ export class GitHubApiClient {
 						forks: val.forks,
 						license: val.license,
 						lastSyncDate: getDateTimeNow()
-					}));		
+					}));
 						
-					if(repos.length === 0) {
-						vscode.window.setStatusBarMessage(`${NO_REPOS_FOUND_MSG} ${term}.`);
-					}
-					else{
-						vscode.window.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${term}".`, );
-					}
+					repos.length === 0 
+						? vscode.window.showInformationMessage(`${NO_REPOS_FOUND_MSG} ${term}.`) 
+						: vscode.window.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${term}".`, );
 
 					return repos;
 				});		
@@ -73,18 +71,16 @@ export class GitHubApiClient {
 			try {
 				await this.apiClient.get(url)
 				.then((response) => {			
-					repo = response.data.items.map((val: any) => ({
-						id: val.id,
-						name: val.name,
-						fullName: val.full_name,
-						description: val.description,
-						url: val.html_url,
-						stargazersCount: val.stargazers_count,
-						language:val.language,
-						forks: val.forks,
-						license: val.license,
-						lastSyncDate: getDateTimeNow()
-					}));
+					const data = response.data;
+					repo = new GithubRepository(data.id, data.name, data.html_url);
+					repo.ownerName = data.owner?.login;
+					repo.fullName = data.full_name;
+					repo.description = data.description;
+					repo.stargazersCount = data.stargazers_count;
+					repo.language = data.language;
+					repo.forks = data.forks;
+					repo.license = data.license;
+					repo.lastSyncDate = getDateTimeNow();
 				});
 			} 
 			catch (err) {	

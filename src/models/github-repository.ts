@@ -1,15 +1,34 @@
+import {
+	IsInt,
+	Min,
+	MinLength,
+ } from 'class-validator';
 import { DateTime } from "luxon";
-import { Uri } from "vscode";
+import { Uri } from 'vscode';
 
-export interface GithubRepository {
-	id: string; 
+export class GithubRepository {
+	id: string;
 	name: string;
-	fullName: string;
-	stargazersCount: number;
-	language: string;
-	description: string;
+	fullName!: string;
+	ownerName!: string;
+	description!: string;
+	language!: string;
+	license!: any;
+	lastSyncDate!: DateTime;
+
+	@MinLength(7)
 	url: Uri;
-	forks: number;
-	license: any;
-	lastSyncDate: DateTime;
+
+	@IsInt()
+	@Min(0)
+	stargazersCount!: number;
+
+	@IsInt()
+	forks!: number;
+
+	public constructor(id: string, name: string,  url: Uri) {
+		this.id = id;
+		this.name = name;
+      this.url = url;
+   }
 }

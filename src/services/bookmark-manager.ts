@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { FAVORITE_REPOS_KEY } from '../consts/application';
+import { CONTEXT_CATEGORY_COUNT, FAVORITE_REPOS_KEY, SET_CONTEXT } from '../consts/application';
 import { CATEGORY_ALREADY_EXISTS_MSG } from '../consts/messages';
 import { Category } from '../models/category';
 import { GithubRepository } from '../models/github-repository';
@@ -81,7 +81,7 @@ export default class BookmarkManager {
 			? storedCategories 
 			: [];
 
-		vscode.commands.executeCommand('setContext', 'categoryCount', 
+		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 			this.categories.length);
 		this.treeViewManager
 			.refreshDataProvider(this.categories);
@@ -152,13 +152,13 @@ export default class BookmarkManager {
 		}
 	}
 
-	private setRefresh(){
+	public setRefresh(){
 		this.localStorageSvc
 			.setValue<Category[]>(FAVORITE_REPOS_KEY, this.categories);
 		this.treeViewManager
 			.refreshDataProvider(this.categories);
 
-		vscode.commands.executeCommand('setContext', 'categoryCount', 
+		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 			this.categories.length);
 	}
 }

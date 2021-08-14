@@ -7,3 +7,7 @@ export const ACCESS_TOKEN_SECRET = 'accessToken';
 
 //Views
 export const GIT_MARKER_VIEW = 'gitmarkerView';
+
+//context
+export const SET_CONTEXT = 'setContext';
+export const CONTEXT_CATEGORY_COUNT = 'categoryCount';
