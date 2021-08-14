@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { GIT_MARKER_VIEW } from '../consts/application';
+import { CONTEXT_CATEGORY_COUNT, GIT_MARKER_VIEW, SET_CONTEXT } from '../consts/application';
 import { REFRESH_REPOSITORY } from '../consts/commands';
 import { Category } from '../models/category';
 import { GithubRepository } from '../models/github-repository';
@@ -51,33 +51,38 @@ export class TreeViewManager {
 
 			this.dataProvider.setTreeItems(dataItems);
 			this.dataProvider.refresh();
-		}	
+
+			vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
+				categories.length);
+		}
 	}
 
 	private buildToolTip(repository: GithubRepository): string {
 		const newLine = '\n';
-		const formattedDate = formatDate(repository.lastSyncDate);
-		const lastUpdatedRow = `Last sync: ${formattedDate}${newLine}`;
-		const description = repository.description !== null 
-			? `${lastUpdatedRow}${newLine}${repository.description}${newLine}${newLine}`
-			: '';
-				
+
 		// Tooltip rows
 		let toolTipItems: string[] = [];
-		toolTipItems.push(`⭐ Stars: ${repository.stargazersCount}`);
-		toolTipItems.push(` 🍴  Forks: ${repository.forks}`);
-
-		
-		if(repository.language){
-			toolTipItems.push(`🧬 Language: ${repository.language}`);
+			
+		if(repository.description){
+			toolTipItems.push(`${repository.description}${newLine}`);
 		}
 
-		if(repository.license){
-			toolTipItems.push(` 🕮 Licence: ${repository.license.name}`);
+		toolTipItems.push(` 🧍  Owned by ${repository.ownerName}`);
+		toolTipItems.push(`⭐ ${repository.stargazersCount} stars`);
+		toolTipItems.push(` 🍴  ${repository.forks} forks`);
+
+		if(repository.language) { 
+			toolTipItems.push(`🧬 Written in ${repository.language}`);
+		} 
+			
+		if(repository.license) { 
+			toolTipItems.push(`📝 ${repository.license.name}`);	
 		}
 
-		let toolTipStr = toolTipItems.join(newLine); 
-		return `${description}${toolTipStr}`;
+		toolTipItems.push(`${newLine}`);
+		toolTipItems.push(`${formatDate(repository.lastSyncDate)}`);
+
+		return toolTipItems.join(newLine); 
 	}
 
    private click(selected: TreeDataItem[]) {

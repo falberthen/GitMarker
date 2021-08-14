@@ -17,8 +17,10 @@ import {
 	CREATE_CATEGORY, REMOVE_CATEGORY, 
 	RENAME_CATEGORY, SEARCH_REPOSITORIES, 
 	SET_ACCESS_TOKEN, REMOVE_REPOSITORY,
-	CLEAR_ALL, REFRESH_REPOSITORY, SET_ACCESS_TOKEN_HELP
+	CLEAR_ALL, REFRESH_REPOSITORY, SET_ACCESS_TOKEN_HELP, EXPORT_BOOKMARKS, IMPORT_BOOKMARKS
 } from './consts/commands';
+import { exportBookmarks } from './commands/exportBookmarks';
+import { importBookmarks } from './commands/importBookmarks';
 
 
 // this method is called when your extension is activated
@@ -60,6 +62,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands.registerCommand(SET_ACCESS_TOKEN, async () => {
 		await setAccessToken();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand(EXPORT_BOOKMARKS, async () => {
+		await exportBookmarks(context);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand(IMPORT_BOOKMARKS, async () => {
+		await importBookmarks(context);
 	}));
 	
 	context.subscriptions.push(vscode.commands.registerCommand(CLEAR_ALL, async () => {

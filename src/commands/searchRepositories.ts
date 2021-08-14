@@ -17,11 +17,11 @@ export async function searchRepositoriesCommand(dataItem: TreeDataItem) {
    
       if(typeof searchTerm !== 'undefined' && searchTerm) {
          searchTerm = searchTerm.toLowerCase();
-         let gitHubRepos = await new GitHubApiClient(accessToken)
+         const gitHubRepos = await new GitHubApiClient(accessToken)
             .search(searchTerm);
    
          if(gitHubRepos.length > 0) {
-            let repoDetails = gitHubRepos.map(repoInfo =>  {
+            const repoDetails = gitHubRepos.map(repoInfo =>  {
                return {
                   id: repoInfo.id,
                   label: repoInfo.name,
