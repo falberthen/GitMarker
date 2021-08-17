@@ -15,7 +15,7 @@ export async function clearAll() {
             const localStorageSvc = new LocalStorageService(BookmarkManager.instance.context.workspaceState);
             localStorageSvc.clearValues(FAVORITE_REPOS_KEY);
             BookmarkManager.instance
-               .loadStoredCategories();
+               .loadStoredData();
          }
       });
 }

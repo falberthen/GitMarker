@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { Command, Uri } from 'vscode';
 import { CATEGORY_ICON, DARK_THEME, GITHUB_ICON, LIGHT_THEME } from '../consts/icons';
+import { VIEW_ITEM_CATEGORY, VIEW_ITEM_REPOSITORY } from '../consts/application';
 import path = require('path');
 
 export class TreeDataItem extends vscode.TreeItem {
@@ -19,8 +20,8 @@ export class TreeDataItem extends vscode.TreeItem {
 
 		this.children = children;
 		this.contextValue = isRoot 
-			? 'categoryItem' 
-			: 'repositoryItem';
+			? VIEW_ITEM_CATEGORY 
+			: VIEW_ITEM_REPOSITORY;
 		
 		const icon = isRoot 
 			? CATEGORY_ICON 

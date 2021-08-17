@@ -5,7 +5,7 @@ import { TreeDataItem } from '../models/tree-data-item';
 import BookmarkManager from '../services/bookmark-manager';
 import SecretManager from '../services/secret-manager';
 
-export async function searchRepositoriesCommand(dataItem: TreeDataItem) {
+export async function searchRepositories(dataItem: TreeDataItem) {
    const accessToken = await SecretManager.instance
       .getAccessToken();
       

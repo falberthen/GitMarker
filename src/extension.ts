@@ -1,36 +1,31 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { clearAll } from './commands/clearAll';
 import { createCategory } from './commands/createCategory';
 import { removeCategory } from './commands/removeCategory';
 import { renameCategory } from './commands/renameCategory';
 import { removeRepository } from './commands/removeRepository';
-import { searchRepositoriesCommand } from './commands/searchRepositories';
+import { searchRepositories } from './commands/searchRepositories';
 import { setAccessToken } from './commands/setAccessToken';
-import { refreshRepository } from './commands/refreshRepository';
+import { syncRepository } from './commands/syncRepository';
 import { howToSetupToken } from './commands/howToSetupToken';
+import { exportBookmarks } from './commands/exportBookmarks';
+import { importBookmarks } from './commands/importBookmarks';
 import { TreeDataItem } from './models/tree-data-item';
 import SecretManager from './services/secret-manager';
 import BookmarkManager from './services/bookmark-manager';
+import RepositorySyncManager from './services/repository-sync-manager';
 import { 
-	CREATE_CATEGORY, REMOVE_CATEGORY, 
-	RENAME_CATEGORY, SEARCH_REPOSITORIES, 
-	SET_ACCESS_TOKEN, REMOVE_REPOSITORY,
-	CLEAR_ALL, REFRESH_REPOSITORY, SET_ACCESS_TOKEN_HELP, EXPORT_BOOKMARKS, IMPORT_BOOKMARKS
+	CREATE_CATEGORY, REMOVE_CATEGORY, RENAME_CATEGORY, SEARCH_REPOSITORIES, 
+	SET_ACCESS_TOKEN, REMOVE_REPOSITORY, CLEAR_ALL, SYNC_REPOSITORY, 
+	SET_ACCESS_TOKEN_HELP, EXPORT_BOOKMARKS, IMPORT_BOOKMARKS
 } from './consts/commands';
-import { exportBookmarks } from './commands/exportBookmarks';
-import { importBookmarks } from './commands/importBookmarks';
 
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-
 	// Init singleton instances
 	SecretManager.init(context);
 	BookmarkManager.init(context);
-	
+	RepositorySyncManager.init();
+
 	context.subscriptions.push(vscode.commands.registerCommand(CREATE_CATEGORY, async () => {
 		await createCategory();
 	}));
@@ -44,11 +39,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(SEARCH_REPOSITORIES, async (repository: TreeDataItem) => {
-		await searchRepositoriesCommand(repository);
+		await searchRepositories(repository);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand(REFRESH_REPOSITORY, async (repository: TreeDataItem) => {
-		await refreshRepository(repository);
+	context.subscriptions.push(vscode.commands.registerCommand(SYNC_REPOSITORY, async (repository: TreeDataItem) => {
+		await syncRepository(repository);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(REMOVE_REPOSITORY, async (repository: TreeDataItem) => {
@@ -56,10 +51,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	}));
 
 	// Config commands
-	context.subscriptions.push(vscode.commands.registerCommand(SET_ACCESS_TOKEN_HELP, async () => {
-		howToSetupToken();
-	}));
-
 	context.subscriptions.push(vscode.commands.registerCommand(SET_ACCESS_TOKEN, async () => {
 		await setAccessToken();
 	}));
@@ -69,11 +60,15 @@ export async function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(IMPORT_BOOKMARKS, async () => {
-		await importBookmarks(context);
+		await importBookmarks();
 	}));
 	
 	context.subscriptions.push(vscode.commands.registerCommand(CLEAR_ALL, async () => {
 		clearAll();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand(SET_ACCESS_TOKEN_HELP, async () => {
+		howToSetupToken();
 	}));
 }
 

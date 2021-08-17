@@ -5,7 +5,7 @@ import { TreeDataItem } from '../models/tree-data-item';
 export class TreeDataItemProvider implements TreeDataProvider<TreeDataItem> {
 	private _onDidChangeTreeData = new vscode.EventEmitter<TreeDataItem | undefined>();
 	public readonly onDidChangeTreeData: vscode.Event<TreeDataItem | undefined> = this._onDidChangeTreeData.event;
-	data: TreeDataItem[] = [];
+	dataItems: TreeDataItem[] = [];
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire(undefined);
@@ -15,13 +15,13 @@ export class TreeDataItemProvider implements TreeDataProvider<TreeDataItem> {
 
 	getChildren(element?: TreeDataItem|undefined): vscode.ProviderResult<TreeDataItem[]> {
 		if (element === undefined) {
-			return this.data;
+			return this.dataItems;
 		}
 
 		return element.children;
 	}
 
 	setTreeItems(elements: TreeDataItem[]) {      
-		this.data = elements;
+		this.dataItems = elements;
 	}
 }

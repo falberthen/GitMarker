@@ -6,31 +6,31 @@ import { ACCESS_TOKEN_REQUIRED_MSG, CHECK_GITHUB_DOC_MSG, SET_TOKEN_NOW_MSG } fr
 import { SET_ACCESS_TOKEN } from "../consts/commands";
 
 export default class SecretManager {
-    private static _instance: SecretManager;
+	private static _instance: SecretManager;
 
-    constructor(private secretStorage: SecretStorage) {}
+	constructor(private secretStorage: SecretStorage) {}
 
-    static init(context: ExtensionContext): void {
-        SecretManager._instance = new SecretManager(context.secrets);
-    }
+	static init(context: ExtensionContext): void {
+		SecretManager._instance = new SecretManager(context.secrets);
+	}
 
-    static get instance(): SecretManager {
-        return SecretManager._instance;
-    }
+	static get instance(): SecretManager {
+		return SecretManager._instance;
+	}
 
-    async storeSecret(key: string, value?: string): Promise<void> {
-        if (key && value) {
+	async storeSecret(key: string, value?: string): Promise<void> {
+			if (key && value) {
             this.secretStorage.store(key, value);
         }
-    }
+	}
 
-    async getSecret(key: string): Promise<string | undefined> {
-        return await this.secretStorage.get(key);
-    }
+	async getSecret(key: string): Promise<string | undefined> {
+		return await this.secretStorage.get(key);
+	}
 
-    async getAccessToken():  Promise<string | undefined> {
+	async getAccessToken():  Promise<string | undefined> {
 		const accessToken = await this.getSecret(ACCESS_TOKEN_SECRET);
- 
+
 		if(!accessToken) { 
 			const options = [] = [CHECK_GITHUB_DOC_MSG, SET_TOKEN_NOW_MSG];
 			vscode.window.showInformationMessage(ACCESS_TOKEN_REQUIRED_MSG, ...options)

@@ -1,7 +1,10 @@
 import * as vscode from 'vscode';
 import { CONTEXT_CATEGORY_COUNT, GIT_MARKER_VIEW, SET_CONTEXT } from '../consts/application';
-import { REFRESH_REPOSITORY } from '../consts/commands';
-import { Category } from '../models/category';
+import { SYNC_REPOSITORY } from '../consts/commands';
+import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
+			TOOLTIP_LASTSYNC, TOOLTIP_LICENSE, TOOLTIP_OWNED_BY, 
+			TOOLTIP_STARGAZERS, TOOLTIP_STARGAZERS_LBL } from '../consts/messages';
+import { CategoriesRepositories } from '../models/categories-repositories';
 import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
 import { formatDate } from '../utils/datetime-helper';
@@ -10,7 +13,6 @@ import { TreeDataItemProvider } from './tree-data-item-provider';
 export class TreeViewManager {
 	context: vscode.ExtensionContext;
 	dataProvider: TreeDataItemProvider;
-	categories: Category[] | undefined;
 	treeView: any;
 
 	constructor(context: vscode.ExtensionContext) {	
@@ -26,22 +28,29 @@ export class TreeViewManager {
 			this.click(e.selection));
 	}
 
-	refreshDataProvider(categories?: Category[]) {
-		if(categories) {			
+	refreshDataProvider(categoriesRepositories: CategoriesRepositories) {
+		if(categoriesRepositories) {			
 			const dataItems: TreeDataItem[] = [];
-			categories.forEach(category => {
+
+			categoriesRepositories.categories.forEach(category => {
 				const categoryRepositories: TreeDataItem[] = [];
-				category.repositories.forEach(repository => {
-					let repositoryDataItem = new TreeDataItem(false, `${repository.name}`);
-					repositoryDataItem.customId = repository.id;
-					repositoryDataItem.parentId = category.id;
-					repositoryDataItem.url = repository.url;					
-					repositoryDataItem.tooltip = this.buildToolTip(repository);
-					repositoryDataItem.description = repository.stargazersCount > 0 
-						? `⭐${repository.stargazersCount}` 
-						: '';
+
+				category.repositories.forEach(repositoryId => {
+					const repository = categoriesRepositories
+						.repositories.filter(r=>r.id === repositoryId)[0];
 					
-					categoryRepositories.push(repositoryDataItem);
+					if(repository) {
+						let repositoryDataItem = new TreeDataItem(false, `${repository.name}`);
+						repositoryDataItem.customId = repository.id;
+						repositoryDataItem.parentId = category.id;
+						repositoryDataItem.url = repository.url;					
+						repositoryDataItem.tooltip = this.buildToolTip(repository);
+						repositoryDataItem.description = repository.stargazersCount > 0 
+							? `⭐${repository.stargazersCount}` 
+							: '';
+						
+						categoryRepositories.push(repositoryDataItem);
+					}					
 				});
 
 				const categoryDataItem = new TreeDataItem(true, category.name, categoryRepositories);
@@ -53,7 +62,7 @@ export class TreeViewManager {
 			this.dataProvider.refresh();
 
 			vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
-				categories.length);
+				categoriesRepositories.categories.length);
 		}
 	}
 
@@ -67,20 +76,20 @@ export class TreeViewManager {
 			toolTipItems.push(`${repository.description}${newLine}`);
 		}
 
-		toolTipItems.push(` 🧍  Owned by ${repository.ownerName}`);
-		toolTipItems.push(`⭐ ${repository.stargazersCount} stars`);
-		toolTipItems.push(` 🍴  ${repository.forks} forks`);
+		toolTipItems.push(`${TOOLTIP_OWNED_BY}${repository.ownerName}`);
+		toolTipItems.push(`${TOOLTIP_STARGAZERS}${repository.stargazersCount}${TOOLTIP_STARGAZERS_LBL}`);
+		toolTipItems.push(`${TOOLTIP_FORKS}${repository.forks}${TOOLTIP_FORKS_LBL}`);
 
 		if(repository.language) { 
-			toolTipItems.push(`🧬 Written in ${repository.language}`);
+			toolTipItems.push(`${TOOLTIP_LANGUAGE}${repository.language}`);
 		} 
 			
 		if(repository.license) { 
-			toolTipItems.push(`📝 ${repository.license.name}`);	
+			toolTipItems.push(`${TOOLTIP_LICENSE}${repository.license.name}`);	
 		}
 
 		toolTipItems.push(`${newLine}`);
-		toolTipItems.push(`${formatDate(repository.lastSyncDate)}`);
+		toolTipItems.push(`${TOOLTIP_LASTSYNC}${formatDate(repository.lastSyncDate)}`);
 
 		return toolTipItems.join(newLine); 
 	}
@@ -89,7 +98,7 @@ export class TreeViewManager {
 		selected.forEach(element => {
 			if(element.url) {
 				vscode.env.openExternal(element.url);
-				vscode.commands.executeCommand(REFRESH_REPOSITORY, selected[0]);
+				vscode.commands.executeCommand(SYNC_REPOSITORY, selected[0]);
 			}
 		});
 	}

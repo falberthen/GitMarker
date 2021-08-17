@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -58,15 +58,6 @@
 				}
 			},
 			{
-				"command": "gitmarker.refreshRepository",
-				"title": "Refresh repository",
-				"category": "GitMarker",
-				"icon": {
-					"light": "resources/refresh.svg",
-					"dark": "resources/refresh.svg"
-				}
-			},
-			{
 				"command": "gitmarker.removeRepository",
 				"title": "Remove repository",
 				"category": "GitMarker",
@@ -76,21 +67,12 @@
 				}
 			},
 			{
-				"command": "gitmarker.refreshRepository",
-				"title": "Refresh repository",
+				"command": "gitmarker.syncRepository",
+				"title": "Sync repository",
 				"category": "GitMarker",
 				"icon": {
 					"light": "resources/refresh.svg",
 					"dark": "resources/refresh.svg"
-				}
-			},
-			{
-				"command": "gitmarker.removeRepository",
-				"title": "Remove repository",
-				"category": "GitMarker",
-				"icon": {
-					"light": "resources/delete.svg",
-					"dark": "resources/delete.svg"
 				}
 			},
 			{
@@ -134,12 +116,16 @@
 					"when": "false"
 				},
 				{
-					"command": "gitmarker.refreshRepository",
+					"command": "gitmarker.syncRepository",
 					"when": "false"
 				},
 				{
 					"command": "gitmarker.removeRepository",
 					"when": "false"
+				},
+				{
+					"command": "gitmarker.exportBookmarks",
+					"when": "view == gitmarkerView && categoryCount > 0"
 				}
 			],
 			"view/title": [
@@ -191,7 +177,7 @@
 					"when": "viewItem == categoryItem"
 				},
 				{
-					"command": "gitmarker.refreshRepository",
+					"command": "gitmarker.syncRepository",
 					"group": "inline@3",
 					"when": "viewItem == repositoryItem"
 				},
