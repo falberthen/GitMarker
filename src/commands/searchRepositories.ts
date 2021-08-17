@@ -1,11 +1,11 @@
-import { TYPE_SEARCH_TERM_PLACEHOLDER } from './../consts/messages';
+import { CHOOSE_CATEGORY, TYPE_SEARCH_TERM_PLACEHOLDER } from './../consts/messages';
 import * as vscode from 'vscode';
 import { GitHubApiClient } from '../services/github-api-client';
-import { TreeDataItem } from '../models/tree-data-item';
 import BookmarkManager from '../services/bookmark-manager';
 import SecretManager from '../services/secret-manager';
+import { Category } from '../models/category';
 
-export async function searchRepositoriesCommand(dataItem: TreeDataItem) {
+export async function searchRepositories() {
    const accessToken = await SecretManager.instance
       .getAccessToken();
       
@@ -36,19 +36,50 @@ export async function searchRepositoriesCommand(dataItem: TreeDataItem) {
                matchOnDetail: true, 
                canPickMany: true,
                title: `${gitHubRepos.length} items found for ${searchTerm}`,
-               onDidSelectItem: item => {}
-            }).then((selection) => {
-               selection?.forEach(pickedRepo  => {
-                  const selectedRepo = gitHubRepos
-                     .filter(e=>e.id === pickedRepo.id)[0];
-   
-                  if(selectedRepo) {
-                     BookmarkManager.instance
-                        .bookmarkRepository(dataItem, selectedRepo);
+            })
+            .then((result) => {                 
+               if(result!.length > 0) {
+                  let resultIds = result!.map(a => a.id);
+                  const selectedRepos = gitHubRepos
+                     .filter(repo => resultIds.includes(repo.id));
+
+                  var allCategories = BookmarkManager
+                     	.instance.categoryRepositories.categories;
+
+                  // Selecting category
+                  if(allCategories.length > 1) {
+                     pickCategory(allCategories)
+                     .then(category => {                     
+                        return BookmarkManager.instance
+                           .bookmarkRepositories(category?.id!, selectedRepos);
+                     });
                   }
-               });
-            });
+                  else {
+                     return BookmarkManager.instance
+                           .bookmarkRepositories(allCategories[0].id, selectedRepos);                                          
+                  }
+               }
+            });        
          }
       }
-   }	
+   }
+}
+
+async function pickCategory(categories: Category[]) {
+   var categoriesDetails = categories
+   .map(categoryInfo =>  {
+         return {
+            id: categoryInfo.id,
+            label: categoryInfo.name,
+            detail: categoryInfo.name,
+         };
+      });
+   
+   // Picking a repo from result list
+   return await vscode.window.showQuickPick(categoriesDetails, {
+      matchOnDescription: true,
+      matchOnDetail: true, 
+      canPickMany: false,
+      title: CHOOSE_CATEGORY,
+   });
 }

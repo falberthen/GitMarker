@@ -24,7 +24,7 @@ export class GitHubApiClient {
 		 this.accessToken = accessToken;
 	}
 	
-	async search(term: string): Promise<GithubRepository[]> {
+	async search(term: string) {
 		let repos: GithubRepository[] = [];
 
 		if(this.accessToken) {
@@ -50,8 +50,6 @@ export class GitHubApiClient {
 					repos.length === 0 
 						? vscode.window.showInformationMessage(`${NO_REPOS_FOUND_MSG} ${term}.`) 
 						: vscode.window.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${term}".`, );
-
-					return repos;
 				});		
 			} 
 			catch (err) {	
@@ -62,7 +60,7 @@ export class GitHubApiClient {
 		return repos;
 	}
 
-	async getById(repositoryId: string): Promise<GithubRepository> {
+	async getById(repositoryId: string) {
 		let repo!: GithubRepository;
 
 		if(this.accessToken){

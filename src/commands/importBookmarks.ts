@@ -2,14 +2,13 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { ERROR_IMPORTING_MSG } from '../consts/messages';
 import { validate } from 'class-validator';
-import { Category, } from '../models/category';
 import { plainToClass } from 'class-transformer';
 import { GithubRepository } from '../models/github-repository';
 import { openDialogOptions } from '../utils/open-dialog-options';
+import { CategoriesRepositories } from '../models/categories-repositories';
 import BookmarkManager from '../services/bookmark-manager';
 
-export async function importBookmarks(context: vscode.ExtensionContext) { 
-     
+export async function importBookmarks() { 
    await vscode.window.showOpenDialog(openDialogOptions)
    .then(fileUri => {
       if (fileUri && fileUri[0]) {
@@ -19,25 +18,33 @@ export async function importBookmarks(context: vscode.ExtensionContext) {
               return;
             }
 
-            try {
-               let validCategories: Category[] = [];
-               const parsedObject = JSON.parse(data);
-               const categories = plainToClass(Category, parsedObject);
-               categories.forEach(category => {
-                  category.repositories = plainToClass(GithubRepository, category.repositories);
-                  validate(category)
-                  .then(errors => {
-                     if (errors.length === 0) {
-                        validCategories.push(category);
-                        BookmarkManager.instance.categories = validCategories;
-                        BookmarkManager.instance.setRefresh();
-                     }
-                  });
-               });
-            } catch (error) {
-               vscode.window.showErrorMessage(ERROR_IMPORTING_MSG);
-            }      
+            validateImport(data);
           });
       }
   });
+}
+
+async function validateImport(data: string) {
+   try {
+      let validRepositories: GithubRepository[] = [];
+      const parsedObject = JSON.parse(data);
+      const categoriesRepositories = plainToClass(CategoriesRepositories, parsedObject);
+
+      // Repository schema validation
+      categoriesRepositories.repositories.forEach(parsedRepository => {
+         const repository  = plainToClass(GithubRepository, parsedRepository);
+         validate(repository)
+         .then(errors => {
+            if (errors.length === 0) {
+               validRepositories.push(repository);
+               categoriesRepositories.repositories = validRepositories;                        
+            }
+         }).finally(() => {
+            BookmarkManager.instance.categoryRepositories = categoriesRepositories;
+            BookmarkManager.instance.storeAndRefreshProvider();
+         });
+      });
+   } catch (error) {
+      vscode.window.showErrorMessage(ERROR_IMPORTING_MSG);
+   }     
 }
