@@ -1,8 +1,8 @@
 {
-	"name": "gitmarker",
+   "name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {

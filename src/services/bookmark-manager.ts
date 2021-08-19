@@ -7,7 +7,6 @@ import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
 import { LocalStorageService } from './local-storage-service';
 import { TreeViewManager } from './tree-view-manager';
-import { SYNC_REPOSITORY } from '../consts/commands';
 
 export default class BookmarkManager {
 	context: vscode.ExtensionContext;

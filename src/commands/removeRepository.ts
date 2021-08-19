@@ -4,15 +4,15 @@ import { TreeDataItem } from '../models/tree-data-item';
 import BookmarkManager from '../services/bookmark-manager';
 
 export async function removeRepository(dataItem: TreeDataItem) {
-   vscode.window
-      .showInformationMessage(
-         `${SURE_REMOVING_MSG} ${dataItem.label}?`,
-         ...[YES_MSG, NO_MSG]
-      )
-      .then((answer) => {
-         if (answer === YES_MSG) {
-            BookmarkManager.instance
-               .removeRepository(dataItem);
-         }
-      });
+	vscode.window
+		.showInformationMessage(
+			`${SURE_REMOVING_MSG} ${dataItem.label}?`,
+			...[YES_MSG, NO_MSG]
+		)
+		.then((answer) => {
+			if (answer === YES_MSG) {
+				BookmarkManager.instance
+					.removeRepository(dataItem);
+			}
+		});
 }

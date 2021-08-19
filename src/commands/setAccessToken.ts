@@ -8,9 +8,9 @@ export async function setAccessToken() {
 		value: '',
 		placeHolder: TYPE_ACCESS_TOKEN_PLACEHOLDER,
 	}).then(token => {
-      if(typeof token !== 'undefined' && token) {
-         SecretManager.instance.storeSecret(ACCESS_TOKEN_SECRET, token);
-         vscode.window.showInformationMessage(ACCESS_TOKEN_SET_MSG);
-      }
-   });
+		if(typeof token !== 'undefined' && token) {
+			SecretManager.instance.storeSecret(ACCESS_TOKEN_SECRET, token);
+			vscode.window.showInformationMessage(ACCESS_TOKEN_SET_MSG);
+		}
+	});
 }
