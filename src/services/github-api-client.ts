@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from "axios";
 import * as vscode from 'vscode';
+import axios, { AxiosInstance } from "axios";
 import { 
 	LAST_SEARCHED_TERM_MSG, 
 	NO_REPOS_FOUND_MSG } from './../consts/messages';
