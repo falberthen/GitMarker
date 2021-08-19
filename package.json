@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -103,6 +103,10 @@
 		],
 		"menus": {
 			"commandPalette": [
+				{
+					"command": "gitmarker.searchRepositories",
+					"when": "categoryCount > 0"
+				},
 				{
 					"command": "gitmarker.removeCategory",
 					"when": "false"

@@ -22,11 +22,6 @@ import {
 import { TreeViewManager } from './services/tree-view-manager';
 
 export async function activate(context: vscode.ExtensionContext) {
-	// Init singleton services
-	TreeViewManager.init();
-	SecretManager.init(context);
-	BookmarkManager.init(context);
-	RepositorySyncManager.init();
 
 	context.subscriptions.push(vscode.commands.registerCommand(CREATE_CATEGORY, async () => {
 		await createCategory();
@@ -66,16 +61,18 @@ export async function activate(context: vscode.ExtensionContext) {
 	}));
 	
 	context.subscriptions.push(vscode.commands.registerCommand(CLEAR_ALL, async () => {
-		clearAll();
+		clearAll(context);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(SET_ACCESS_TOKEN_HELP, async () => {
 		howToSetupToken();
 	}));
+
+	// Init singleton services
+	TreeViewManager.init();
+	SecretManager.init(context);
+	BookmarkManager.init(context);
+	RepositorySyncManager.init();
 }
 
-
-
-// this method is called when your extension is deactivated
 export function deactivate() {}
-

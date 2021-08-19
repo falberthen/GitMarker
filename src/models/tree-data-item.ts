@@ -16,7 +16,7 @@ export class TreeDataItem extends vscode.TreeItem {
 			isRoot 
 				? vscode.TreeItemCollapsibleState.Expanded
 				: vscode.TreeItemCollapsibleState.None
-   	);
+		);
 
 		this.children = children;
 		this.contextValue = isRoot 
@@ -32,8 +32,8 @@ export class TreeDataItem extends vscode.TreeItem {
 			dark: path.join(__filename, '..', '..', '..', 'resources', DARK_THEME, icon)
 		};
 
-   	if(command !== undefined) {
+		if(command !== undefined) {
 			this.command = command;
 		} 
-   }
+	}
 }

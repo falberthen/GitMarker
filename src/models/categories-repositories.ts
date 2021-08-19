@@ -4,8 +4,8 @@ import { GithubRepository } from "./github-repository";
 
 // Storable object with Categories and Repositories
 export class CategoriesRepositories{
-   categories: Category[] = [];
-   
-   @ValidateNested()
-   repositories: GithubRepository[] = [];
+	categories: Category[] = [];
+	
+	@ValidateNested()
+	repositories: GithubRepository[] = [];
 }

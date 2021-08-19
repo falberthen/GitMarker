@@ -29,6 +29,6 @@ export class GithubRepository {
 	public constructor(id: string, name: string,  url: Uri) {
 		this.id = id;
 		this.name = name;
-      this.url = url;
-   }
+		this.url = url;
+	}
 }
