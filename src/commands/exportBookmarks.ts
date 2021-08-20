@@ -4,11 +4,10 @@ import { LocalStorageService } from '../services/local-storage-service';
 import { Category } from '../models/category';
 import { FAVORITE_REPOS_KEY } from '../consts/application';
 import { ERROR_EXPORTING_MSG } from '../consts/messages';
+import { saveDialogOptions } from '../utils/dialog-options';
 
 export async function exportBookmarks(context: vscode.ExtensionContext) {   
-	await vscode.window.showSaveDialog({
-		defaultUri: vscode.Uri.file("gitmarker.json"),
-	})
+	await vscode.window.showSaveDialog(saveDialogOptions)
 	.then(file => {
 		if(file) {
 			const storedCategories = new LocalStorageService(context.workspaceState)

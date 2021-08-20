@@ -1,5 +1,5 @@
 {
-   "name": "gitmarker",
+	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
 	"version": "1.0.1",
@@ -103,6 +103,10 @@
 		],
 		"menus": {
 			"commandPalette": [
+				{
+					"command": "gitmarker.searchRepositories",
+					"when": "categoryCount > 0"
+				},
 				{
 					"command": "gitmarker.removeCategory",
 					"when": "false"

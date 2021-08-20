@@ -1,4 +1,4 @@
-import { CHOOSE_CATEGORY, TYPE_SEARCH_TERM_PLACEHOLDER } from './../consts/messages';
+import { CHOOSE_CATEGORY_MSG, TYPE_SEARCH_TERM_PLACEHOLDER } from './../consts/messages';
 import * as vscode from 'vscode';
 import { GitHubApiClient } from '../services/github-api-client';
 import BookmarkManager from '../services/bookmark-manager';
@@ -22,9 +22,13 @@ export async function searchRepositories() {
 	
 			if(gitHubRepos.length > 0) {
 				const repoDetails = gitHubRepos.map(repoInfo =>  {
+					const label = repoInfo.stargazersCount > 0 
+					? `${repoInfo.name} ⭐${repoInfo.stargazersCount}` 
+					: `${repoInfo.name}`;
+
 					return {
 						id: repoInfo.id,
-						label: repoInfo.name,
+						label: label, 
 						detail: repoInfo.description,
 						link: repoInfo.url          
 					};
@@ -38,7 +42,7 @@ export async function searchRepositories() {
 					title: `${gitHubRepos.length} items found for ${searchTerm}`,
 				})
 				.then((result) => {                 
-					if(result!.length > 0) {
+					if(result) {
 						let resultIds = result!.map(a => a.id);
 						const selectedRepos = gitHubRepos
 							.filter(repo => resultIds.includes(repo.id));
@@ -70,8 +74,7 @@ async function pickCategory(categories: Category[]) {
 	.map(categoryInfo =>  {
 			return {
 				id: categoryInfo.id,
-				label: categoryInfo.name,
-				detail: categoryInfo.name,
+				label: `📁 ${categoryInfo.name}`
 			};
 		});
 	
@@ -80,6 +83,6 @@ async function pickCategory(categories: Category[]) {
 		matchOnDescription: true,
 		matchOnDetail: true, 
 		canPickMany: false,
-		title: CHOOSE_CATEGORY,
+		title: CHOOSE_CATEGORY_MSG,
 	});
 }

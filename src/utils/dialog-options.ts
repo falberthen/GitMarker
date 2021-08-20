@@ -7,3 +7,11 @@ export const openDialogOptions: vscode.OpenDialogOptions = {
 		'Json files': ['json'],
 	}
 };
+
+export const saveDialogOptions: vscode.SaveDialogOptions = {
+	defaultUri: vscode.Uri.file("gitmarker.json"),
+	saveLabel: 'Save',
+	filters: {
+		'Json files': ['json'],
+	}
+};
