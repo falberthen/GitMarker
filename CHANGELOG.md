@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.1 Unreleased]
 
-- Initial release
+- Initial release.
 
 --------------------------------------------------------------------------------------------------------
 
@@ -33,5 +33,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the way the data is organized and stored, resulting in a way smaller export file.
 - Centralized the search on GitHub at the top navigation menu for a better UI.
+
+--------------------------------------------------------------------------------------------------------
+
+## [1.1.0] - 2021-08-20
+### Added
+
+- Git Clone feature.
+- Settings for defining default clone path and, when use it.
+
+### Changed
+
+- Exchanged centralized search icon.
 
 --------------------------------------------------------------------------------------------------------

@@ -15,6 +15,7 @@ export class GithubRepository {
 	language!: string;
 	license!: any;
 	lastSyncDate!: DateTime;
+	cloneUrl: string;
 
 	@MinLength(7)
 	url: Uri;
@@ -30,5 +31,6 @@ export class GithubRepository {
 		this.id = id;
 		this.name = name;
 		this.url = url;
+		this.cloneUrl = `${this.url}.git`;
 	}
 }

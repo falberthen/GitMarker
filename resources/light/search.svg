@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   version="1.1"
-   viewBox="0 0 129 129"
-   enable-background="new 0 0 129 129"
-   id="svg6"
+   version="1"
+   viewBox="0 0 48 48"
+   enable-background="new 0 0 48 48"
+   id="svg14"
    sodipodi:docname="search.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -11,9 +11,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs10" />
+     id="defs18" />
   <sodipodi:namedview
-     id="namedview8"
+     id="namedview16"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
@@ -21,22 +21,55 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="6.7674419"
-     inkscape:cx="64.647766"
-     inkscape:cy="64.5"
+     inkscape:zoom="18.1875"
+     inkscape:cx="24"
+     inkscape:cy="24"
      inkscape:window-width="2560"
      inkscape:window-height="1377"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg6" />
+     inkscape:current-layer="svg14" />
   <g
-     id="g4"
-     style="fill:#00a800;fill-opacity:1"
-     transform="matrix(1.091318,0,0,1.0972809,-6.5042195,-5.9965224)">
-    <path
-       d="m 51.6,96.7 c 11,0 21,-3.9 28.8,-10.5 l 35,35 c 0.8,0.8 1.8,1.2 2.9,1.2 1.1,0 2.1,-0.4 2.9,-1.2 1.6,-1.6 1.6,-4.2 0,-5.8 l -35,-35 C 92.7,72.6 96.7,62.5 96.7,51.6 96.7,26.7 76.5,6.5 51.6,6.5 26.8,6.5 6.5,26.8 6.5,51.6 c 0,24.9 20.3,45.1 45.1,45.1 z m 0,-82 C 72,14.7 88.5,31.3 88.5,51.6 88.5,72 72,88.5 51.6,88.5 31.2,88.5 14.7,71.9 14.7,51.6 14.7,31.3 31.3,14.7 51.6,14.7 Z"
-       id="path2"
-       style="fill:#00a800;fill-opacity:1" />
+     fill="#616161"
+     id="g6"
+     transform="matrix(1.1772226,0,0,1.1771585,-4.1728078,-4.3374995)"
+     style="fill:#808080">
+    <rect
+       x="34.599998"
+       y="28.1"
+       transform="matrix(0.707,-0.707,0.707,0.707,-15.154,36.586)"
+       width="4"
+       height="17"
+       id="rect2"
+       style="fill:#808080" />
+    <circle
+       cx="20"
+       cy="20"
+       r="16"
+       id="circle4"
+       style="fill:#808080" />
   </g>
+  <rect
+     x="-2.2270899"
+     y="50.428303"
+     transform="matrix(0.70712606,-0.7070875,0.70712606,0.7070875,0,0)"
+     fill="#37474f"
+     width="4.7080512"
+     height="14.477257"
+     id="rect8"
+     style="stroke-width:1.17701;fill:#808080" />
+  <ellipse
+     fill="#64b5f6"
+     cx="19.316662"
+     cy="19.095705"
+     id="circle10"
+     rx="16.733446"
+     ry="16.677629"
+     style="stroke-width:1.28504" />
+  <path
+     fill="#bbdefb"
+     d="m 27.49448,12.378151 c -2.001278,-2.354318 -4.944335,-3.766908 -8.122836,-3.766908 -3.178501,0 -6.121558,1.41259 -8.122835,3.766908 -0.47089,0.470863 -0.353168,1.294874 0.117721,1.648022 0.47089,0.470863 1.294945,0.353147 1.648112,-0.117716 1.648112,-1.883454 3.884835,-2.942896 6.357002,-2.942896 2.472167,0 4.70889,1.059442 6.357002,2.942896 0.235444,0.235431 0.588611,0.470863 0.941778,0.470863 0.235445,0 0.588611,-0.117715 0.706334,-0.235432 0.470889,-0.470863 0.470889,-1.294874 0.117722,-1.765737 z"
+     id="path12"
+     style="stroke-width:1.17719" />
 </svg>

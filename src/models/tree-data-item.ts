@@ -9,6 +9,7 @@ export class TreeDataItem extends vscode.TreeItem {
 	parentId!: string;
 	customId!: string;
 	url!: Uri;
+	cloneUrl!: string;
 
 	constructor(isRoot: boolean, label: string, children?: TreeDataItem[], command?: Command) {
 		super(

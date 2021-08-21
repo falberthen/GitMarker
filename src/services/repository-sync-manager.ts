@@ -1,8 +1,10 @@
+import * as vscode from 'vscode';
 import { TreeDataItem } from '../models/tree-data-item';
 import { getTimeDiff } from '../utils/datetime-helper';
 import { GitHubApiClient } from './github-api-client';
 import SecretManager from './secret-manager';
 import BookmarkManager from './bookmark-manager';
+import { REPO_SYNC_SUCCESS } from '../consts/messages';
 
 export default class RepositorySyncManager {
 	
@@ -41,6 +43,8 @@ export default class RepositorySyncManager {
 					.then(updatedRepository => {
 						BookmarkManager.instance
 							.updateRepository(updatedRepository);
+						
+						vscode.window.showInformationMessage(`${dataItem.label} ${REPO_SYNC_SUCCESS}`);
 					});
 			}
 		}
