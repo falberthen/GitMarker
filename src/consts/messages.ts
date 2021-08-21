@@ -15,6 +15,9 @@ export const SET_TOKEN_NOW_MSG = 'Setup it now';
 export const ARE_YOU_SURE_IMPORT_MSG = 'Your current bookmarks will be replaced with the importing file. Are you sure?';
 export const ERROR_IMPORTING_MSG = 'An error ocurred when importing the file. The content format is invalid.';
 export const ERROR_EXPORTING_MSG = 'An error ocurred when exporting your bookmarks.';
+export const REPO_SYNC_SUCCESS = 'was syncronized with success!';
+export const GIT_CLONE_EXECUTED = 'Clone command executed for ';
+export const DO_YOU_WANT_CLONE_MSG = 'Do you want to clone ';
 export const YES_MSG = 'Yes';
 export const NO_MSG = 'No';
 
