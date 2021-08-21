@@ -4,6 +4,7 @@ export const RENAME_CATEGORY = 'gitmarker.renameCategory';
 export const SEARCH_REPOSITORIES = 'gitmarker.searchRepositories';
 export const SYNC_REPOSITORY = 'gitmarker.syncRepository';
 export const REMOVE_REPOSITORY = 'gitmarker.removeRepository';
+export const CLONE_REPOSITORY = 'gitmarker.cloneRepository';
 export const SET_ACCESS_TOKEN = 'gitmarker.setAccessToken';
 export const EXPORT_BOOKMARKS = 'gitmarker.exportBookmarks';
 export const IMPORT_BOOKMARKS = 'gitmarker.importBookmarks';

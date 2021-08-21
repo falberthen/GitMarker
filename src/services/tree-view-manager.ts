@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CONTEXT_CATEGORY_COUNT, GIT_MARKER_VIEW, SET_CONTEXT } from '../consts/application';
+import { CONTEXT_CATEGORY_COUNT, GITMARKER_VIEW, SET_CONTEXT } from '../consts/application';
 import { SYNC_REPOSITORY } from '../consts/commands';
 import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
 			TOOLTIP_LASTSYNC, TOOLTIP_LICENSE, TOOLTIP_OWNED_BY, 
@@ -26,7 +26,7 @@ export class TreeViewManager {
 
 	constructor() {	
 		this.dataProvider = new TreeDataItemProvider();
-		this.treeView = vscode.window.createTreeView(GIT_MARKER_VIEW, {
+		this.treeView = vscode.window.createTreeView(GITMARKER_VIEW, {
 			showCollapseAll: true,
 			treeDataProvider: this.dataProvider,
 			canSelectMany: true
@@ -74,7 +74,8 @@ export class TreeViewManager {
 			repositoryDataItem = new TreeDataItem(false, `${repository.name}`);
 			repositoryDataItem.customId = repository.id;
 			repositoryDataItem.parentId = categoryId;
-			repositoryDataItem.url = repository.url;					
+			repositoryDataItem.url = repository.url;
+			repositoryDataItem.cloneUrl = `${repository.url}.git`;
 			repositoryDataItem.tooltip = this.buildToolTip(repository);
 			repositoryDataItem.description = repository.stargazersCount > 0 
 				? `⭐${repository.stargazersCount}` 

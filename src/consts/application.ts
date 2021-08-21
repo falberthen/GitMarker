@@ -10,8 +10,16 @@ export const VIEW_ITEM_CATEGORY = 'categoryItem';
 export const VIEW_ITEM_REPOSITORY = 'repositoryItem';
 
 // Views
-export const GIT_MARKER_VIEW = 'gitmarkerView';
+export const GITMARKER_VIEW = 'gitmarkerView';
 
 // Context
 export const SET_CONTEXT = 'setContext';
 export const CONTEXT_CATEGORY_COUNT = 'categoryCount';
+
+// Terminal
+export const TERMINAL_KEY = 'GitMarker';
+
+// Config
+export const GITMARKER_CONFIG = 'gitmarker';
+export const USE_DEFAULT_PATH_CFG = 'useDefaultClonePath';
+export const DEFAULT_PATH_CFG = 'defaultClonePath';

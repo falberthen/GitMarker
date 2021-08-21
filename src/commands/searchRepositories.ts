@@ -60,7 +60,7 @@ export async function searchRepositories() {
 						}
 						else {
 							return BookmarkManager.instance
-									.bookmarkRepositories(allCategories[0].id, selectedRepos);                                          
+								.bookmarkRepositories(allCategories[0].id, selectedRepos);                                          
 						}
 					}
 				});        
