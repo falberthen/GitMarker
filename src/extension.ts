@@ -10,6 +10,7 @@ import { syncRepository } from './commands/syncRepository';
 import { howToSetupToken } from './commands/howToSetupToken';
 import { exportBookmarks } from './commands/exportBookmarks';
 import { importBookmarks } from './commands/importBookmarks';
+import { cloneRepository } from './commands/cloneRepository';
 import { TreeDataItem } from './models/tree-data-item';
 import SecretManager from './services/secret-manager';
 import BookmarkManager from './services/bookmark-manager';
@@ -17,7 +18,7 @@ import RepositorySyncManager from './services/repository-sync-manager';
 import { 
 	CREATE_CATEGORY, REMOVE_CATEGORY, RENAME_CATEGORY, SEARCH_REPOSITORIES, 
 	SET_ACCESS_TOKEN, REMOVE_REPOSITORY, CLEAR_ALL, SYNC_REPOSITORY, 
-	SET_ACCESS_TOKEN_HELP, EXPORT_BOOKMARKS, IMPORT_BOOKMARKS
+	SET_ACCESS_TOKEN_HELP, EXPORT_BOOKMARKS, IMPORT_BOOKMARKS, CLONE_REPOSITORY
 } from './consts/commands';
 import { TreeViewManager } from './services/tree-view-manager';
 
@@ -35,12 +36,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		await removeCategory(category);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand(SEARCH_REPOSITORIES, async (repository: TreeDataItem) => {
+	context.subscriptions.push(vscode.commands.registerCommand(SEARCH_REPOSITORIES, async () => {
 		await searchRepositories();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(SYNC_REPOSITORY, async (repository: TreeDataItem) => {
 		await syncRepository(repository);
+	}));
+	
+	context.subscriptions.push(vscode.commands.registerCommand(CLONE_REPOSITORY, async (repository: TreeDataItem) => {
+		await cloneRepository(repository);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(REMOVE_REPOSITORY, async (repository: TreeDataItem) => {

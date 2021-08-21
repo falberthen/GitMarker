@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -20,6 +20,20 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "GitMarker",
+			"properties": {
+				"gitmarker.defaultClonePath": {
+					"type": "string",
+					"description": "Set a default path for cloning repositories."
+				},
+				"gitmarker.useDefaultClonePath": {
+					"type": "boolean",
+					"default": false,
+					"description": "Always use default clone path."
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "gitmarker.createCategory",
@@ -76,6 +90,15 @@
 				}
 			},
 			{
+				"command": "gitmarker.cloneRepository",
+				"title": "Clone repository",
+				"category": "GitMarker",
+				"icon": {
+					"light": "resources/light/clone.svg",
+					"dark": "resources/dark/clone.svg"
+				}
+			},			
+			{
 				"command": "gitmarker.howToSetupToken",
 				"title": "❔ How to setup GitHub personal access token?",
 				"category": "GitMarker"
@@ -121,6 +144,10 @@
 				},
 				{
 					"command": "gitmarker.removeRepository",
+					"when": "false"
+				},
+				{
+					"command": "gitmarker.cloneRepository",
 					"when": "false"
 				},
 				{
@@ -175,15 +202,20 @@
 					"command": "gitmarker.removeCategory",
 					"group": "inline@1",
 					"when": "viewItem == categoryItem"
-				},
+				},				
 				{
 					"command": "gitmarker.syncRepository",
-					"group": "inline@2",
+					"group": "inline@0",
+					"when": "viewItem == repositoryItem"
+				},
+				{
+					"command": "gitmarker.cloneRepository",
+					"group": "inline@1",
 					"when": "viewItem == repositoryItem"
 				},
 				{
 					"command": "gitmarker.removeRepository",
-					"group": "inline@3",
+					"group": "inline@2",
 					"when": "viewItem == repositoryItem"
 				}
 			]
