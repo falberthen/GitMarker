@@ -1,8 +1,15 @@
+import ContextManager from "./context-manager";
+import { injectable } from "inversify";
 import { Memento } from "vscode";
 
-export class LocalStorageService {
+@injectable()
+export class LocalStorageManager {
+	storage: Memento;
 
-	constructor(private storage: Memento) { }   
+	constructor() {
+		this.storage = ContextManager.instance.
+			context.globalState;
+	}   
 
 	public getValue<T>(key : string) {
 		return this.storage.get<T>(key);
