@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import axios, { AxiosInstance } from "axios";
-import { 
-	LAST_SEARCHED_TERM_MSG, 
-	NO_REPOS_FOUND_MSG } from './../consts/messages';
+import TYPES from '../commands/base/types';
+import container from '../inversify.config';
 import { GithubRepository } from "../models/github-repository";
 import { ERROR_FETCHING_DATA_MSG } from "../consts/messages";
-import { getDateTimeNow } from "../utils/datetime-helper";
+import { DateTimeHelper } from '../utils/datetime-helper';
 
 export class GitHubApiClient {
 	accessToken: string;
 	apiClient: AxiosInstance;
+	private dateTimeHelper: DateTimeHelper;
 
 	public constructor(accessToken: string) {
 		this.apiClient = axios.create({
@@ -19,17 +19,19 @@ export class GitHubApiClient {
 			  'content-Type': 'application/json',	
 			  'authorization': `Bearer ${accessToken}`
 			}
-		 });
+		});
 
 		 this.accessToken = accessToken;
+		 this.dateTimeHelper = container
+			.get(TYPES.dateTimeHelper) as DateTimeHelper;
 	}
-	
+
 	async search(term: string) {
 		let repos: GithubRepository[] = [];
 
 		if(this.accessToken) {
 			const url = `/search/repositories?q=${term}&access_token=${this.accessToken}`;
-		
+
 			try {
 				await this.apiClient.get(url)
 				.then((response) => {			
@@ -44,19 +46,15 @@ export class GitHubApiClient {
 						language:val.language,
 						forks: val.forks,
 						license: val.license,
-						lastSyncDate: getDateTimeNow()
-					}));
-						
-					repos.length === 0 
-						? vscode.window.showInformationMessage(`${NO_REPOS_FOUND_MSG} ${term}.`) 
-						: vscode.window.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${term}".`, );
+						lastSyncDate: this.dateTimeHelper.getDateTimeNow()
+					}));											
 				});		
 			} 
 			catch (err) {	
 				vscode.window.showErrorMessage(`${ERROR_FETCHING_DATA_MSG}`);				
 			}
 		}
-		
+
 		return repos;
 	}
 
@@ -65,7 +63,7 @@ export class GitHubApiClient {
 
 		if(this.accessToken){
 			const url = `/repositories/${repositoryId}&access_token=${this.accessToken}`;
-	
+
 			try {
 				await this.apiClient.get(url)
 				.then((response) => {			
@@ -78,7 +76,7 @@ export class GitHubApiClient {
 					repo.language = data.language;
 					repo.forks = data.forks;
 					repo.license = data.license;
-					repo.lastSyncDate = getDateTimeNow();
+					repo.lastSyncDate = this.dateTimeHelper.getDateTimeNow();
 				});
 			} 
 			catch (err) {	

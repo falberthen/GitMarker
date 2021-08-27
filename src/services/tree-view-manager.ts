@@ -1,4 +1,6 @@
+import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
+import TYPES from '../commands/base/types';
 import { CONTEXT_CATEGORY_COUNT, GITMARKER_VIEW, SET_CONTEXT } from '../consts/application';
 import { SYNC_REPOSITORY } from '../consts/commands';
 import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
@@ -7,24 +9,18 @@ import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE,
 import { CategoriesRepositories } from '../models/categories-repositories';
 import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
-import { formatDate } from '../utils/datetime-helper';
+import { DateTimeHelper } from '../utils/datetime-helper';
 import { TreeDataItemProvider } from './tree-data-item-provider';
 
+@injectable()
 export class TreeViewManager {
 	dataProvider: TreeDataItemProvider;
 	treeView: any;
 
-	private static _instance: TreeViewManager;
-
-	static init(): void {
-		TreeViewManager._instance = new TreeViewManager();
-	}
-	
-	static get instance(): TreeViewManager {
-		return TreeViewManager._instance;
-	}
-
-	constructor() {	
+	constructor(
+		@inject(TYPES.dateTimeHelper) 
+		private dateTimeHelper: DateTimeHelper
+	) {	
 		this.dataProvider = new TreeDataItemProvider();
 		this.treeView = vscode.window.createTreeView(GITMARKER_VIEW, {
 			showCollapseAll: true,
@@ -108,7 +104,7 @@ export class TreeViewManager {
 		}
 
 		toolTipItems.push(`${newLine}`);
-		toolTipItems.push(`${TOOLTIP_LASTSYNC}${formatDate(repository.lastSyncDate)}`);
+		toolTipItems.push(`${TOOLTIP_LASTSYNC}${this.dateTimeHelper.formatDate(repository.lastSyncDate)}`);
 
 		return toolTipItems.join(newLine); 
 	}

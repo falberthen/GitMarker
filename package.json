@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -15,7 +15,6 @@
 		"vscode": "^1.58.0"
 	},
 	"activationEvents": [
-		"onCommand:extension.createCategory",
 		"onView:gitmarkerView"
 	],
 	"main": "./out/extension.js",
@@ -97,15 +96,15 @@
 					"light": "resources/light/clone.svg",
 					"dark": "resources/dark/clone.svg"
 				}
-			},			
+			},
 			{
-				"command": "gitmarker.howToSetupToken",
-				"title": "❔ How to setup GitHub personal access token?",
+				"command": "gitmarker.howToCreatePat",
+				"title": "❔ How to create a GitHub PAT?",
 				"category": "GitMarker"
 			},
 			{
-				"command": "gitmarker.setAccessToken",
-				"title": "⚙️ Setup GitHub personal access token",
+				"command": "gitmarker.setupPat",
+				"title": "⚙️ Setup GitHub personal access token (PAT)",
 				"category": "GitMarker"
 			},
 			{
@@ -182,12 +181,12 @@
 					"group": "group@2"
 				},
 				{
-					"command": "gitmarker.setAccessToken",
+					"command": "gitmarker.setupPat",
 					"when": "view == gitmarkerView",
 					"group": "group@3"
 				},
 				{
-					"command": "gitmarker.howToSetupToken",
+					"command": "gitmarker.howToCreatePat",
 					"when": "view == gitmarkerView",
 					"group": "inline@0"
 				}
@@ -202,7 +201,7 @@
 					"command": "gitmarker.removeCategory",
 					"group": "inline@1",
 					"when": "viewItem == categoryItem"
-				},				
+				},
 				{
 					"command": "gitmarker.syncRepository",
 					"group": "inline@0",
@@ -272,6 +271,8 @@
 		"axios": "^0.21.1",
 		"class-transformer": "^0.4.0",
 		"class-validator": "^0.13.1",
-		"luxon": "^2.0.2"
+		"inversify": "^5.1.1",
+		"luxon": "^2.0.2",
+		"reflect-metadata": "^0.1.13"
 	}
 }

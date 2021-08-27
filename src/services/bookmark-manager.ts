@@ -1,31 +1,38 @@
 import * as vscode from 'vscode';
+import { inject } from 'inversify';
+import TYPES from '../commands/base/types';
+import container from '../inversify.config';
 import { CONTEXT_CATEGORY_COUNT, FAVORITE_REPOS_KEY, SET_CONTEXT } from '../consts/application';
 import { ALREADY_EXISTS_MSG, CATEGORY_ALREADY_EXISTS_MSG } from '../consts/messages';
 import { Category } from '../models/category';
 import { CategoriesRepositories } from '../models/categories-repositories';
 import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
-import { LocalStorageService } from './local-storage-service';
+import { LocalStorageManager } from './local-storage-manager';
 import { TreeViewManager } from './tree-view-manager';
 
 export default class BookmarkManager {
-	context: vscode.ExtensionContext;
-	localStorageSvc!: LocalStorageService;
 	categoryRepositories!: CategoriesRepositories;
-
 	private static _instance: BookmarkManager;
 
-	static init(context:  vscode.ExtensionContext): void {
-		BookmarkManager._instance = new BookmarkManager(context);
+	static init(): void {
+		var treeViewMngr = container
+			.get(TYPES.treeViewManager) as TreeViewManager;
+		var localStorageMngr = container
+			.get(TYPES.localStorageManager) as LocalStorageManager;
+		BookmarkManager._instance = new BookmarkManager(treeViewMngr, localStorageMngr);
 	}
 	
 	static get instance(): BookmarkManager {
 		return BookmarkManager._instance;
 	}
-
-	constructor(context: vscode.ExtensionContext) {	
-		this.context = context;
-		this.localStorageSvc = new LocalStorageService(context.workspaceState);
+	
+	constructor(
+		@inject(TYPES.treeViewManager) 
+		private treeViewManager: TreeViewManager,
+		@inject(TYPES.localStorageManager) 
+		private localStorageManager: LocalStorageManager
+	) {			
 		this.loadStoredData();
 	}
 
@@ -49,36 +56,34 @@ export default class BookmarkManager {
 		const category = this.categoryRepositories.categories
 			?.filter(obj => obj.id === categoryId)[0];
 
-		if(category) {
-			selectedRepositories.forEach(selectedRepository => {			
-				// Searching in the global list
-				let repository = this.categoryRepositories
-					?.repositories
-					.filter(r => r.id === selectedRepository.id)[0];
-	
-				if(!repository) {
-					// Adding hard object to main list
-					this.categoryRepositories
-						?.repositories.push(selectedRepository);
-				}
-				else{
-					// Updating existent
-					this.updateRepository(selectedRepository);			
-				}
-	
-				// Searching repo in the category
-				const repositoryInCategory = category
-					?.repositories
-					.filter(repoId => repoId === selectedRepository.id)[0];
-	
-				if(!repositoryInCategory) {
-					// Adding ref into category
-					category.repositories.push(selectedRepository.id);
-				}
-			});
+		selectedRepositories.forEach(selectedRepository => {			
+			// Searching in the global list
+			let repository = this.categoryRepositories
+				?.repositories
+				.filter(r => r.id === selectedRepository.id)[0];
 
-			this.storeAndRefreshProvider();
-		}		
+			if(!repository) {
+				// Adding hard object to main list
+				this.categoryRepositories
+					?.repositories.push(selectedRepository);
+			}
+			else{
+				// Updating existent
+				this.updateRepository(selectedRepository);			
+			}
+
+			// Searching repo in the category
+			const repositoryInCategory = category
+				?.repositories
+				.filter(repoId => repoId === selectedRepository.id)[0];
+
+			if(!repositoryInCategory) {
+				// Adding ref into category
+				category.repositories.push(selectedRepository.id);
+			}
+		});
+
+		this.storeAndRefreshProvider();
 	}
 
 	getRepositoryModelByDataItem(dataItem: TreeDataItem) : GithubRepository | undefined {
@@ -89,7 +94,7 @@ export default class BookmarkManager {
 	}
 
 	loadStoredData() {
-		const storedCategories = this.localStorageSvc
+		const storedCategories = this.localStorageManager
 			.getValue<CategoriesRepositories>(FAVORITE_REPOS_KEY);
 
 		this.categoryRepositories = storedCategories 
@@ -99,7 +104,7 @@ export default class BookmarkManager {
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 			this.categoryRepositories.categories);
 
-		TreeViewManager.instance
+		this.treeViewManager
 			.buildDataProviderItems(this.categoryRepositories);
 	}
 	
@@ -107,32 +112,32 @@ export default class BookmarkManager {
 		const category = this.categoryRepositories.categories
 			?.filter(c => c.name === dataItem.label)[0];
 
-		if(category) {
-			const existingCategory = this.categoryRepositories.categories
-				?.filter(ec => ec.name === newName)[0];
+		const existingCategory = this.categoryRepositories.categories
+			?.filter(ec => ec.name === newName)[0];
 
-			if(existingCategory && category?.name !== newName) {
-				vscode.window
-					.showErrorMessage(`${newName}${ALREADY_EXISTS_MSG}`);
-				return;
-			}
-				
-			category.name = newName;
-			this.storeAndRefreshProvider();
+		if(existingCategory && category?.name !== newName) {
+			vscode.window
+				.showErrorMessage(`${newName}${ALREADY_EXISTS_MSG}`);
+			return;
 		}
+			
+		category.name = newName;
+		this.storeAndRefreshProvider();		
 	}
 
 	removeCategory(dataItem: TreeDataItem) {
 		const category = this.categoryRepositories.categories
 			?.filter(category => category.id === dataItem.id)[0];
 
-		if(category) {
-			const index = this.categoryRepositories.categories
-				?.findIndex(c => c.id === dataItem.id);
-			this.categoryRepositories.categories
-				?.splice(index as number, 1);
+		if(!category) {
+			return;
 		}
 
+		const index = this.categoryRepositories.categories
+			?.findIndex(c => c.id === dataItem.id);
+		this.categoryRepositories.categories
+			?.splice(index as number, 1);
+	
 		this.storeAndRefreshProvider();
 	}
 
@@ -140,14 +145,12 @@ export default class BookmarkManager {
 		const category = this.categoryRepositories.categories
 			?.filter(c => c.id === dataItem.parentId)[0];
 
-		if(category) {
-			const index = category.repositories
-				?.findIndex(r => r === dataItem.customId);
+		const index = category.repositories
+			?.findIndex(r => r === dataItem.customId);
 
-			category.repositories
-				?.splice(index as number, 1);
-			this.storeAndRefreshProvider();
-		}
+		category.repositories
+			?.splice(index as number, 1);
+		this.storeAndRefreshProvider();		
 	}
 
 	updateRepository(updatedRepository: GithubRepository) {
@@ -165,12 +168,12 @@ export default class BookmarkManager {
 
 	storeAndRefreshProvider(){
 		// Store updated values
-		this.localStorageSvc
+		this.localStorageManager
 			.setValue<CategoriesRepositories>(FAVORITE_REPOS_KEY, 
 				this.categoryRepositories);
 
 		// Refreshing all data items	
-		TreeViewManager.instance
+		this.treeViewManager
 			.buildDataProviderItems(this.categoryRepositories);
 
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
