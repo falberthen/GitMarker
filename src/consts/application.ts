@@ -4,6 +4,7 @@ export const GITHUB_TOKEN_DOC = 'https://docs.github.com/en/github/authenticatin
 // Stored keys
 export const FAVORITE_REPOS_KEY = 'favoritedRepos';
 export const ACCESS_TOKEN_SECRET = 'accessToken';
+export const SEARCH_STATUS_BAR = 'searchStatusBarItem';
 
 // View Item keys
 export const VIEW_ITEM_CATEGORY = 'categoryItem';
