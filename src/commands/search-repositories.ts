@@ -12,6 +12,7 @@ import { GitHubApiClient } from '../services/github-api-client';
 import { Category } from '../models/category';
 import { Command } from './base/command';
 import { PersonalAccessTokenManager } from '../services/pat-manager';
+import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';
 
 @injectable()
 export class SearchRepositories implements Command {
@@ -38,16 +39,24 @@ export class SearchRepositories implements Command {
 
 			if(typeof searchTerm !== 'undefined' && searchTerm) {
 				searchTerm = searchTerm.toLowerCase();
+				this.setStatusBarMessage(`Searching for ${searchTerm}...`!);
+
+				const config = vscode.workspace
+					.getConfiguration(GITMARKER_CONFIG);
+	
+				const searchResultsPerPage = config
+					.get(SEARCH_RESULTS_NUMBER);
+
 				const gitHubRepos = await new GitHubApiClient(accessToken)
-					.search(searchTerm);
+					.search(searchTerm, searchResultsPerPage as number);
 
 				if(gitHubRepos.length === 0) {
+					this.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${searchTerm}".`);
 					vscode.window.showInformationMessage(`${NO_REPOS_FOUND_MSG} ${searchTerm}.`);
 					return;
 				}				
 
-				this.setStatusBar(searchTerm!);
-
+				this.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${searchTerm}".`!);
 				const repoDetails = gitHubRepos.map(repoInfo =>  {
 					const label = repoInfo.stargazersCount > 0 
 					? `${repoInfo.name} ⭐${repoInfo.stargazersCount}` 
@@ -68,8 +77,8 @@ export class SearchRepositories implements Command {
 					canPickMany: true,
 					title: `${gitHubRepos.length} items found for ${searchTerm}`,
 				})
-				.then((result) => {                 
-					if(result) {
+				.then((result) => {        					
+					if(result) {						
 						let resultIds = result.map(a => a.id);
 						const selectedRepos = gitHubRepos
 							.filter(repo => resultIds.includes(repo.id));
@@ -91,7 +100,7 @@ export class SearchRepositories implements Command {
 						});
 					}
 				});			
-			}
+			}			
 		}
 	}
 
@@ -113,7 +122,7 @@ export class SearchRepositories implements Command {
 		});
 	}
 
-	setStatusBar(term: string) {
-		vscode.window.setStatusBarMessage(`${LAST_SEARCHED_TERM_MSG} "${term}".`);
+	setStatusBarMessage(message: string) {
+		vscode.window.setStatusBarMessage(message);
 	}	
 }

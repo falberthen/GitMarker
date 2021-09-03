@@ -5,7 +5,7 @@ import { inject, injectable} from 'inversify';
 import { CLEAR_ALL } from '../consts/commands';
 import { CLEAR_ALL_MSG, NO_MSG, YES_MSG } from '../consts/messages';
 import { Command } from './base/command';
-import { LocalStorageManager } from '../services/local-storage-manager';
+import { DataStorageManager } from '../services/data-storage-manager';
 import { FAVORITE_REPOS_KEY } from '../consts/application';
 
 @injectable()
@@ -13,8 +13,8 @@ export class ClearAll implements Command {
 
 	constructor
 	(
-		@inject(TYPES.localStorageManager) 
-		private localStorageManager: LocalStorageManager
+		@inject(TYPES.dataStorageManager) 
+		private dataStorageManager: DataStorageManager
 	) {}
 
 	get id() {
@@ -29,7 +29,7 @@ export class ClearAll implements Command {
 			)
 			.then((answer) => {
 				if (answer === 'Yes') {
-					this.localStorageManager
+					this.dataStorageManager
 						.clearValues(FAVORITE_REPOS_KEY);
 						
 					BookmarkManager.instance

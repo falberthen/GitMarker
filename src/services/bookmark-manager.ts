@@ -8,7 +8,7 @@ import { Category } from '../models/category';
 import { CategoriesRepositories } from '../models/categories-repositories';
 import { GithubRepository } from '../models/github-repository';
 import { TreeDataItem } from '../models/tree-data-item';
-import { LocalStorageManager } from './local-storage-manager';
+import { DataStorageManager } from './data-storage-manager';
 import { TreeViewManager } from './tree-view-manager';
 
 export default class BookmarkManager {
@@ -17,10 +17,10 @@ export default class BookmarkManager {
 
 	static init(): void {
 		var treeViewMngr = container
-			.get(TYPES.treeViewManager) as TreeViewManager;
-		var localStorageMngr = container
-			.get(TYPES.localStorageManager) as LocalStorageManager;
-		BookmarkManager._instance = new BookmarkManager(treeViewMngr, localStorageMngr);
+			.get<TreeViewManager>(TYPES.treeViewManager);
+		var dataStorageManager = container
+			.get<DataStorageManager>(TYPES.dataStorageManager);
+		BookmarkManager._instance = new BookmarkManager(treeViewMngr, dataStorageManager);
 	}
 	
 	static get instance(): BookmarkManager {
@@ -30,8 +30,8 @@ export default class BookmarkManager {
 	constructor(
 		@inject(TYPES.treeViewManager) 
 		private treeViewManager: TreeViewManager,
-		@inject(TYPES.localStorageManager) 
-		private localStorageManager: LocalStorageManager
+		@inject(TYPES.dataStorageManager) 
+		private dataStorageManager: DataStorageManager
 	) {			
 		this.loadStoredData();
 	}
@@ -94,7 +94,7 @@ export default class BookmarkManager {
 	}
 
 	loadStoredData() {
-		const storedCategories = this.localStorageManager
+		const storedCategories = this.dataStorageManager
 			.getValue<CategoriesRepositories>(FAVORITE_REPOS_KEY);
 
 		this.categoryRepositories = storedCategories 
@@ -168,7 +168,7 @@ export default class BookmarkManager {
 
 	storeAndRefreshProvider(){
 		// Store updated values
-		this.localStorageManager
+		this.dataStorageManager
 			.setValue<CategoriesRepositories>(FAVORITE_REPOS_KEY, 
 				this.categoryRepositories);
 

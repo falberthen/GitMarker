@@ -5,7 +5,7 @@ import { inject, injectable} from 'inversify';
 import { FAVORITE_REPOS_KEY } from '../consts/application';
 import { ERROR_EXPORTING_MSG } from '../consts/messages';
 import { saveDialogOptions } from '../utils/dialog-options';
-import { LocalStorageManager } from '../services/local-storage-manager';
+import { DataStorageManager } from '../services/data-storage-manager';
 import { EXPORT_BOOKMARKS } from '../consts/commands';
 import { Category } from '../models/category';
 import { Command } from './base/command';
@@ -15,8 +15,8 @@ export class ExportBookmarks implements Command {
 
 	constructor
 	(
-		@inject(TYPES.localStorageManager) 
-		private localStorageManager: LocalStorageManager
+		@inject(TYPES.dataStorageManager) 
+		private dataStorageManager: DataStorageManager
 	) {}
 	
 	get id() {
@@ -27,7 +27,7 @@ export class ExportBookmarks implements Command {
 		await vscode.window.showSaveDialog(saveDialogOptions)
 		.then(file => {
 			if(file) {
-				const storedCategories = this.localStorageManager
+				const storedCategories = this.dataStorageManager
 					.getValue<Category[]>(FAVORITE_REPOS_KEY);
 
 				const serializedObj = JSON
