@@ -23,14 +23,14 @@ export class GitHubApiClient {
 
 		 this.accessToken = accessToken;
 		 this.dateTimeHelper = container
-			.get(TYPES.dateTimeHelper) as DateTimeHelper;
+			.get<DateTimeHelper>(TYPES.dateTimeHelper);
 	}
 
-	async search(term: string) {
+	async search(term: string, perPageRecords: number) {
 		let repos: GithubRepository[] = [];
 
 		if(this.accessToken) {
-			const url = `/search/repositories?q=${term}&access_token=${this.accessToken}`;
+			const url = `/search/repositories?q=${term}+is:public&per_page=${perPageRecords};&access_token=${this.accessToken}`;
 
 			try {
 				await this.apiClient.get(url)

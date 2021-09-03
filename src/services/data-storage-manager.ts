@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import { Memento } from "vscode";
 
 @injectable()
-export class LocalStorageManager {
+export class DataStorageManager {
 	storage: Memento;
 
 	constructor() {
@@ -15,11 +15,11 @@ export class LocalStorageManager {
 		return this.storage.get<T>(key);
 	}
 
-	public setValue<T>(key : string, value : T | undefined) {
+	public setValue<T>(key : string, value : T) {
 		this.storage.update(key, value);
 	}
 
 	public clearValues(key : string) {
-		this.storage.update(key, null);
+		this.storage.update(key, undefined);
 	}
 }

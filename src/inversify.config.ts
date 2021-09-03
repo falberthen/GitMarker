@@ -17,7 +17,7 @@ import { HowToCreatePat } from './commands/how-to-create-pat';
 import { Command } from './commands/base/command';
 import { TreeViewManager } from './services/tree-view-manager';
 import { PersonalAccessTokenManager } from './services/pat-manager';
-import { LocalStorageManager } from './services/local-storage-manager';
+import { DataStorageManager } from './services/data-storage-manager';
 import { DateTimeHelper } from './utils/datetime-helper';
 
 const container = new Container();
@@ -38,7 +38,7 @@ container.bind<Command>(TYPES.command).to(HowToCreatePat);
 container.bind<CommandsManager>(TYPES.commandManager).to(CommandsManager);
 container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);
 container.bind<PersonalAccessTokenManager>(TYPES.accessTokenManager).to(PersonalAccessTokenManager);
-container.bind<LocalStorageManager>(TYPES.localStorageManager).to(LocalStorageManager);
+container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManager);
 container.bind<DateTimeHelper>(TYPES.dateTimeHelper).to(DateTimeHelper);
 
 export default container;

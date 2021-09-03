@@ -1,7 +1,7 @@
 const TYPES = {
    command: Symbol("Command"),
    commandManager: Symbol("CommandManager"),
-   localStorageManager: Symbol("LocalStorageManager"),
+   dataStorageManager: Symbol("DataStorageManager"),
    treeViewManager: Symbol("TreeViewManager"),
    accessTokenManager: Symbol("AccessTokenManager"),
    dateTimeHelper: Symbol("DateTimeHelper")

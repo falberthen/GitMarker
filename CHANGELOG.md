@@ -47,3 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exchanged centralized search icon.
 
 --------------------------------------------------------------------------------------------------------
+
+## [1.2.0] - 2021-09-02
+### Added
+
+- Settings for defining the number of search results per page when searching repositories
+
+--------------------------------------------------------------------------------------------------------

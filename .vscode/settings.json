@@ -10,5 +10,5 @@
    "typescript.tsc.autoDetect": "on",
    "git.ignoreLimitWarning": false,
    "editor.detectIndentation": true,
-   "editor.tabSize": 3
+   "editor.tabSize": 2
 }
