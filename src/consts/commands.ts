@@ -9,4 +9,5 @@ export const EXPORT_BOOKMARKS = 'gitmarker.exportBookmarks';
 export const IMPORT_BOOKMARKS = 'gitmarker.importBookmarks';
 export const SETUP_PAT = 'gitmarker.setupPat';
 export const HOW_TO_CREATE_PAT = 'gitmarker.howToCreatePat';
-export const CLEAR_ALL = 'gitmarker.clearAll';
+export const CLEAR_ALL_CATEGORIES = 'gitmarker.clearAllCategories';
+export const DELETE_PAT = 'gitmarker.clearPAT';

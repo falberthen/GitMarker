@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
---------------------------------------------------------------------------------------------------------
+<br>
 
 ## [0.1.0] - 2021-08-14
 ### Added
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Better grouping for "..." view/title menu.
 
---------------------------------------------------------------------------------------------------------
+<br>
 
 ## [1.0.0] - 2021-08-19
 ### Added
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the way the data is organized and stored, resulting in a way smaller export file.
 - Centralized the search on GitHub at the top navigation menu for a better UI.
 
---------------------------------------------------------------------------------------------------------
+<br>
 
 ## [1.1.0] - 2021-08-20
 ### Added
@@ -46,11 +46,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exchanged centralized search icon.
 
---------------------------------------------------------------------------------------------------------
+<br>
 
 ## [1.2.0] - 2021-09-02
 ### Added
 
 - Settings for defining the number of search results per page when searching repositories
 
---------------------------------------------------------------------------------------------------------
+<br>
+
+## [1.3.0] - 2021-09-03
+### Added
+
+- Implemented *Clear PAT* option
+
+### Changed
+
+- Removed the requirement to have a PAT for searching
+

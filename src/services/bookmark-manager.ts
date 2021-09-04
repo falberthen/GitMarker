@@ -86,13 +86,6 @@ export default class BookmarkManager {
 		this.storeAndRefreshProvider();
 	}
 
-	getRepositoryModelByDataItem(dataItem: TreeDataItem) : GithubRepository | undefined {
-		const repository = this.categoryRepositories.repositories
-			?.filter(obj => obj.id === dataItem.customId)[0];
-
-		return repository;
-	}
-
 	loadStoredData() {
 		const storedCategories = this.dataStorageManager
 			.getValue<CategoriesRepositories>(FAVORITE_REPOS_KEY);

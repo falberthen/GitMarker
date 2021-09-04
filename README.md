@@ -38,9 +38,13 @@ In addition to offering quick access to your bookmarked repositories, it highlig
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/settings.png"> 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone-into-folder.png"> 
 
-## Requirements
+## Notes
 
-Since GitMarker uses the [GitHub API](https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api) for searching repositories, you need to provide a [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token). It will be required when using the search feature for the first time, but also can be set up anytime. Once it's all set, GitMarker stores it in the <b>secret storage</b> to ensure your token will not be read or misused by other extensions.
+GitMarker uses [GitHub API](https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api) for its features, like searching and synchronizing repositories. According to the documentation:
+
+> Unauthenticated clients can make 60 requests per hour. To get more requests per hour, we'll need to authenticate. In fact, doing anything interesting with the GitHub API requires authentication.
+
+I recommend you need to set a [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on GitMarker to have the best experience. Once it's all set, GitMarker stores it in the <b>secret storage</b> to ensure your token will not be read or misused by other extensions.
 
 ## Change Log
 

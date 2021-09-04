@@ -12,13 +12,15 @@ import { RemoveRepository } from './commands/remove-repository';
 import { SetAccessToken } from './commands/setup-pat';
 import { ExportBookmarks } from './commands/export-bookmarks';
 import { ImportBookmarks } from './commands/import-bookmarks';
-import { ClearAll } from './commands/clear-all';
+import { ClearAllCategories } from './commands/clear-all-categories';
 import { HowToCreatePat } from './commands/how-to-create-pat';
 import { Command } from './commands/base/command';
 import { TreeViewManager } from './services/tree-view-manager';
 import { PersonalAccessTokenManager } from './services/pat-manager';
 import { DataStorageManager } from './services/data-storage-manager';
 import { DateTimeHelper } from './utils/datetime-helper';
+import { GitHubApiClient } from './services/github-api-client';
+import { ClearPAT } from './commands/clear-pat';
 
 const container = new Container();
 
@@ -32,13 +34,15 @@ container.bind<Command>(TYPES.command).to(RemoveRepository);
 container.bind<Command>(TYPES.command).to(SetAccessToken);
 container.bind<Command>(TYPES.command).to(ExportBookmarks);
 container.bind<Command>(TYPES.command).to(ImportBookmarks);
-container.bind<Command>(TYPES.command).to(ClearAll);
+container.bind<Command>(TYPES.command).to(ClearAllCategories);
+container.bind<Command>(TYPES.command).to(ClearPAT);
 container.bind<Command>(TYPES.command).to(HowToCreatePat);
 
 container.bind<CommandsManager>(TYPES.commandManager).to(CommandsManager);
 container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);
-container.bind<PersonalAccessTokenManager>(TYPES.accessTokenManager).to(PersonalAccessTokenManager);
+container.bind<PersonalAccessTokenManager>(TYPES.patManager).to(PersonalAccessTokenManager);
 container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManager);
 container.bind<DateTimeHelper>(TYPES.dateTimeHelper).to(DateTimeHelper);
+container.bind<GitHubApiClient>(TYPES.gitHubApiClient).to(GitHubApiClient);
 
 export default container;
