@@ -3,8 +3,9 @@ const TYPES = {
    commandManager: Symbol("CommandManager"),
    dataStorageManager: Symbol("DataStorageManager"),
    treeViewManager: Symbol("TreeViewManager"),
-   accessTokenManager: Symbol("AccessTokenManager"),
-   dateTimeHelper: Symbol("DateTimeHelper")
+   patManager: Symbol("PatManager"),
+   dateTimeHelper: Symbol("DateTimeHelper"),
+   gitHubApiClient: Symbol("GitHubApiClient")
 };
 
 export default TYPES;

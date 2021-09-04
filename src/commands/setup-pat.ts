@@ -14,7 +14,7 @@ export class SetAccessToken implements Command {
 
 	constructor
 	(
-		@inject(TYPES.accessTokenManager) 
+		@inject(TYPES.patManager) 
 		private accessTokenManager: PersonalAccessTokenManager
 	) {}
 
@@ -26,9 +26,9 @@ export class SetAccessToken implements Command {
 		await vscode.window.showInputBox({
 			value: '',
 			placeHolder: TYPE_ACCESS_TOKEN_PLACEHOLDER,
-		}).then(token => {
+		}).then(async token => {
 			if(typeof token !== 'undefined' && token) {
-				this.accessTokenManager
+				await this.accessTokenManager
 					.storeToken(token);
 				vscode.window.showInformationMessage(ACCESS_TOKEN_SET_MSG);
 			}
