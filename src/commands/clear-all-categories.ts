@@ -13,6 +13,8 @@ export class ClearAllCategories implements Command {
 
 	constructor
 	(
+		@inject(TYPES.bookmarkManager) 
+		private bookmarkManager: BookmarkManager,
 		@inject(TYPES.dataStorageManager) 
 		private dataStorageManager: DataStorageManager
 	) {}
@@ -32,7 +34,7 @@ export class ClearAllCategories implements Command {
 					this.dataStorageManager
 						.clearValues(FAVORITE_REPOS_KEY);
 						
-					BookmarkManager.instance
+					this.bookmarkManager
 						.loadStoredData();
 				}
 			});

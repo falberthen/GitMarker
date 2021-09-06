@@ -12,6 +12,8 @@ import { Command } from './base/command';
 export class SyncRepository implements Command {
 	constructor
 	(
+		@inject(TYPES.bookmarkManager) 
+		private bookmarkManager: BookmarkManager,
 		@inject(TYPES.gitHubApiClient) 
 		private githubApiClient: GitHubApiClient
 	) {}
@@ -27,7 +29,7 @@ export class SyncRepository implements Command {
 			.getById(repositoryId)
 			.then(updatedRepository => {
 				if(updatedRepository) {
-					BookmarkManager.instance
+					this.bookmarkManager
 						.updateRepository(updatedRepository);						
 					vscode.window
 						.showInformationMessage(`${dataItem.label} ${REPO_SYNC_SUCCESS_MSG}`);

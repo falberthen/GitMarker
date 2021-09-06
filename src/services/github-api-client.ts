@@ -19,13 +19,16 @@ export class GitHubApiClient {
 					.get<DateTimeHelper>(TYPES.dateTimeHelper);
 	}
 
-	async search(term: string, perPageRecords: number) {
-		let repos: GithubRepository[] = [];
-		const url = `/search/repositories?q=${term}+is:public&per_page=${perPageRecords}`;
+	async search(term: string, perPageRecords: number, pageNumber: number) : Promise<ISearchResult> {
+
+		const queryString = 'q=' + encodeURIComponent(`${term}`);
+		const url = `/search/repositories?${queryString}+is:public&per_page=${perPageRecords}&page=${pageNumber}`;
 
 		const client = await this.buildAxiosClient();
-		await client.get(url).then((response) => {			
-			repos = response.data.items.map((val: any) => ({
+		let total = 0;
+		const data = await client.get(url).then((response) => {
+			total = response.data.total_count;	
+			return response.data.items.map((val: any) => ({
 				id: val.id,
 				name: val.name,
 				fullName: val.full_name,
@@ -37,10 +40,10 @@ export class GitHubApiClient {
 				forks: val.forks,
 				license: val.license,
 				lastSyncDate: this.dateTimeHelper.getDateTimeNow()
-			}));											
+			}));						
 		})
 		.catch(error => {
-			var response = error.response;
+			const response = error.response;
 			if(response){
 				vscode.window.showErrorMessage(error.response.data.message);
 				if(response.status === 403) {
@@ -48,8 +51,12 @@ export class GitHubApiClient {
 				}
 			}
 		});
-	
-		return repos;
+
+		return { 
+			page:pageNumber, 
+			total: total,  
+			repositories: data 
+		};
 	}
 
 	async getById(repositoryId: string) {
@@ -70,7 +77,7 @@ export class GitHubApiClient {
 			repo.lastSyncDate = this.dateTimeHelper.getDateTimeNow();
 		})
 		.catch(error => {
-			var response = error.response;
+			const response = error.response;
 			if(response){
 				vscode.window.showErrorMessage(error.response.data.message);
 				if(response.status === 403) {
@@ -100,4 +107,10 @@ export class GitHubApiClient {
 		
 		return axios.create(config);
 	}	
+}
+
+export interface ISearchResult {
+	total: number,
+	page: number,
+	repositories: GithubRepository[]
 }

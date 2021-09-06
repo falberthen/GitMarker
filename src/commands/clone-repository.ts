@@ -58,7 +58,7 @@ export class CloneRepository implements Command {
    }
 
    executeTerminalCmd(dataItem: TreeDataItem, path: string) {
-      var terminal = vscode.window.terminals
+      let terminal = vscode.window.terminals
          .find(e=>e.name === TERMINAL_KEY);
 
       if(!terminal) {

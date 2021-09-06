@@ -1,14 +1,21 @@
 import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
-import { injectable} from 'inversify';
+import { inject, injectable} from 'inversify';
 import { TYPE_NAME_CATEGORY_MSG } from '../consts/messages';
 import { TreeDataItem } from '../models/tree-data-item';
 import { RENAME_CATEGORY } from '../consts/commands';
 import { Command } from './base/command';
+import TYPES from './base/types';
 
 @injectable()
 export class RenameCategory implements Command {
 
+	constructor
+	(
+		@inject(TYPES.bookmarkManager) 
+		private bookmarkManager: BookmarkManager,
+	) {}
+	
 	get id() {
 		return RENAME_CATEGORY;
 	}
@@ -20,7 +27,7 @@ export class RenameCategory implements Command {
 		});
 	
 		if(typeof newName !== 'undefined' && newName) {
-			BookmarkManager.instance
+			this.bookmarkManager
 				.renameCategory(dataItem, newName);
 		}
 	}
