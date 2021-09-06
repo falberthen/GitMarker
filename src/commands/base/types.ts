@@ -5,7 +5,8 @@ const TYPES = {
    treeViewManager: Symbol("TreeViewManager"),
    patManager: Symbol("PatManager"),
    dateTimeHelper: Symbol("DateTimeHelper"),
-   gitHubApiClient: Symbol("GitHubApiClient")
+   gitHubApiClient: Symbol("GitHubApiClient"),
+   bookmarkManager: Symbol("BookmarkManager")
 };
 
 export default TYPES;

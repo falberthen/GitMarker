@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import TYPES from '../commands/base/types';
-import container from '../inversify.config';
 import { CONTEXT_CATEGORY_COUNT, FAVORITE_REPOS_KEY, SET_CONTEXT } from '../consts/application';
 import { ALREADY_EXISTS_MSG, CATEGORY_ALREADY_EXISTS_MSG } from '../consts/messages';
 import { Category } from '../models/category';
@@ -11,22 +10,10 @@ import { TreeDataItem } from '../models/tree-data-item';
 import { DataStorageManager } from './data-storage-manager';
 import { TreeViewManager } from './tree-view-manager';
 
+@injectable()
 export default class BookmarkManager {
 	categoryRepositories!: CategoriesRepositories;
-	private static _instance: BookmarkManager;
 
-	static init(): void {
-		var treeViewMngr = container
-			.get<TreeViewManager>(TYPES.treeViewManager);
-		var dataStorageManager = container
-			.get<DataStorageManager>(TYPES.dataStorageManager);
-		BookmarkManager._instance = new BookmarkManager(treeViewMngr, dataStorageManager);
-	}
-	
-	static get instance(): BookmarkManager {
-		return BookmarkManager._instance;
-	}
-	
 	constructor(
 		@inject(TYPES.treeViewManager) 
 		private treeViewManager: TreeViewManager,

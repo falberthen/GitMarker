@@ -10,19 +10,26 @@ import { GithubRepository } from '../models/github-repository';
 import { openDialogOptions } from '../utils/dialog-options';
 import { CategoriesRepositories } from '../models/categories-repositories';
 import { IMPORT_BOOKMARKS } from '../consts/commands';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Command } from './base/command';
 import BookmarkManager from '../services/bookmark-manager';
+import TYPES from './base/types';
 
 @injectable()
 export class ImportBookmarks implements Command {
 
+	constructor
+	(
+		@inject(TYPES.bookmarkManager) 
+		private bookmarkManager: BookmarkManager,
+	) {}
+	
 	get id() {
 		return IMPORT_BOOKMARKS;
 	}
 
 	async execute() {
-		const hasRepositories = BookmarkManager.instance
+		const hasRepositories = this.bookmarkManager
 			.categoryRepositories.repositories.length > 0;
 
 		if(hasRepositories) {
@@ -75,8 +82,8 @@ export class ImportBookmarks implements Command {
 						categoriesRepositories.repositories = validRepositories;                        
 					}
 				}).finally(() => {
-					BookmarkManager.instance.categoryRepositories = categoriesRepositories;
-					BookmarkManager.instance.storeAndRefreshProvider();
+					this.bookmarkManager.categoryRepositories = categoriesRepositories;
+					this.bookmarkManager.storeAndRefreshProvider();
 				});
 			});
 		} catch (error) {

@@ -21,6 +21,7 @@ import { DataStorageManager } from './services/data-storage-manager';
 import { DateTimeHelper } from './utils/datetime-helper';
 import { GitHubApiClient } from './services/github-api-client';
 import { ClearPAT } from './commands/clear-pat';
+import BookmarkManager from './services/bookmark-manager';
 
 const container = new Container();
 
@@ -44,5 +45,6 @@ container.bind<PersonalAccessTokenManager>(TYPES.patManager).to(PersonalAccessTo
 container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManager);
 container.bind<DateTimeHelper>(TYPES.dateTimeHelper).to(DateTimeHelper);
 container.bind<GitHubApiClient>(TYPES.gitHubApiClient).to(GitHubApiClient);
+container.bind<BookmarkManager>(TYPES.bookmarkManager).to(BookmarkManager).inSingletonScope();
 
 export default container;
