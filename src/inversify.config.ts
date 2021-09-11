@@ -21,6 +21,8 @@ import { DataStorageManager } from './services/data-storage-manager';
 import { DateTimeHelper } from './utils/datetime-helper';
 import { GitHubApiClient } from './services/github-api-client';
 import { ClearPAT } from './commands/clear-pat';
+import { SearchResultManager } from './services/search-result-manager';
+import { PickCachedResults } from './commands/pick-cached-results';
 import BookmarkManager from './services/bookmark-manager';
 
 const container = new Container();
@@ -38,6 +40,7 @@ container.bind<Command>(TYPES.command).to(ImportBookmarks);
 container.bind<Command>(TYPES.command).to(ClearAllCategories);
 container.bind<Command>(TYPES.command).to(ClearPAT);
 container.bind<Command>(TYPES.command).to(HowToCreatePat);
+container.bind<Command>(TYPES.command).to(PickCachedResults);
 
 container.bind<CommandsManager>(TYPES.commandManager).to(CommandsManager);
 container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);
@@ -46,5 +49,6 @@ container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManag
 container.bind<DateTimeHelper>(TYPES.dateTimeHelper).to(DateTimeHelper);
 container.bind<GitHubApiClient>(TYPES.gitHubApiClient).to(GitHubApiClient);
 container.bind<BookmarkManager>(TYPES.bookmarkManager).to(BookmarkManager).inSingletonScope();
+container.bind<SearchResultManager>(TYPES.searchResultManager).to(SearchResultManager).inSingletonScope();
 
 export default container;

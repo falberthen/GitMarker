@@ -8,7 +8,7 @@ import { SETUP_PAT } from '../consts/commands';
 
 @injectable()
 export class PersonalAccessTokenManager {
-	secretStorage: SecretStorage;
+	private secretStorage: SecretStorage;
 
 	constructor(){
 		this.secretStorage = ContextManager.instance

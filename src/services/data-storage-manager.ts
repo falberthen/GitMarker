@@ -4,7 +4,7 @@ import { Memento } from "vscode";
 
 @injectable()
 export class DataStorageManager {
-	storage: Memento;
+	private storage: Memento;
 
 	constructor() {
 		this.storage = ContextManager.instance.
