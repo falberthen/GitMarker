@@ -12,7 +12,7 @@ import { TreeViewManager } from './tree-view-manager';
 
 @injectable()
 export default class BookmarkManager {
-	categoryRepositories!: CategoriesRepositories;
+	categoryRepositories: CategoriesRepositories | undefined;
 
 	constructor(
 		@inject(TYPES.treeViewManager) 
@@ -25,7 +25,7 @@ export default class BookmarkManager {
 
 	addCategory(categoryName: string) {      
 		const newCategory = new Category(categoryName);
-		const existingCategory = this.categoryRepositories.categories
+		const existingCategory = this.categoryRepositories!.categories
 			?.filter(n => n.name === categoryName)[0];
 
 		if(existingCategory) {
@@ -34,13 +34,13 @@ export default class BookmarkManager {
 			return;						
 		}
 
-		this.categoryRepositories.categories
+		this.categoryRepositories!.categories
 			?.push(newCategory);
 		this.storeAndRefreshProvider();
 	}
 
 	bookmarkRepositories(categoryId: string, selectedRepositories: GithubRepository[]) { 
-		const category = this.categoryRepositories.categories
+		const category = this.categoryRepositories!.categories
 			?.filter(obj => obj.id === categoryId)[0];
 
 		selectedRepositories.forEach(selectedRepository => {			
@@ -89,10 +89,10 @@ export default class BookmarkManager {
 	}
 	
 	renameCategory(dataItem: TreeDataItem, newName: string) {
-		const category = this.categoryRepositories.categories
-			?.filter(c => c.name === dataItem.label)[0];
+		const category = this.categoryRepositories!.categories
+			?.filter(c => c.id === dataItem.id)[0];
 
-		const existingCategory = this.categoryRepositories.categories
+		const existingCategory = this.categoryRepositories!.categories
 			?.filter(ec => ec.name === newName)[0];
 
 		if(existingCategory && category?.name !== newName) {
@@ -106,42 +106,61 @@ export default class BookmarkManager {
 	}
 
 	removeCategory(dataItem: TreeDataItem) {
-		const category = this.categoryRepositories.categories
+		const category = this.categoryRepositories!.categories
 			?.filter(category => category.id === dataItem.id)[0];
 
 		if(!category) {
 			return;
 		}
 
-		const index = this.categoryRepositories.categories
+		const index = this.categoryRepositories!.categories
 			?.findIndex(c => c.id === dataItem.id);
-		this.categoryRepositories.categories
+		this.categoryRepositories!.categories
 			?.splice(index as number, 1);
 	
 		this.storeAndRefreshProvider();
 	}
 
 	removeRepository(dataItem: TreeDataItem) {
-		const category = this.categoryRepositories.categories
+		// Removing it from the category
+		const category = this.categoryRepositories!.categories
 			?.filter(c => c.id === dataItem.parentId)[0];
-
 		const index = category.repositories
 			?.findIndex(r => r === dataItem.customId);
-
 		category.repositories
 			?.splice(index as number, 1);
+
+		// If no other ocurrences, hard remove it
+		const ocurrences: string[] = [];
+		this.categoryRepositories!.categories.forEach(category => {
+			const index = category.repositories
+				?.findIndex(r => r === dataItem.customId);
+			if(index >= 0) {
+				ocurrences.push(dataItem.customId);
+			}
+		});
+
+		if(ocurrences.length === 0) {
+			const existingRepository = this.categoryRepositories!.repositories
+				?.filter(c => c.id === dataItem.customId)[0];
+			let index = this.categoryRepositories!.repositories
+				.indexOf(existingRepository);
+			this.categoryRepositories!.repositories
+				?.splice(index as number, 1);
+		}
+
 		this.storeAndRefreshProvider();		
 	}
 
 	updateRepository(updatedRepository: GithubRepository) {
-		const existingRepository = this.categoryRepositories.repositories
+		const existingRepository = this.categoryRepositories!.repositories
 			?.filter(c => c.id === updatedRepository.id)[0];
 
 		if(existingRepository) {
-			let index = this.categoryRepositories.repositories
+			let index = this.categoryRepositories!.repositories
 				.indexOf(existingRepository);
 
-			this.categoryRepositories.repositories[index] = updatedRepository;
+			this.categoryRepositories!.repositories[index] = updatedRepository;
 			this.storeAndRefreshProvider();
 		}
 	}
@@ -150,13 +169,13 @@ export default class BookmarkManager {
 		// Store updated values
 		this.dataStorageManager
 			.setValue<CategoriesRepositories>(FAVORITE_REPOS_KEY, 
-				this.categoryRepositories);
+				this.categoryRepositories!);
 
 		// Refreshing all data items	
 		this.treeViewManager
-			.buildDataProviderItems(this.categoryRepositories);
+			.buildDataProviderItems(this.categoryRepositories!);
 
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
-			this.categoryRepositories.categories.length);
+			this.categoryRepositories!.categories.length);
 	}
 }

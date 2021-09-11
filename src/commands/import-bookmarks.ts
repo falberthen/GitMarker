@@ -30,7 +30,7 @@ export class ImportBookmarks implements Command {
 
 	async execute() {
 		const hasRepositories = this.bookmarkManager
-			.categoryRepositories.repositories.length > 0;
+			.categoryRepositories!.repositories.length > 0;
 
 		if(hasRepositories) {
 			vscode.window

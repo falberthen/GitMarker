@@ -12,3 +12,4 @@ export const SETUP_PAT = 'gitmarker.setupPat';
 export const HOW_TO_CREATE_PAT = 'gitmarker.howToCreatePat';
 export const CLEAR_ALL_CATEGORIES = 'gitmarker.clearAllCategories';
 export const DELETE_PAT = 'gitmarker.clearPAT';
+export const AUTO_SYNC_REPOSITORIES = 'gitmarker.autoSyncRepositories';

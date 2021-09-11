@@ -35,7 +35,6 @@ export class TreeViewManager {
 	buildDataProviderItems(categoriesRepositories: CategoriesRepositories) {
 		if(categoriesRepositories) {			
 			const dataItems: TreeDataItem[] = [];
-
 			categoriesRepositories.categories.forEach(category => {
 				const categoryRepositories: TreeDataItem[] = [];
 				category.repositories.forEach(repositoryId => {

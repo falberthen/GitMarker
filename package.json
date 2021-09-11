@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -34,7 +34,12 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Always use default clone path."
-				}
+				},
+				"gitmarker.enableAutoSync": {
+					"type": "boolean",
+					"default": false,
+					"description": "Synchronize my bookmarks every time the extension is activated."
+				}				
 			}
 		},
 		"commands": [
@@ -85,7 +90,7 @@
 			},
 			{
 				"command": "gitmarker.syncRepository",
-				"title": "Sync repository",
+				"title": "Synchronize repository",
 				"category": "GitMarker",
 				"icon": {
 					"light": "resources/refresh.svg",

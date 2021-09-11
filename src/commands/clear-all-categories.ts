@@ -33,7 +33,7 @@ export class ClearAllCategories implements Command {
 				if (answer === 'Yes') {
 					this.dataStorageManager
 						.clearValues(FAVORITE_REPOS_KEY);
-						
+					this.bookmarkManager.categoryRepositories = undefined;
 					this.bookmarkManager
 						.loadStoredData();
 				}

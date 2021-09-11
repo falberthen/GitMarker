@@ -7,6 +7,7 @@ import { REMOVE_CATEGORY } from '../consts/commands';
 import { TreeDataItem } from '../models/tree-data-item';
 import { Command } from './base/command';
 import TYPES from './base/types';
+import { Category } from '../models/category';
 
 @injectable()
 export class RemoveCategory implements Command {
@@ -22,9 +23,13 @@ export class RemoveCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
+
+		const existingCategory : Category = this.bookmarkManager.categoryRepositories!.categories
+			?.filter(ec => ec.id === dataItem.id)[0];
+			
 		vscode.window
 		.showInformationMessage(
-			`${SURE_REMOVING_MSG} ${dataItem.label}?`,
+			`${SURE_REMOVING_MSG} ${existingCategory.name}?`,
 			...[YES_MSG, NO_MSG]
 		)
 		.then((answer) => {

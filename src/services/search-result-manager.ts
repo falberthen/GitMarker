@@ -12,25 +12,25 @@ import TYPES from '../commands/base/types';
 
 @injectable()
 export class SearchResultManager {
-  private searchResults: ISearchResult[] = [];
+	private searchResults: ISearchResult[] = [];
 	private quickPick: vscode.QuickPick<RepoPickItem> | undefined;
-  private pageSelectedItems: PageSelectedItems[] = [];
+	private pageSelectedItems: PageSelectedItems[] = [];
 	private totalResults: number;
-  private currentPage: number;
+	private currentPage: number;
 	private totalPages: number;
-  private resultsPerPage: number | undefined;
-  private searchTerm: string | undefined;
+	private resultsPerPage: number | undefined;
+	private searchTerm: string | undefined;
 
-  constructor(
+	constructor(
 		@inject(TYPES.bookmarkManager) 
 		private bookmarkManager: BookmarkManager,
 		@inject(TYPES.gitHubApiClient) 
 		private githubApiClient: GitHubApiClient,
-  ) {
-    this.totalResults = 0;
-    this.totalPages = 0;
+	) {
+		this.totalResults = 0;
+		this.totalPages = 0;
 		this.currentPage = 0;
-  }
+	}
 
   setSearchResults(searchTerm: string, searchResult: ISearchResult) {
     this.initializeValues();
@@ -42,7 +42,7 @@ export class SearchResultManager {
 
   async pickRepository(page: number) {		
     this.currentPage = page;
-    var pageResult = this.searchResults.filter(r=>r.page === page)[0];
+    const pageResult = this.searchResults.filter(r=>r.page === page)[0];
     if(pageResult) {
       // Picking a repository from the result list
       let repoPickItems = this.mapToPickItem(pageResult.repositories);
@@ -64,8 +64,8 @@ export class SearchResultManager {
 
   private initializePicker(repoPickItems: RepoPickItem[]) {
     this.resultsPerPage = vscode.workspace
-				.getConfiguration(GITMARKER_CONFIG)
-				.get(SEARCH_RESULTS_NUMBER) as number;
+			.getConfiguration(GITMARKER_CONFIG)
+			.get(SEARCH_RESULTS_NUMBER) as number;
         
     this.quickPick = this.buildQuickPicker();
     this.quickPick.buttons = this.buildQuickPickButtons();
@@ -255,37 +255,35 @@ export class SearchResultManager {
 
 	private async onDidAccept() {
 		const selectedRepositories: GithubRepository[] = [];
-			const allCategories = this.bookmarkManager
-				.categoryRepositories.categories;
+		const allCategories = this.bookmarkManager
+			.categoryRepositories!.categories;
 
-			// getting GitHubRepositories from searchResults
-			this.pageSelectedItems.forEach(pageItem => {
-				const reposPage =  this.searchResults
-					.filter(e=>e.page === pageItem.page)[0];
+		// getting GitHubRepositories from searchResults
+		this.pageSelectedItems.forEach(pageItem => {
+			const reposPage =  this.searchResults
+				.filter(e=>e.page === pageItem.page)[0];
 
-				const resultIds = pageItem.items.map(a => a.id);
-				const selectedReposPerPage = reposPage.repositories
-					.filter(repo => resultIds.includes(repo.id));
+			const resultIds = pageItem.items.map(a => a.id);
+			const selectedReposPerPage = reposPage.repositories
+				.filter(repo => resultIds.includes(repo.id));
 
-				// joining all repositories
-				selectedRepositories.push
-					.apply(selectedRepositories, selectedReposPerPage);
-			});
+			// joining all repositories
+			selectedRepositories.push
+				.apply(selectedRepositories, selectedReposPerPage);
+		});
 			
-			// No need for selecting a category
-			if(allCategories.length === 1) {							
-				return this.bookmarkManager
-					.bookmarkRepositories(allCategories[0].id, selectedRepositories); 
-			}
+		// No need for selecting a category
+		if(allCategories.length === 1) {
+			return this.bookmarkManager
+				.bookmarkRepositories(allCategories[0].id, selectedRepositories); 
+		}
 
-			// Selecting category
-			await this.pickCategory(allCategories)
-				.then(category => {
-					return this.bookmarkManager
-						.bookmarkRepositories(category?.id!, selectedRepositories);
-				});
+		// Selecting category
+		await this.pickCategory(allCategories).then(category => {
+			return this.bookmarkManager
+				.bookmarkRepositories(category?.id!, selectedRepositories);
+		});
 	}
-
 }
 
 // Support classes for Multi-Step picker

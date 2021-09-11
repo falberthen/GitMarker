@@ -15,28 +15,33 @@ In addition to offering quick access to your bookmarked repositories, it highlig
 
 ## Features
 
-- Search repositories on GitHub by a term and, add the selected results to categories
+#### Search repositories on GitHub by a term and, add the selected results to categories
 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/welcome.png">
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/repo-search.png">
 
 
-- Syncronize it to update with the latest repository metadata
+#### Syncronize it to update with the latest repository metadata (or enable the Auto Sync feature!)
 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/my-repos.png"> 
 
-- Import / Export your bookmarks
+#### Import / Export your bookmarks
 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/menu-options.png"> 
 
-- Clone a repository with a few clicks!
+#### Clone a repository with a few clicks!
 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone.png"> 
+<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone-into-folder.png"> 
 
-- Set up a default clone path and use it if you want, or GitMarker will open a dialog where you can choose the path for cloning a repository
+#### Setup settings
+
+- *Default Clone Path*: it will set the path for every time you hit the *Clone repository* button. Otherwise, GitMarker will popup a dialog where you can choose the folder you want the repository to be cloned.
+- *Use Default Clone Path*: enables/disables using the Default Clone Path, defined above. `default: false`.
+- *Search Results Number*: sets the number of records per page when searching repositories on GitHub. `maximum: 100`.
+- *Enable Auto Sync*: synchronizes your bookmarks every time the extension is activated. `default: false`.
 
 <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/settings.png"> 
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone-into-folder.png"> 
 
 ## Notes
 

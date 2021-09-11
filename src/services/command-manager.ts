@@ -5,15 +5,15 @@ import { Command } from '../commands/base/command';
 
 @injectable()
 export class CommandsManager {
-    constructor(
-        @multiInject(TYPES.command) 
-        private commands: Command[]
-    ) {}
+	constructor(
+		@multiInject(TYPES.command) 
+		private commands: Command[]
+	) {}
 
-    registerCommands(context: vscode.ExtensionContext) {
-        for (const c of this.commands) {
-            const cmd = vscode.commands.registerCommand(c.id, c.execute, c);
-            context.subscriptions.push(cmd);
-        }
-    }
+	registerCommands(context: vscode.ExtensionContext) {
+		for (const c of this.commands) {
+			const cmd = vscode.commands.registerCommand(c.id, c.execute, c);
+			context.subscriptions.push(cmd);
+		}
+	}
 }

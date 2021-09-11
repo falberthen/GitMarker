@@ -25,3 +25,4 @@ export const GITMARKER_CONFIG = 'gitmarker';
 export const SEARCH_RESULTS_NUMBER = 'searchResultsNumber';
 export const USE_DEFAULT_PATH_CFG = 'useDefaultClonePath';
 export const DEFAULT_PATH_CFG = 'defaultClonePath';
+export const ENABLE_AUTO_SYNC = 'enableAutoSync';
