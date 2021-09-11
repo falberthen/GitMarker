@@ -7,11 +7,11 @@ import { Command } from './base/command';
 @injectable()
 export class HowToCreatePat implements Command {
 
-    get id() {
-        return HOW_TO_CREATE_PAT;
-    }
+	get id() {
+		return HOW_TO_CREATE_PAT;
+	}
 
-    async execute() {
+	async execute() {
 		vscode.env.openExternal(vscode.Uri.parse(GITHUB_TOKEN_DOC));
-   }
+	}
 }

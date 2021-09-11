@@ -7,6 +7,7 @@ export const CLEAR_ALL_CATEGORIES_MSG = 'Are you sure you want to clear all cate
 export const CLEAR_PAT_MSG = 'Are you sure you want to clear your PAT?';
 export const SURE_REMOVING_MSG = 'Are you sure you want to remove';
 export const NO_REPOS_FOUND_MSG = 'No repositories found for';
+export const REPOSITORY_NOT_AVAILABLE = 'This repository is no longer available.';
 export const CLICK_SHOW_RESULTS_FOUND = 'Click to show the results found';
 export const RESULTS_FOR_TERM_MSG = 'Results found for';
 export const ACCESS_TOKEN_REQUIRED_MSG = 'It is recommended that you set your personal GitHub access token for the best experience.';

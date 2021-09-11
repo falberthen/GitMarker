@@ -20,18 +20,17 @@ export class ClearPAT implements Command {
 	}
 
 	async execute() {
-		vscode.window
-			.showInformationMessage(
-				CLEAR_PAT_MSG,
-				...[YES_MSG, NO_MSG]
-			)
-			.then((answer) => {
-				if (answer === 'Yes') {
-					this.accessTokenManager
-						.deleteToken().then(result => {
-							vscode.window.showInformationMessage(PAT_CLEARED_SUCCESS);
-						});						
-				}
-			});
-    }
+		vscode.window.showInformationMessage(
+			CLEAR_PAT_MSG,
+			...[YES_MSG, NO_MSG]
+		)
+		.then((answer) => {
+			if (answer === 'Yes') {
+				this.accessTokenManager.deleteToken()
+				.then(() => {
+					vscode.window.showInformationMessage(PAT_CLEARED_SUCCESS);
+				});				
+			}
+		});
+	}
 }

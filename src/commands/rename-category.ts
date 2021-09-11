@@ -6,6 +6,7 @@ import { TreeDataItem } from '../models/tree-data-item';
 import { RENAME_CATEGORY } from '../consts/commands';
 import { Command } from './base/command';
 import TYPES from './base/types';
+import { Category } from '../models/category';
 
 @injectable()
 export class RenameCategory implements Command {
@@ -13,7 +14,7 @@ export class RenameCategory implements Command {
 	constructor
 	(
 		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		private bookmarkManager: BookmarkManager
 	) {}
 	
 	get id() {
@@ -21,9 +22,12 @@ export class RenameCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
+		const existingCategory: Category = this.bookmarkManager.categoryRepositories!.categories
+			?.filter(ec => ec.id === dataItem.id)[0];
+		
 		let newName = await vscode.window.showInputBox({
-			value: dataItem.label?.toString(),
-			placeHolder:  `${TYPE_NAME_CATEGORY_MSG} ${dataItem.label}`,
+			value: existingCategory.name,
+			placeHolder:  `${TYPE_NAME_CATEGORY_MSG}`,
 		});
 	
 		if(typeof newName !== 'undefined' && newName) {

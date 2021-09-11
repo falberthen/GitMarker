@@ -11,8 +11,7 @@ export class PickCachedResults implements Command {
 	(
 		@inject(TYPES.searchResultManager)
 		private searchResultManager: SearchResultManager,		
-	) {
-	}
+	) {}
 
 	get id() {
 		return PICK_CACHED_RESULTS;

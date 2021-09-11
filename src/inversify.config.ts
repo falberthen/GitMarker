@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import TYPES from './commands/base/types';
+import BookmarkManager from './services/bookmark-manager';
 import { Container } from 'inversify';
 import { CreateCategory } from './commands/create-category';
 import { CommandsManager } from './services/command-manager';
@@ -23,7 +24,7 @@ import { GitHubApiClient } from './services/github-api-client';
 import { ClearPAT } from './commands/clear-pat';
 import { SearchResultManager } from './services/search-result-manager';
 import { PickCachedResults } from './commands/pick-cached-results';
-import BookmarkManager from './services/bookmark-manager';
+import { AutoSyncRepositories } from './commands/auto-sync-repositories';
 
 const container = new Container();
 
@@ -41,6 +42,7 @@ container.bind<Command>(TYPES.command).to(ClearAllCategories);
 container.bind<Command>(TYPES.command).to(ClearPAT);
 container.bind<Command>(TYPES.command).to(HowToCreatePat);
 container.bind<Command>(TYPES.command).to(PickCachedResults);
+container.bind<Command>(TYPES.command).to(AutoSyncRepositories);
 
 container.bind<CommandsManager>(TYPES.commandManager).to(CommandsManager);
 container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);

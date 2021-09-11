@@ -28,8 +28,7 @@ export class SetAccessToken implements Command {
 			placeHolder: TYPE_ACCESS_TOKEN_PLACEHOLDER,
 		}).then(async token => {
 			if(typeof token !== 'undefined' && token) {
-				await this.accessTokenManager
-					.storeToken(token);
+				await this.accessTokenManager.storeToken(token);
 				vscode.window.showInformationMessage(ACCESS_TOKEN_SET_MSG);
 			}
 		});

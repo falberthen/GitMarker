@@ -4,7 +4,6 @@ import {
 	ARE_YOU_SURE_IMPORT_MSG, 
 	ERROR_IMPORTING_MSG, 
 	NO_MSG, YES_MSG } from '../consts/messages';
-import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { GithubRepository } from '../models/github-repository';
 import { openDialogOptions } from '../utils/dialog-options';
@@ -29,12 +28,15 @@ export class ImportBookmarks implements Command {
 	}
 
 	async execute() {
+		if(!this.bookmarkManager.categoryRepositories) {
+			this.bookmarkManager.categoryRepositories = new CategoriesRepositories();
+		}
+
 		const hasRepositories = this.bookmarkManager
-			.categoryRepositories.repositories.length > 0;
+			.categoryRepositories!.repositories.length > 0;
 
 		if(hasRepositories) {
-			vscode.window
-			.showInformationMessage(
+			vscode.window.showInformationMessage(
 				ARE_YOU_SURE_IMPORT_MSG,
 				...[YES_MSG, NO_MSG]
 			)
@@ -59,7 +61,7 @@ export class ImportBookmarks implements Command {
 						console.error(err);
 						return;
 					}
-	
+
 					this.validateImport(data);
 				});
 			}
@@ -68,24 +70,17 @@ export class ImportBookmarks implements Command {
 	
 	async validateImport(data: string) {
 		try {
-			let validRepositories: GithubRepository[] = [];
 			const parsedObject = JSON.parse(data);
 			const categoriesRepositories = plainToClass(CategoriesRepositories, parsedObject);
-	
-			// Repository schema validation
 			categoriesRepositories.repositories.forEach(parsedRepository => {
 				const repository  = plainToClass(GithubRepository, parsedRepository);
-				validate(repository)
-				.then(errors => {
-					if (errors.length === 0) {
-						validRepositories.push(repository);
-						categoriesRepositories.repositories = validRepositories;                        
-					}
-				}).finally(() => {
-					this.bookmarkManager.categoryRepositories = categoriesRepositories;
-					this.bookmarkManager.storeAndRefreshProvider();
-				});
+				if(repository) {
+					repository.setCloneUrl();
+				}
 			});
+
+			this.bookmarkManager.categoryRepositories = categoriesRepositories;
+			this.bookmarkManager.storeAndRefreshProvider();
 		} catch (error) {
 			vscode.window.showErrorMessage(ERROR_IMPORTING_MSG);
 		}
