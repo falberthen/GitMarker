@@ -14,8 +14,8 @@ import { TreeDataItemProvider } from './tree-data-item-provider';
 
 @injectable()
 export class TreeViewManager {
-	dataProvider: TreeDataItemProvider;
-	treeView: any;
+	private dataProvider: TreeDataItemProvider;
+	private treeView: any;
 
 	constructor(
 		@inject(TYPES.dateTimeHelper) 
@@ -51,7 +51,7 @@ export class TreeViewManager {
 				});
 
 				// Building category dataItem
-				const categoryDataItem = new TreeDataItem(true, category.name, categoryRepositories);
+				const categoryDataItem = new TreeDataItem(true, `${category.name} (${category.repositories.length})`, categoryRepositories);
 				categoryDataItem.id = category.id;
 				dataItems.push(categoryDataItem);
 			});

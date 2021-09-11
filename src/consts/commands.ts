@@ -7,6 +7,7 @@ export const REMOVE_REPOSITORY = 'gitmarker.removeRepository';
 export const CLONE_REPOSITORY = 'gitmarker.cloneRepository';
 export const EXPORT_BOOKMARKS = 'gitmarker.exportBookmarks';
 export const IMPORT_BOOKMARKS = 'gitmarker.importBookmarks';
+export const PICK_CACHED_RESULTS = 'gitmarker.pickCachedResults';
 export const SETUP_PAT = 'gitmarker.setupPat';
 export const HOW_TO_CREATE_PAT = 'gitmarker.howToCreatePat';
 export const CLEAR_ALL_CATEGORIES = 'gitmarker.clearAllCategories';

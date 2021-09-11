@@ -5,7 +5,7 @@ import { TreeDataItem } from '../models/tree-data-item';
 export class TreeDataItemProvider implements TreeDataProvider<TreeDataItem> {
 	private _onDidChangeTreeData = new vscode.EventEmitter<TreeDataItem | undefined>();
 	public readonly onDidChangeTreeData: vscode.Event<TreeDataItem | undefined> = this._onDidChangeTreeData.event;
-	dataItems: TreeDataItem[] = [];
+	private dataItems: TreeDataItem[] = [];
 
 	refresh(): void {
 		this._onDidChangeTreeData.fire(undefined);
