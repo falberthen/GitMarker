@@ -24,19 +24,17 @@ export class ClearAllCategories implements Command {
 	}
 
 	async execute() {
-		vscode.window
-			.showInformationMessage(
-				CLEAR_ALL_CATEGORIES_MSG,
-				...[YES_MSG, NO_MSG]
-			)
-			.then((answer) => {
-				if (answer === 'Yes') {
-					this.dataStorageManager
-						.clearValues(FAVORITE_REPOS_KEY);
-					this.bookmarkManager.categoryRepositories = undefined;
-					this.bookmarkManager
-						.loadStoredData();
-				}
-			});
-    }
+		vscode.window.showInformationMessage(
+			CLEAR_ALL_CATEGORIES_MSG,
+			...[YES_MSG, NO_MSG]
+		)
+		.then((answer) => {
+			if (answer === 'Yes') {
+				this.dataStorageManager
+					.clearValues(FAVORITE_REPOS_KEY);
+				this.bookmarkManager.categoryRepositories = undefined;
+				this.bookmarkManager.storeAndRefreshProvider();				
+			}
+		});
+	}
 }

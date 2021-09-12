@@ -14,7 +14,7 @@ export class RemoveRepository implements Command {
 	constructor
 	(
 		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		private bookmarkManager: BookmarkManager
 	) {}
 	
 	get id() {

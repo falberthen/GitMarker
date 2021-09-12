@@ -23,7 +23,6 @@ export class RemoveCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
-
 		const existingCategory : Category = this.bookmarkManager.categoryRepositories!.categories
 			?.filter(ec => ec.id === dataItem.id)[0];
 			

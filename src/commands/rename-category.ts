@@ -14,7 +14,7 @@ export class RenameCategory implements Command {
 	constructor
 	(
 		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		private bookmarkManager: BookmarkManager
 	) {}
 	
 	get id() {
@@ -27,7 +27,7 @@ export class RenameCategory implements Command {
 		
 		let newName = await vscode.window.showInputBox({
 			value: existingCategory.name,
-			placeHolder:  `${TYPE_NAME_CATEGORY_MSG} ${existingCategory.name}`,
+			placeHolder:  `${TYPE_NAME_CATEGORY_MSG}`,
 		});
 	
 		if(typeof newName !== 'undefined' && newName) {

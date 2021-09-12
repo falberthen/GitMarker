@@ -30,8 +30,8 @@ export class PersonalAccessTokenManager {
 	}
 
 	async deleteToken(): Promise<void> {
-			this.secretStorage
-				.delete(ACCESS_TOKEN_SECRET);
+		this.secretStorage
+			.delete(ACCESS_TOKEN_SECRET);
 	}
 
 	async showPatWarning() {
@@ -48,7 +48,7 @@ export class PersonalAccessTokenManager {
 						vscode.commands.executeCommand(SETUP_PAT);
 						break;
 				}
-			});				
+			});
 		}
 	}
 }

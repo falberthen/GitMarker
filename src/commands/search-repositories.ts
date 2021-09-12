@@ -42,7 +42,7 @@ export class SearchRepositories implements Command {
 			const page = 1;
 			const resultsPerPage = vscode.workspace
 				.getConfiguration(GITMARKER_CONFIG)
-				.get(SEARCH_RESULTS_NUMBER) as number;
+				.get<number>(SEARCH_RESULTS_NUMBER);
 
 			// First search by term
 			const searchResult = await this.githubApiClient

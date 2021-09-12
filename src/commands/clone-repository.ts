@@ -16,59 +16,56 @@ import {
 
 @injectable()
 export class CloneRepository implements Command {
-    
-   get id() {
-      return CLONE_REPOSITORY;
-   }
 
-   async execute(dataItem: TreeDataItem) {
-		vscode.window
-         .showInformationMessage(
-            `${DO_YOU_WANT_CLONE_MSG}${dataItem.label}?`,
-            ...[YES_MSG, NO_MSG]
-         )
-         .then((answer) => {
-            if (answer === 'Yes') {
-               this.pickClonePath(dataItem);
-            }
-         });   
-   }
+	get id() {
+		return CLONE_REPOSITORY;
+	}
 
-   pickClonePath(dataItem: TreeDataItem) {
-      const config = vscode.workspace
-         .getConfiguration(GITMARKER_CONFIG);
+	async execute(dataItem: TreeDataItem) {
+		vscode.window.showInformationMessage(
+			`${DO_YOU_WANT_CLONE_MSG}${dataItem.label}?`,
+			...[YES_MSG, NO_MSG]
+		).then((answer) => {
+			if (answer === 'Yes') {
+				this.pickClonePath(dataItem);
+			}
+		});
+	}
 
-      const useDefaultPath = config
-         .get(USE_DEFAULT_PATH_CFG);
-      
-      const defaultClonePath = config
-         .get(DEFAULT_PATH_CFG) as string;   
+	pickClonePath(dataItem: TreeDataItem) {
+		const config = vscode.workspace
+			.getConfiguration(GITMARKER_CONFIG);
 
-      if(useDefaultPath && defaultClonePath) {
-         this.executeTerminalCmd(dataItem, defaultClonePath);
-         return;
-      }
-      
-      vscode.window.showOpenDialog(openFolderOptions)
-         .then(fileUri => {
-            if(fileUri) {
-               this.executeTerminalCmd(dataItem, fileUri[0].fsPath);
-            }
-      });
-   }
+		const useDefaultPath = config
+			.get(USE_DEFAULT_PATH_CFG);
 
-   executeTerminalCmd(dataItem: TreeDataItem, path: string) {
-      let terminal = vscode.window.terminals
-         .find(e=>e.name === TERMINAL_KEY);
+		const defaultClonePath = config
+			.get<string>(DEFAULT_PATH_CFG);   
 
-      if(!terminal) {
-         terminal = vscode.window
-            .createTerminal(TERMINAL_KEY);
-      }
+		if(useDefaultPath && defaultClonePath) {
+			this.executeTerminalCmd(dataItem, defaultClonePath);
+			return;
+		}
 
-      terminal.sendText(`cls`);
-      terminal.show();
-      terminal.sendText(`git clone ${dataItem?.cloneUrl} ${path}\\${dataItem.label}`);
-      vscode.window.showInformationMessage(`${GIT_CLONE_EXECUTED_MSG}${dataItem.label}`);
-   }
+		vscode.window.showOpenDialog(openFolderOptions)
+		.then(fileUri => {
+			if(fileUri) {
+				this.executeTerminalCmd(dataItem, fileUri[0].fsPath);
+			}
+		});
+	}
+
+	executeTerminalCmd(dataItem: TreeDataItem, path: string) {
+		let terminal = vscode.window.terminals
+			.find(e => e.name === TERMINAL_KEY);
+
+		if(!terminal) {
+			terminal = vscode.window.createTerminal(TERMINAL_KEY);
+		}
+
+		terminal.sendText(`cls`);
+		terminal.show();
+		terminal.sendText(`git clone ${dataItem?.cloneUrl} ${path}\\${dataItem.label}`);
+		vscode.window.showInformationMessage(`${GIT_CLONE_EXECUTED_MSG}${dataItem.label}`);
+	}
 }

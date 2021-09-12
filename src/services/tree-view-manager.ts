@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import * as vscode from 'vscode';
 import TYPES from '../commands/base/types';
 import { CONTEXT_CATEGORY_COUNT, GITMARKER_VIEW, SET_CONTEXT } from '../consts/application';
-import { SYNC_REPOSITORY } from '../consts/commands';
 import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
 			TOOLTIP_LASTSYNC, TOOLTIP_LICENSE, TOOLTIP_OWNED_BY, 
 			TOOLTIP_STARGAZERS, TOOLTIP_STARGAZERS_LBL } from '../consts/messages';
@@ -33,13 +32,13 @@ export class TreeViewManager {
 	}
 
 	buildDataProviderItems(categoriesRepositories: CategoriesRepositories) {
+		const dataItems: TreeDataItem[] = [];
 		if(categoriesRepositories) {			
-			const dataItems: TreeDataItem[] = [];
 			categoriesRepositories.categories.forEach(category => {
 				const categoryRepositories: TreeDataItem[] = [];
 				category.repositories.forEach(repositoryId => {
 					const repository = categoriesRepositories
-						.repositories.filter(r=>r.id === repositoryId)[0];
+						.repositories.filter(r => r.id === repositoryId)[0];
 					
 					// Building repository dataItem
 					const repositoryDataItem = this
@@ -57,10 +56,10 @@ export class TreeViewManager {
 			
 			vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 				categoriesRepositories.categories.length);
-
-			this.dataProvider.setTreeItems(dataItems);
-			this.dataProvider.refresh();
 		}
+		
+		this.dataProvider.setTreeItems(dataItems);
+		this.dataProvider.refresh();
 	}
 	
 	private buildRepositoryDataItem(categoryId: string, repository: GithubRepository) : TreeDataItem | undefined {
@@ -111,8 +110,7 @@ export class TreeViewManager {
    private click(selected: TreeDataItem[]) {
 		selected.forEach(element => {
 			if(element.url) {
-				vscode.env.openExternal(element.url);
-				vscode.commands.executeCommand(SYNC_REPOSITORY, selected[0]);
+				vscode.env.openExternal(element.url);				
 			}
 		});
 	}

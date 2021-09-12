@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.6.0",
+	"version": "1.6.3",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -22,24 +22,26 @@
 		"configuration": {
 			"title": "GitMarker",
 			"properties": {
-				"gitmarker.searchResultsNumber": {
-					"type": "string",
-					"description": "Set the number of search results per page (max 100)."
-				},
-				"gitmarker.defaultClonePath": {
-					"type": "string",
-					"description": "Set a default path for cloning repositories."
-				},
-				"gitmarker.useDefaultClonePath": {
+				"gitmarker.autoSyncEnabled": {
 					"type": "boolean",
-					"default": false,
-					"description": "Always use default clone path."
-				},
-				"gitmarker.enableAutoSync": {
-					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Synchronize my bookmarks every time the extension is activated."
-				}				
+				},
+				"gitmarker.gitClone.defaultClonePath": {
+					"type": "string",
+					"description": "The default path for cloning repositories."
+				},
+				"gitmarker.gitClone.alwaysUseDefaultClonePath": {
+					"type": "boolean",
+					"default": false,
+					"description": "Always use the default clone path when cloning repositories."
+				},
+				"gitmarker.searchResultsPerPage": {
+					"type": "number",
+					"minimum": 0,
+					"maximum": 100,
+					"description": "The number of results per page when searching repositories on GitHub (max 100)."
+				}
 			}
 		},
 		"commands": [
@@ -286,7 +288,8 @@
 		"vscode-test": "^1.5.2"
 	},
 	"dependencies": {
-		"axios": "^0.21.1",
+		"ansi-regex": "^6.0.1",
+		"axios": "^0.22.0",
 		"class-transformer": "^0.4.0",
 		"class-validator": "^0.13.1",
 		"inversify": "^5.1.1",

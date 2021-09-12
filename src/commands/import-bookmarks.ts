@@ -33,8 +33,7 @@ export class ImportBookmarks implements Command {
 			.categoryRepositories!.repositories.length > 0;
 
 		if(hasRepositories) {
-			vscode.window
-			.showInformationMessage(
+			vscode.window.showInformationMessage(
 				ARE_YOU_SURE_IMPORT_MSG,
 				...[YES_MSG, NO_MSG]
 			)
@@ -59,7 +58,7 @@ export class ImportBookmarks implements Command {
 						console.error(err);
 						return;
 					}
-	
+
 					this.validateImport(data);
 				});
 			}

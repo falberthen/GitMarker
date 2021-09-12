@@ -113,6 +113,11 @@ export default class BookmarkManager {
 			return;
 		}
 
+		// Removing repositories from category
+		category.repositories.forEach(repositoryId => {
+			this.checkDeleteRepository(dataItem.id!, repositoryId);
+		});
+
 		const index = this.categoryRepositories!.categories
 			?.findIndex(c => c.id === dataItem.id);
 		this.categoryRepositories!.categories
@@ -122,33 +127,7 @@ export default class BookmarkManager {
 	}
 
 	removeRepository(dataItem: TreeDataItem) {
-		// Removing it from the category
-		const category = this.categoryRepositories!.categories
-			?.filter(c => c.id === dataItem.parentId)[0];
-		const index = category.repositories
-			?.findIndex(r => r === dataItem.customId);
-		category.repositories
-			?.splice(index as number, 1);
-
-		// If no other ocurrences, hard remove it
-		const ocurrences: string[] = [];
-		this.categoryRepositories!.categories.forEach(category => {
-			const index = category.repositories
-				?.findIndex(r => r === dataItem.customId);
-			if(index >= 0) {
-				ocurrences.push(dataItem.customId);
-			}
-		});
-
-		if(ocurrences.length === 0) {
-			const existingRepository = this.categoryRepositories!.repositories
-				?.filter(c => c.id === dataItem.customId)[0];
-			let index = this.categoryRepositories!.repositories
-				.indexOf(existingRepository);
-			this.categoryRepositories!.repositories
-				?.splice(index as number, 1);
-		}
-
+		this.checkDeleteRepository(dataItem.parentId, dataItem.customId);
 		this.storeAndRefreshProvider();		
 	}
 
@@ -165,7 +144,7 @@ export default class BookmarkManager {
 		}
 	}
 
-	storeAndRefreshProvider(){
+	storeAndRefreshProvider() {
 		// Store updated values
 		this.dataStorageManager
 			.setValue<CategoriesRepositories>(FAVORITE_REPOS_KEY, 
@@ -175,7 +154,39 @@ export default class BookmarkManager {
 		this.treeViewManager
 			.buildDataProviderItems(this.categoryRepositories!);
 
-		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
-			this.categoryRepositories!.categories.length);
+		var categoryCount = this.categoryRepositories 
+			? this.categoryRepositories!.categories.length
+			: 0;
+
+		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, categoryCount);
+	}
+
+	private checkDeleteRepository(categoryId: string, repositoryId: string) {
+		// Removing it from the category
+		const category = this.categoryRepositories!.categories
+			?.filter(c => c.id === categoryId)[0];
+		const index = category.repositories
+			?.findIndex(r => r === repositoryId);
+		category.repositories
+			?.splice(index as number, 1);
+
+		// If no other ocurrences, hard remove it
+		const ocurrences: string[] = [];
+		this.categoryRepositories!.categories.forEach(category => {
+			const index = category.repositories
+				?.findIndex(r => r === repositoryId);
+			if(index >= 0) {
+				ocurrences.push(repositoryId);
+			}
+		});
+
+		if(ocurrences.length === 0) {
+			const existingRepository = this.categoryRepositories!.repositories
+				?.filter(c => c.id === repositoryId)[0];
+			let index = this.categoryRepositories!.repositories
+				.indexOf(existingRepository);
+			this.categoryRepositories!.repositories
+				?.splice(index as number, 1);
+		}
 	}
 }

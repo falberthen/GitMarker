@@ -1,18 +1,20 @@
 import * as vscode from 'vscode';
-import { QuickInputButton, QuickInputButtons, Uri } from "vscode";
+import { QuickInputButton, Uri } from "vscode";
 import { inject, injectable } from 'inversify';
 import { GithubRepository } from '../models/github-repository';
 import { CHOOSE_CATEGORY_MSG } from '../consts/messages';
 import { Category } from '../models/category';
 import { GitHubApiClient, ISearchResult } from './github-api-client';
 import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';
+import { PageSelectedItems, PavigationButton, RepoPickItem } from '../models/repo-pick-item';
+import { NavDirection } from '../consts/nav-direction';
 import ContextManager from './context-manager';
 import BookmarkManager from './bookmark-manager';
 import TYPES from '../commands/base/types';
 
 @injectable()
 export class SearchResultManager {
-	private searchResults: ISearchResult[] = [];
+  private searchResults: ISearchResult[] = [];
 	private quickPick: vscode.QuickPick<RepoPickItem> | undefined;
 	private pageSelectedItems: PageSelectedItems[] = [];
 	private totalResults: number;
@@ -25,7 +27,7 @@ export class SearchResultManager {
 		@inject(TYPES.bookmarkManager) 
 		private bookmarkManager: BookmarkManager,
 		@inject(TYPES.gitHubApiClient) 
-		private githubApiClient: GitHubApiClient,
+		private githubApiClient: GitHubApiClient
 	) {
 		this.totalResults = 0;
 		this.totalPages = 0;
@@ -42,7 +44,9 @@ export class SearchResultManager {
 
   async pickRepository(page: number) {		
     this.currentPage = page;
-    const pageResult = this.searchResults.filter(r=>r.page === page)[0];
+    const pageResult = this.searchResults
+			.filter(r => r.page === page)[0];
+
     if(pageResult) {
       // Picking a repository from the result list
       let repoPickItems = this.mapToPickItem(pageResult.repositories);
@@ -70,7 +74,6 @@ export class SearchResultManager {
     this.quickPick = this.buildQuickPicker();
     this.quickPick.buttons = this.buildQuickPickButtons();
     this.quickPick.items = repoPickItems;
-    this.quickPick.selectedItems = repoPickItems.filter(item => item.picked);
     this.quickPick.title = `${this.totalResults} results found for ${this.searchTerm}`,
     this.quickPick.show();
 
@@ -101,7 +104,7 @@ export class SearchResultManager {
 
 	private async pickCategory(categories: Category[]) {
 		const categoriesDetails = categories
-		.map(categoryInfo =>  {
+		.map(categoryInfo => {
 			return {
 				id: categoryInfo.id,
 				label: `📁 ${categoryInfo.name}`
@@ -113,26 +116,28 @@ export class SearchResultManager {
 			matchOnDescription: true,
 			matchOnDetail: true,
 			canPickMany: false,
-			title: CHOOSE_CATEGORY_MSG,
+			title: CHOOSE_CATEGORY_MSG
 		});
 	}
 
   private buildQuickPickButtons() : QuickInputButton[]{
     const context = ContextManager.instance.context;
     const nextButton = new PavigationButton(
-      Direction.right,
+      NavDirection.right,
       {
         dark: Uri.file(context.asAbsolutePath('resources/dark/forward.svg')),
         light: Uri.file(context.asAbsolutePath('resources/light/forward.svg')),			
       }, 
-      'Next results');
+      'Next results'
+    );
 
     const backButton = new PavigationButton(
-      Direction.left,
+      NavDirection.left,
       { dark: Uri.file(context.asAbsolutePath('resources/dark/back.svg')),
         light: Uri.file(context.asAbsolutePath('resources/light/back.svg')),
       }, 
-      'Previous results');
+      'Previous results'
+    );
 
     if(this.totalPages > 1) {
       if(this.currentPage === this.totalPages) {
@@ -146,29 +151,33 @@ export class SearchResultManager {
         return [backButton, nextButton];
       }
     }
+
     return [];
   }
 
   private buildWaitingButton() : QuickInputButton[] {
     const context = ContextManager.instance.context;
     const nextButtonInactive = new PavigationButton(
-      Direction.waiting,
+      NavDirection.waiting,
       {
         dark: Uri.file(context.asAbsolutePath('resources/dark/loading.svg')),
         light: Uri.file(context.asAbsolutePath('resources/light/loading.svg')),			
       }, 
-      'loading...');
+      'loading...'
+    );
 
     return [nextButtonInactive];
   }
 
   private getPagePickedItems(repoItems: RepoPickItem[]) {
     const pageItems = this.pageSelectedItems
-      .filter(e=>e.page === this.currentPage)[0];
+      .filter(e => e.page === this.currentPage)[0];
 
     if(pageItems) {
-      repoItems.forEach(element => {
-        const selected = pageItems.items.filter(e=>e.id === element.id)[0];
+      repoItems.forEach(element => { 
+        const selected = pageItems
+					.items.filter(i => i.id === element.id)[0];
+
         if(selected) {
           element.picked = true;
         }
@@ -179,7 +188,7 @@ export class SearchResultManager {
   }
 
   private mapToPickItem(gitHubRepos: GithubRepository[]): RepoPickItem[] {
-    const repoDetails = gitHubRepos.map(repoInfo =>  {
+    const repoDetails = gitHubRepos.map(repoInfo => {
       const label = repoInfo.stargazersCount > 0 
       ? `${repoInfo.name} ⭐${repoInfo.stargazersCount}` 
       : `${repoInfo.name}`;
@@ -200,7 +209,7 @@ export class SearchResultManager {
 	private async onDidChangeSelection(selectedItems: readonly RepoPickItem[]) {
 		const selected = (selectedItems as RepoPickItem[]).map(a => a);
 		const currentPageItems = this.pageSelectedItems
-			.filter(e=>e.page === this.currentPage)[0];
+			.filter(e => e.page === this.currentPage)[0];
 		
 		if(!currentPageItems){
 			const itemsPage = new PageSelectedItems(this.currentPage, selected);
@@ -215,7 +224,7 @@ export class SearchResultManager {
 		const button = (quickInputButton as PavigationButton);
 
 		// BACK BUTTON
-		if (button.direction === Direction.left) {
+		if (button.direction === NavDirection.left) {
 			this.currentPage = this.quickPick!.step = --this.currentPage;
 			const items = this.searchResults
 				.filter(e=> e.page === this.currentPage)[0];		
@@ -224,11 +233,11 @@ export class SearchResultManager {
 		}
 
 		// FORWARD BUTTON
-		if(button.direction === Direction.right) { 
+		if(button.direction === NavDirection.right) { 
 			this.currentPage = this.quickPick!.step = ++this.currentPage;		
 
 			const items = this.searchResults
-				.filter(e=> e.page === this.currentPage)[0];
+				.filter(e => e.page === this.currentPage)[0];
 
 			if(items) { // IN-MEMORY DATA
 				repoPickItems = this.mapToPickItem(items.repositories);
@@ -261,9 +270,9 @@ export class SearchResultManager {
 		// getting GitHubRepositories from searchResults
 		this.pageSelectedItems.forEach(pageItem => {
 			const reposPage =  this.searchResults
-				.filter(e=>e.page === pageItem.page)[0];
+				.filter(e => e.page === pageItem.page)[0];
 
-			const resultIds = pageItem.items.map(a => a.id);
+			const resultIds = pageItem.items.map(i => i.id);
 			const selectedReposPerPage = reposPage.repositories
 				.filter(repo => resultIds.includes(repo.id));
 
@@ -280,29 +289,10 @@ export class SearchResultManager {
 
 		// Selecting category
 		await this.pickCategory(allCategories).then(category => {
-			return this.bookmarkManager
-				.bookmarkRepositories(category?.id!, selectedRepositories);
+			if(category) {
+				return this.bookmarkManager
+				.bookmarkRepositories(category.id, selectedRepositories);
+			}			
 		});
 	}
-}
-
-// Support classes for Multi-Step picker
-class RepoPickItem implements vscode.QuickPickItem {
-	constructor(public id: string,
-		public label: string, public picked: boolean ) { }
-}
-
-class PageSelectedItems {
-	constructor(public page:number, public items: RepoPickItem[]) { }
-}
-
-class PavigationButton implements QuickInputButtons {
-	constructor(public direction: Direction, public iconPath: { light: Uri; dark: Uri; }, 
-		public tooltip: string,) { }
-}
-
-enum Direction {
-  left,
-  right,
-	waiting
 }

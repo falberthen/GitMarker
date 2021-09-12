@@ -20,17 +20,17 @@ export class AutoSyncRepositories implements Command {
 		@inject(TYPES.bookmarkManager) 
 		private bookmarkManager: BookmarkManager
 	) {
-		const resultsPerPage = vscode.workspace
+		const autoSyncEnabled = vscode.workspace
       .getConfiguration(GITMARKER_CONFIG)
-      .get(ENABLE_AUTO_SYNC) as boolean;
-		this.execute(resultsPerPage);
+      .get<boolean>(ENABLE_AUTO_SYNC);
+		this.execute(autoSyncEnabled);
 	}
 
 	get id() {
 		return AUTO_SYNC_REPOSITORIES;
 	}
 
-	async execute(synchronize: boolean) {		
+	async execute(synchronize: boolean | undefined) {		
 		if(synchronize) {
 			// Request rate limit - it needs to be at least 1 minute outdated
 			const minimumWaitSync = 1;
@@ -49,17 +49,17 @@ export class AutoSyncRepositories implements Command {
 
 	async syncRepositories(reposToSync: GithubRepository[]) {
 		const tasks: Promise<GithubRepository>[] = [];
-			reposToSync.forEach(repository => {
-				tasks.push(this.gitHubApiClient.getById(repository.id));
-			});
-			
-			const callUpdateTasks = async () => {
-				for (const task of tasks) {					
-					const repo = await task;
-					this.bookmarkManager.updateRepository(repo);
-				}
-			};
-	
-			callUpdateTasks();
+		reposToSync.forEach(repository => {
+			tasks.push(this.gitHubApiClient.getById(repository.id));
+		});
+		
+		const callUpdateTasks = async () => {
+			for (const task of tasks) {					
+				const repo = await task;
+				this.bookmarkManager.updateRepository(repo);
+			}
+		};
+
+		callUpdateTasks();
 	}
 }
