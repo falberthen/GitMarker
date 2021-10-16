@@ -86,3 +86,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Implemented AutoSync feature for synchronizing repositories when the extension is active.
 it can be enabled/disabled from the extension settings.
+
+<br>
+
+## [1.6.4] - 2021-10-16
+### Changed
+
+- Removed dependency of the class-validator package after potential security vulnerabilities were found.
+- Improved error handling for inactive/non-available bookmarked repositories.

@@ -12,7 +12,7 @@ export class PageSelectedItems {
 	constructor(public page:number, public items: RepoPickItem[]) { }
 }
 
-export class PavigationButton implements vscode.QuickInputButtons {
+export class PavigationButton implements vscode.QuickInputButton {
 	constructor(public direction: NavDirection, public iconPath: { light: Uri; dark: Uri; }, 
 		public tooltip: string,) { }
 }

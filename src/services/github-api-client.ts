@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import TYPES from '../commands/base/types';
 import container from '../inversify.config';
@@ -19,7 +18,7 @@ export class GitHubApiClient {
 
 	public constructor(
 			@inject(TYPES.patManager) 
-			private accessTokenManager: PersonalAccessTokenManager
+			public accessTokenManager: PersonalAccessTokenManager
 		) {
 				this.dateTimeHelper = container
 					.get<DateTimeHelper>(TYPES.dateTimeHelper);
@@ -46,15 +45,6 @@ export class GitHubApiClient {
 				license: val.license,
 				lastSyncDate: this.dateTimeHelper.getDateTimeNow()
 			}));						
-		})
-		.catch(error => {
-			const response = error.response;
-			if(response){
-				vscode.window.showErrorMessage(error.response.data.message);
-				if(response.status === 403) {
-					this.accessTokenManager!.showPatWarning();
-				}
-			}
 		});
 
 		return { 
@@ -80,28 +70,19 @@ export class GitHubApiClient {
 			repo.forks = data.forks;
 			repo.license = data.license;
 			repo.lastSyncDate = this.dateTimeHelper.getDateTimeNow();
-		})
-		.catch(error => {
-			const response = error.response;
-			if(response){
-				vscode.window.showErrorMessage(error.response.data.message);
-				if(response.status === 403) {
-					this.accessTokenManager!.showPatWarning();
-				}
-			}
 		});
 
 		return repo;
 	}
 
 	private async buildAxiosClient(): Promise<AxiosInstance> {
-		const config = {
+		const config : AxiosRequestConfig = {
 			responseType: 'json',
 			baseURL: 'https://api.github.com',
 			headers: {
 				'content-Type': 'application/json',	
 			}
-		} as AxiosRequestConfig;
+		};
 
 		await this.accessTokenManager!.getToken()
 			.then(accessToken => {

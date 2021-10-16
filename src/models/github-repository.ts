@@ -1,8 +1,3 @@
-import {
-	IsInt,
-	Min,
-	MinLength,
- } from 'class-validator';
 import { DateTime } from "luxon";
 import { Uri } from 'vscode';
 
@@ -15,22 +10,21 @@ export class GithubRepository {
 	language!: string;
 	license!: any;
 	lastSyncDate!: DateTime;
-	cloneUrl: string;
-
-	@MinLength(7)
+	cloneUrl: string | undefined;
 	url: Uri;
-
-	@IsInt()
-	@Min(0)
 	stargazersCount!: number;
-
-	@IsInt()
 	forks!: number;
 
 	public constructor(id: string, name: string,  url: Uri) {
 		this.id = id;
 		this.name = name;
-		this.url = url;
-		this.cloneUrl = `${this.url}.git`;
+		this.url = url;	
+		this.setCloneUrl();
+	}
+
+	public setCloneUrl() {
+		if(this.url) {
+			this.cloneUrl = `${this.url}.git`;
+		}		
 	}
 }

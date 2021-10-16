@@ -57,7 +57,7 @@ export class SearchResultManager {
   private initializeValues() {
     this.resultsPerPage = vscode.workspace
       .getConfiguration(GITMARKER_CONFIG)
-      .get(SEARCH_RESULTS_NUMBER) as number;
+      .get<number>(SEARCH_RESULTS_NUMBER);
 
     this.pageSelectedItems = [];
     this.searchResults = [];
@@ -69,7 +69,7 @@ export class SearchResultManager {
   private initializePicker(repoPickItems: RepoPickItem[]) {
     this.resultsPerPage = vscode.workspace
 			.getConfiguration(GITMARKER_CONFIG)
-			.get(SEARCH_RESULTS_NUMBER) as number;
+			.get<number>(SEARCH_RESULTS_NUMBER);
         
     this.quickPick = this.buildQuickPicker();
     this.quickPick.buttons = this.buildQuickPickButtons();
@@ -78,8 +78,8 @@ export class SearchResultManager {
     this.quickPick.show();
 
     // onDidTriggerButton event
-    this.quickPick.onDidTriggerButton(async item => {
-      await this.onDidTriggerButton(item, repoPickItems);			
+    this.quickPick.onDidTriggerButton(async button  => {
+      await this.onDidTriggerButton(button as PavigationButton, repoPickItems);			
     });
     
     // onDidChangeSelection event
@@ -207,7 +207,7 @@ export class SearchResultManager {
 
   // QuickPick Events
 	private async onDidChangeSelection(selectedItems: readonly RepoPickItem[]) {
-		const selected = (selectedItems as RepoPickItem[]).map(a => a);
+		const selected = selectedItems.map((i: RepoPickItem) => i);
 		const currentPageItems = this.pageSelectedItems
 			.filter(e => e.page === this.currentPage)[0];
 		
@@ -220,8 +220,7 @@ export class SearchResultManager {
 		currentPageItems.items = selected;
 	}
 
-	private async onDidTriggerButton(quickInputButton: vscode.QuickInputButton, repoPickItems: RepoPickItem[] ) {		
-		const button = (quickInputButton as PavigationButton);
+	private async onDidTriggerButton(button: PavigationButton, repoPickItems: RepoPickItem[] ) {		
 
 		// BACK BUTTON
 		if (button.direction === NavDirection.left) {

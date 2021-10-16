@@ -35,7 +35,7 @@ export class AutoSyncRepositories implements Command {
 			// Request rate limit - it needs to be at least 1 minute outdated
 			const minimumWaitSync = 1;
 			const reposToSync = this.bookmarkManager
-				.categoryRepositories!.repositories
+         .categoryRepositories!.repositories
 			.filter(r => 
 				this.dateTimeHelper.getTimeDiff(r.lastSyncDate)
 				.minutes > minimumWaitSync
@@ -50,13 +50,24 @@ export class AutoSyncRepositories implements Command {
 	async syncRepositories(reposToSync: GithubRepository[]) {
 		const tasks: Promise<GithubRepository>[] = [];
 		reposToSync.forEach(repository => {
-			tasks.push(this.gitHubApiClient.getById(repository.id));
+			if(repository) {
+				var getRepositoryTask = this.gitHubApiClient.getById(repository.id);
+				tasks.push(getRepositoryTask);
+			}			
 		});
 		
 		const callUpdateTasks = async () => {
 			for (const task of tasks) {					
-				const repo = await task;
-				this.bookmarkManager.updateRepository(repo);
+				const repository = await task
+				.catch(error => {
+					if(error.response && error.response.status === 403){
+						this.gitHubApiClient.accessTokenManager!.showPatWarning();		
+					}
+				});
+				
+				if(repository) {
+					this.bookmarkManager.updateRepository(repository);
+				}				
 			}
 		};
 

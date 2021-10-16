@@ -121,7 +121,7 @@ export default class BookmarkManager {
 		const index = this.categoryRepositories!.categories
 			?.findIndex(c => c.id === dataItem.id);
 		this.categoryRepositories!.categories
-			?.splice(index as number, 1);
+			?.splice(index, 1);
 	
 		this.storeAndRefreshProvider();
 	}
@@ -133,7 +133,7 @@ export default class BookmarkManager {
 
 	updateRepository(updatedRepository: GithubRepository) {
 		const existingRepository = this.categoryRepositories!.repositories
-			?.filter(c => c.id === updatedRepository.id)[0];
+		?.filter(c => c.id === updatedRepository.id)[0];
 
 		if(existingRepository) {
 			let index = this.categoryRepositories!.repositories
@@ -168,7 +168,7 @@ export default class BookmarkManager {
 		const index = category.repositories
 			?.findIndex(r => r === repositoryId);
 		category.repositories
-			?.splice(index as number, 1);
+			?.splice(index, 1);
 
 		// If no other ocurrences, hard remove it
 		const ocurrences: string[] = [];
@@ -186,7 +186,7 @@ export default class BookmarkManager {
 			let index = this.categoryRepositories!.repositories
 				.indexOf(existingRepository);
 			this.categoryRepositories!.repositories
-				?.splice(index as number, 1);
+				?.splice(index, 1);
 		}
 	}
 }
