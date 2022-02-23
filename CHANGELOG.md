@@ -94,3 +94,7 @@ it can be enabled/disabled from the extension settings.
 
 - Removed dependency of the class-validator package after potential security vulnerabilities were found.
 - Improved error handling for inactive/non-available bookmarked repositories.
+
+## [1.6.5] - 2022-02-22
+### Changed
+- Updated all dependencies.
