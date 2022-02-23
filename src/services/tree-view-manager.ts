@@ -5,8 +5,8 @@ import { CONTEXT_CATEGORY_COUNT, GITMARKER_VIEW, SET_CONTEXT } from '../consts/a
 import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
 			TOOLTIP_LASTSYNC, TOOLTIP_LICENSE, TOOLTIP_OWNED_BY, 
 			TOOLTIP_STARGAZERS, TOOLTIP_STARGAZERS_LBL } from '../consts/messages';
-import { CategoriesRepositories } from '../models/categories-repositories';
-import { GithubRepository } from '../models/github-repository';
+import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
+import { GithubRepositoryModel } from '../models/github-repository-model';
 import { TreeDataItem } from '../models/tree-data-item';
 import { DateTimeHelper } from '../utils/datetime-helper';
 import { TreeDataItemProvider } from './tree-data-item-provider';
@@ -31,7 +31,7 @@ export class TreeViewManager {
 			this.click(e.selection));
 	}
 
-	buildDataProviderItems(categoriesRepositories: CategoriesRepositories) {
+	buildDataProviderItems(categoriesRepositories: CategoriesRepositoriesModel) {
 		const dataItems: TreeDataItem[] = [];
 		if(categoriesRepositories) {			
 			categoriesRepositories.categories.forEach(category => {
@@ -49,7 +49,7 @@ export class TreeViewManager {
 				});
 
 				// Building category dataItem
-				const categoryDataItem = new TreeDataItem(true, `${category.name} (${category.repositories.length})`, categoryRepositories);
+				const categoryDataItem = new TreeDataItem(true, true, `${category.name} (${category.repositories.length})`, categoryRepositories);
 				categoryDataItem.id = category.id;
 				dataItems.push(categoryDataItem);
 			});
@@ -62,10 +62,10 @@ export class TreeViewManager {
 		this.dataProvider.refresh();
 	}
 	
-	private buildRepositoryDataItem(categoryId: string, repository: GithubRepository) : TreeDataItem | undefined {
+	private buildRepositoryDataItem(categoryId: string, repository: GithubRepositoryModel) : TreeDataItem | undefined {
 		let repositoryDataItem!: TreeDataItem;
-		if(repository) {
-			repositoryDataItem = new TreeDataItem(false, `${repository.name}`);
+		if(repository) {			
+			repositoryDataItem = new TreeDataItem(repository.isActive, false, `${repository.name}`);
 			repositoryDataItem.customId = repository.id;
 			repositoryDataItem.parentId = categoryId;
 			repositoryDataItem.url = repository.url;
@@ -75,39 +75,49 @@ export class TreeViewManager {
 				? `⭐${repository.stargazersCount}` 
 				: '';
 		}
-
+		
 		return repositoryDataItem;
 	}
 	
-	private buildToolTip(repository: GithubRepository): string {
+	private buildToolTip(repository: GithubRepositoryModel): string {
 		const newLine = '\n';
 
 		// Tooltip rows
 		let toolTipItems: string[] = [];
 			
-		if(repository.description){
+		if(repository.description) {
 			toolTipItems.push(`${repository.description}${newLine}`);
 		}
 
-		toolTipItems.push(`${TOOLTIP_OWNED_BY}${repository.ownerName}`);
-		toolTipItems.push(`${TOOLTIP_STARGAZERS}${repository.stargazersCount}${TOOLTIP_STARGAZERS_LBL}`);
-		toolTipItems.push(`${TOOLTIP_FORKS}${repository.forks}${TOOLTIP_FORKS_LBL}`);
+		if(repository.ownerName) {
+			toolTipItems.push(`${TOOLTIP_OWNED_BY}${repository.ownerName}`);
+		}
+
+		if(repository.stargazersCount) {
+			toolTipItems.push(`${TOOLTIP_STARGAZERS}${repository.stargazersCount}${TOOLTIP_STARGAZERS_LBL}`);
+		}
+
+		if(repository.forks) {
+			toolTipItems.push(`${TOOLTIP_FORKS}${repository.forks}${TOOLTIP_FORKS_LBL}`);
+		}
 
 		if(repository.language) { 
 			toolTipItems.push(`${TOOLTIP_LANGUAGE}${repository.language}`);
 		} 
 			
-		if(repository.license) { 
+		if(repository.license) {
 			toolTipItems.push(`${TOOLTIP_LICENSE}${repository.license.name}`);	
 		}
 
-		toolTipItems.push(`${newLine}`);
-		toolTipItems.push(`${TOOLTIP_LASTSYNC}${this.dateTimeHelper.formatDate(repository.lastSyncDate)}`);
-
+		if(repository.lastSyncDate) {
+			toolTipItems.push(`${newLine}`);
+			toolTipItems.push(`${TOOLTIP_LASTSYNC}${this.dateTimeHelper.formatDate(repository.lastSyncDate)}`);
+		}
+		
 		return toolTipItems.join(newLine); 
 	}
 
-   private click(selected: TreeDataItem[]) {
+	private click(selected: TreeDataItem[]) {
 		selected.forEach(element => {
 			if(element.url) {
 				vscode.env.openExternal(element.url);				

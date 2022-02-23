@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { inject, injectable } from 'inversify';
 import TYPES from './base/types';
+import { inject, injectable } from 'inversify';
 import { 
-	RESULTS_FOR_TERM_MSG,
-	NO_REPOS_FOUND_MSG, TYPE_SEARCH_TERM_PLACEHOLDER, CLICK_SHOW_RESULTS_FOUND 
+	RESULTS_FOR_TERM,REPOSITORY_ERR_NOT_FOUND, 
+	TYPE_SEARCH_TERM_PLACEHOLDER, RESULTS_SHOW_RESULTS_FOUND 
 } from '../consts/messages';
 import { PICK_CACHED_RESULTS, SEARCH_REPOSITORIES } from '../consts/commands';
 import { GitHubApiClient } from '../services/github-api-client';
@@ -35,27 +35,28 @@ export class SearchRepositories implements Command {
 			placeHolder: TYPE_SEARCH_TERM_PLACEHOLDER,
 		});
 
-		if(typeof searchTerm !== 'undefined' && searchTerm) {
-			searchTerm = searchTerm.toLowerCase();
-			this.setStatusBarMessage(`Searching for ${searchTerm}...`);
+		let trimmedSearchTerm = searchTerm?.trim();
+		if(typeof trimmedSearchTerm !== 'undefined' && trimmedSearchTerm) {
+			trimmedSearchTerm = trimmedSearchTerm.toLowerCase();
+			this.setStatusBarMessage(`Searching for ${trimmedSearchTerm}...`);
 
 			const page = 1;
 			const resultsPerPage = vscode.workspace
 				.getConfiguration(GITMARKER_CONFIG)
 				.get<number>(SEARCH_RESULTS_NUMBER);
 
-			// First search by term
+			// first search by term
 			const searchResult = await this.githubApiClient
-				.search(searchTerm, resultsPerPage!, 1);
+				.search(trimmedSearchTerm, resultsPerPage!, 1);			
 			this.setStatusBarMessage('');
 
 			if(searchResult.repositories.length === 0) {
-				vscode.window.showInformationMessage(`${NO_REPOS_FOUND_MSG} '${searchTerm}'`);
+				vscode.window.showInformationMessage(`${REPOSITORY_ERR_NOT_FOUND} '${trimmedSearchTerm}'`);
 				return;
 			}
 
-			this.setStatusBarItem(`${RESULTS_FOR_TERM_MSG} '${searchTerm}'`);
-			this.searchResultManager.setSearchResults(searchTerm, searchResult);
+			this.setStatusBarItem(`${RESULTS_FOR_TERM} '${trimmedSearchTerm}'`);
+			this.searchResultManager.setSearchResults(trimmedSearchTerm, searchResult);
 			await this.searchResultManager.pickRepository(page);					
 		}		
 	}
@@ -64,14 +65,15 @@ export class SearchRepositories implements Command {
 		vscode.window.setStatusBarMessage(message);
 	}
 
-	private setStatusBarItem(message: string){
+	private setStatusBarItem(message: string, ){
 		if(!this.searchResultSBarItem) {
-			this.searchResultSBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
+			this.searchResultSBarItem = vscode.window
+				.createStatusBarItem(vscode.StatusBarAlignment.Right);
 			this.searchResultSBarItem.show();
 		}
 
 		this.searchResultSBarItem.text = message;
+		this.searchResultSBarItem.tooltip = `${RESULTS_SHOW_RESULTS_FOUND} ${message}`;
 		this.searchResultSBarItem.command = PICK_CACHED_RESULTS;
-		this.searchResultSBarItem.tooltip = CLICK_SHOW_RESULTS_FOUND;
 	}
 }

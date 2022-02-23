@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
 import { inject, injectable} from 'inversify';
-import { SURE_REMOVING_MSG, YES_MSG } from '../consts/messages';
-import { NO_MSG } from '../consts/messages';
+import { GENERIC_QUESTION_REMOVING,
+	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/messages';
 import { REMOVE_CATEGORY } from '../consts/commands';
 import { TreeDataItem } from '../models/tree-data-item';
 import { Command } from './base/command';
 import TYPES from './base/types';
-import { Category } from '../models/category';
+import { CategoryModel } from '../models/category-model';
 
 @injectable()
 export class RemoveCategory implements Command {
@@ -23,16 +23,17 @@ export class RemoveCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
-		const existingCategory : Category = this.bookmarkManager.categoryRepositories!.categories
+		const existingCategory : CategoryModel = this.bookmarkManager
+			.categoryRepositories!.categories
 			?.filter(ec => ec.id === dataItem.id)[0];
 			
 		vscode.window
 		.showInformationMessage(
-			`${SURE_REMOVING_MSG} ${existingCategory.name}?`,
-			...[YES_MSG, NO_MSG]
+			`${GENERIC_QUESTION_REMOVING} ${existingCategory.name}?`,
+			...[GENERIC_YES_ANSWER, GENERIC_NO_ANSWER]
 		)
 		.then((answer) => {
-			if (answer === YES_MSG) {
+			if (answer === GENERIC_YES_ANSWER) {
 				this.bookmarkManager.removeCategory(dataItem);
 			}
 		});

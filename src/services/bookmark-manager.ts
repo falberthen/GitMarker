@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { inject, injectable } from 'inversify';
 import TYPES from '../commands/base/types';
+import { inject, injectable } from 'inversify';
 import { CONTEXT_CATEGORY_COUNT, FAVORITE_REPOS_KEY, SET_CONTEXT } from '../consts/application';
-import { ALREADY_EXISTS_MSG, CATEGORY_ALREADY_EXISTS_MSG } from '../consts/messages';
-import { Category } from '../models/category';
-import { CategoriesRepositories } from '../models/categories-repositories';
-import { GithubRepository } from '../models/github-repository';
+import { GENERIC_ERR_ALREADY_EXISTS, CATEGORY_ERR_ALREADY_EXISTS } from '../consts/messages';
+import { CategoryModel } from '../models/category-model';
+import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
+import { GithubRepositoryModel } from '../models/github-repository-model';
 import { TreeDataItem } from '../models/tree-data-item';
 import { DataStorageManager } from './data-storage-manager';
 import { TreeViewManager } from './tree-view-manager';
 
 @injectable()
 export default class BookmarkManager {
-	categoryRepositories: CategoriesRepositories | undefined;
+	categoryRepositories: CategoriesRepositoriesModel | undefined;
 
 	constructor(
 		@inject(TYPES.treeViewManager) 
@@ -24,13 +24,13 @@ export default class BookmarkManager {
 	}
 
 	addCategory(categoryName: string) {      
-		const newCategory = new Category(categoryName);
+		const newCategory = new CategoryModel(categoryName);
 		const existingCategory = this.categoryRepositories!.categories
 			?.filter(n => n.name === categoryName)[0];
 
 		if(existingCategory) {
 			vscode.window
-				.showInformationMessage(`${categoryName} ${CATEGORY_ALREADY_EXISTS_MSG}`);
+				.showInformationMessage(`${categoryName} ${CATEGORY_ERR_ALREADY_EXISTS}`);
 			return;						
 		}
 
@@ -39,7 +39,7 @@ export default class BookmarkManager {
 		this.storeAndRefreshProvider();
 	}
 
-	bookmarkRepositories(categoryId: string, selectedRepositories: GithubRepository[]) { 
+	bookmarkRepositories(categoryId: string, selectedRepositories: GithubRepositoryModel[]) { 
 		const category = this.categoryRepositories!.categories
 			?.filter(obj => obj.id === categoryId)[0];
 
@@ -75,11 +75,11 @@ export default class BookmarkManager {
 
 	loadStoredData() {
 		const storedCategories = this.dataStorageManager
-			.getValue<CategoriesRepositories>(FAVORITE_REPOS_KEY);
+			.getValue<CategoriesRepositoriesModel>(FAVORITE_REPOS_KEY);
 
 		this.categoryRepositories = storedCategories 
 			? storedCategories 
-			: new CategoriesRepositories();
+			: new CategoriesRepositoriesModel();
 
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 			this.categoryRepositories.categories);
@@ -97,7 +97,7 @@ export default class BookmarkManager {
 
 		if(existingCategory && category?.name !== newName) {
 			vscode.window
-				.showErrorMessage(`${newName}${ALREADY_EXISTS_MSG}`);
+				.showErrorMessage(`${newName}${GENERIC_ERR_ALREADY_EXISTS}`);
 			return;
 		}
 			
@@ -131,7 +131,7 @@ export default class BookmarkManager {
 		this.storeAndRefreshProvider();		
 	}
 
-	updateRepository(updatedRepository: GithubRepository) {
+	updateRepository(updatedRepository: GithubRepositoryModel) {
 		const existingRepository = this.categoryRepositories!.repositories
 		?.filter(c => c.id === updatedRepository.id)[0];
 
@@ -147,14 +147,14 @@ export default class BookmarkManager {
 	storeAndRefreshProvider() {
 		// Store updated values
 		this.dataStorageManager
-			.setValue<CategoriesRepositories>(FAVORITE_REPOS_KEY, 
+			.setValue<CategoriesRepositoriesModel>(FAVORITE_REPOS_KEY, 
 				this.categoryRepositories!);
 
 		// Refreshing all data items	
 		this.treeViewManager
 			.buildDataProviderItems(this.categoryRepositories!);
 
-		var categoryCount = this.categoryRepositories 
+		let categoryCount = this.categoryRepositories 
 			? this.categoryRepositories!.categories.length
 			: 0;
 
@@ -170,7 +170,7 @@ export default class BookmarkManager {
 		category.repositories
 			?.splice(index, 1);
 
-		// If no other ocurrences, hard remove it
+		// Find other ocurrences
 		const ocurrences: string[] = [];
 		this.categoryRepositories!.categories.forEach(category => {
 			const index = category.repositories
@@ -180,6 +180,7 @@ export default class BookmarkManager {
 			}
 		});
 
+		// If no other ocurrences, hard remove it
 		if(ocurrences.length === 0) {
 			const existingRepository = this.categoryRepositories!.repositories
 				?.filter(c => c.id === repositoryId)[0];

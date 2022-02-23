@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as vscode from 'vscode';
 
 export const openDialogOptions: vscode.OpenDialogOptions = {
@@ -9,7 +10,7 @@ export const openDialogOptions: vscode.OpenDialogOptions = {
 };
 
 export const saveDialogOptions: vscode.SaveDialogOptions = {
-	defaultUri: vscode.Uri.file("gitmarker.json"),
+	defaultUri: vscode.Uri.file(`gitmarker_${DateTime.now().toFormat('yyyy-MM-dd')}.json`),
 	saveLabel: 'Save',
 	filters: {
 		'json GitMark files': ['json'],

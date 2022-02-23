@@ -3,10 +3,12 @@ import TYPES from './base/types';
 import BookmarkManager from '../services/bookmark-manager';
 import { inject, injectable} from 'inversify';
 import { CLEAR_ALL_CATEGORIES } from '../consts/commands';
-import { CLEAR_ALL_CATEGORIES_MSG, NO_MSG, YES_MSG } from '../consts/messages';
+import { CATEGORY_CONFIRM_CLEAR_ALL, 
+	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/messages';
 import { Command } from './base/command';
 import { DataStorageManager } from '../services/data-storage-manager';
 import { FAVORITE_REPOS_KEY } from '../consts/application';
+import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
 
 @injectable()
 export class ClearAllCategories implements Command {
@@ -25,14 +27,14 @@ export class ClearAllCategories implements Command {
 
 	async execute() {
 		vscode.window.showInformationMessage(
-			CLEAR_ALL_CATEGORIES_MSG,
-			...[YES_MSG, NO_MSG]
+			CATEGORY_CONFIRM_CLEAR_ALL,
+			...[GENERIC_YES_ANSWER, GENERIC_NO_ANSWER]
 		)
 		.then((answer) => {
-			if (answer === 'Yes') {
+			if (answer === GENERIC_YES_ANSWER) {
 				this.dataStorageManager
 					.clearValues(FAVORITE_REPOS_KEY);
-				this.bookmarkManager.categoryRepositories = undefined;
+				this.bookmarkManager.categoryRepositories = new CategoriesRepositoriesModel();
 				this.bookmarkManager.storeAndRefreshProvider();				
 			}
 		});

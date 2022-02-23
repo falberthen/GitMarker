@@ -94,3 +94,19 @@ it can be enabled/disabled from the extension settings.
 
 - Removed dependency of the class-validator package after potential security vulnerabilities were found.
 - Improved error handling for inactive/non-available bookmarked repositories.
+
+## [1.6.5] - 2022-02-22
+### Changed
+- Updated all dependencies.
+
+## [1.7.0] - 2022-02-22
+
+### Added
+- Implemented `inactive` reddish icon to indicate no-longer available repositories.
+- Appended current date [yyyy-MM-dd] to the export json file name.
+
+### Changed
+- Fixed bug that cleared the categories when importing an invalid bookmark.
+- Fixed bug that prevented creating categories right away after using clear-all.
+- Insured input trimming for category naming.
+- Improved code standards and constants.

@@ -1,30 +1,33 @@
 // Messages
-export const TYPE_NAME_CATEGORY_MSG = 'Type the category name';
-export const CHOOSE_CATEGORY_MSG = 'Please select the category for this bookmark';
-export const CATEGORY_ALREADY_EXISTS_MSG = 'already exists. Please try with another name.';
-export const ALREADY_EXISTS_MSG = ' already exists.';
-export const CLEAR_ALL_CATEGORIES_MSG = 'Are you sure you want to clear all categories?';
-export const CLEAR_PAT_MSG = 'Are you sure you want to clear your PAT?';
-export const SURE_REMOVING_MSG = 'Are you sure you want to remove';
-export const NO_REPOS_FOUND_MSG = 'No repositories found for';
-export const REPOSITORY_NOT_AVAILABLE = 'This repository is no longer available.';
-export const CLICK_SHOW_RESULTS_FOUND = 'Click to show the results found';
-export const RESULTS_FOR_TERM_MSG = 'Results found for';
-export const ACCESS_TOKEN_REQUIRED_MSG = 'It is recommended that you set your personal GitHub access token for the best experience.';
-export const ACCESS_TOKEN_SET_MSG = 'GitHub personal access token (PAT) set with success!';
+export const ACCESS_TOKEN_REQUIRED = 'It is recommended that you set your personal GitHub access token for the best experience.';
+export const ACCESS_TOKEN_SET_SUCCESS = 'GitHub personal access token (PAT) set with success!';
+export const BOOKMARK_ERR_IMPORTING = 'An error ocurred when importing the file. The content format is invalid.';
+export const BOOKMARK_ERR_EXPORTING = 'An error ocurred when exporting your bookmarks.';
+export const BOOKMARK_IMPORT_QUESTION = 'Your current bookmarks will be replaced with the importing file. Are you sure?';
+export const CATEGORY_ERR_NAME_REQUIRED = 'Type a valid category name';
+export const CATEGORY_PLEASE_SELECT = 'Please select the category for this bookmark';
+export const CATEGORY_ERR_ALREADY_EXISTS = 'already exists. Please try with another name.';
+export const CATEGORY_CONFIRM_CLEAR_ALL = 'Are you sure you want to clear all categories?';
+export const GIT_CLONE_EXECUTED = 'Clone command executed for ';
+export const GIT_CLONE_QUESTION = 'Do you want to clone ';
+export const OPTION_CHECK_GITHUB_DOC = 'Check the GitHub documentation';
+export const OPTION_SET_TOKEN_NOW_MSG = 'Setup it now';
+export const PAT_ERR_INVALID = 'Please type a valid PAT';
+export const PAT_CLEAR_QUESTION = 'Are you sure you want to clear your PAT?';
 export const PAT_CLEARED_SUCCESS = 'PAT cleared with success!';
+export const REPOSITORY_ERR_NOT_FOUND = 'No repositories found for';
+export const REPOSITORY_ERR_NOT_AVAILABLE = 'This repository is no longer available.';
+export const RESULTS_SHOW_RESULTS_FOUND = 'Click to show';
+export const RESULTS_FOR_TERM = 'Results found for';
 
-export const CHECK_GITHUB_DOC_MSG = 'Check the GitHub documentation';
-export const SET_TOKEN_NOW_MSG = 'Setup it now';
-export const ARE_YOU_SURE_IMPORT_MSG = 'Your current bookmarks will be replaced with the importing file. Are you sure?';
-export const ERROR_IMPORTING_MSG = 'An error ocurred when importing the file. The content format is invalid.';
-export const ERROR_EXPORTING_MSG = 'An error ocurred when exporting your bookmarks.';
-export const GIT_CLONE_EXECUTED_MSG = 'Clone command executed for ';
-export const DO_YOU_WANT_CLONE_MSG = 'Do you want to clone ';
-export const YES_MSG = 'Yes';
-export const NO_MSG = 'No';
+// Generic messages
+export const GENERIC_ERR_ALREADY_EXISTS = ' already exists.';
+export const GENERIC_QUESTION_REMOVING = 'Are you sure you want to remove';
+export const GENERIC_YES_ANSWER = 'Yes';
+export const GENERIC_NO_ANSWER = 'No';
 
 // PlaceHolders
+export const CATEGORY_NAME_PLACEHOLDER = 'Type the category name';
 export const TYPE_SEARCH_TERM_PLACEHOLDER = 'Type a term to search on GitHub';
 export const TYPE_ACCESS_TOKEN_PLACEHOLDER = 'Type your GitHub personal access token';
 

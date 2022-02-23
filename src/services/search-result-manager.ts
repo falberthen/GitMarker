@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { QuickInputButton, Uri } from "vscode";
 import { inject, injectable } from 'inversify';
-import { GithubRepository } from '../models/github-repository';
-import { CHOOSE_CATEGORY_MSG } from '../consts/messages';
-import { Category } from '../models/category';
+import { GithubRepositoryModel } from '../models/github-repository-model';
+import { CATEGORY_PLEASE_SELECT } from '../consts/messages';
+import { CategoryModel } from '../models/category-model';
 import { GitHubApiClient, ISearchResult } from './github-api-client';
 import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';
 import { PageSelectedItems, PavigationButton, RepoPickItem } from '../models/repo-pick-item';
@@ -102,7 +102,7 @@ export class SearchResultManager {
     return quickPick;
   }
 
-	private async pickCategory(categories: Category[]) {
+	private async pickCategory(categories: CategoryModel[]) {
 		const categoriesDetails = categories
 		.map(categoryInfo => {
 			return {
@@ -116,7 +116,7 @@ export class SearchResultManager {
 			matchOnDescription: true,
 			matchOnDetail: true,
 			canPickMany: false,
-			title: CHOOSE_CATEGORY_MSG
+			title: CATEGORY_PLEASE_SELECT
 		});
 	}
 
@@ -187,7 +187,7 @@ export class SearchResultManager {
     return repoItems.filter(item => item.picked);
   }
 
-  private mapToPickItem(gitHubRepos: GithubRepository[]): RepoPickItem[] {
+  private mapToPickItem(gitHubRepos: GithubRepositoryModel[]): RepoPickItem[] {
     const repoDetails = gitHubRepos.map(repoInfo => {
       const label = repoInfo.stargazersCount > 0 
       ? `${repoInfo.name} ⭐${repoInfo.stargazersCount}` 
@@ -222,7 +222,7 @@ export class SearchResultManager {
 
 	private async onDidTriggerButton(button: PavigationButton, repoPickItems: RepoPickItem[] ) {		
 
-		// BACK BUTTON
+		// Back button
 		if (button.direction === NavDirection.left) {
 			this.currentPage = this.quickPick!.step = --this.currentPage;
 			const items = this.searchResults
@@ -231,18 +231,18 @@ export class SearchResultManager {
 			this.quickPick!.buttons = this.buildQuickPickButtons();
 		}
 
-		// FORWARD BUTTON
+		// Forward button
 		if(button.direction === NavDirection.right) { 
 			this.currentPage = this.quickPick!.step = ++this.currentPage;		
 
 			const items = this.searchResults
 				.filter(e => e.page === this.currentPage)[0];
 
-			if(items) { // IN-MEMORY DATA
+			if(items) { // In-memory data
 				repoPickItems = this.mapToPickItem(items.repositories);
 				
 			}
-			else { // SEARCH NEW DATA
+			else { // Search new data
 				this.quickPick!.busy = true;
 				this.quickPick!.buttons = this.buildWaitingButton();
 				
@@ -262,7 +262,7 @@ export class SearchResultManager {
 	}
 
 	private async onDidAccept() {
-		const selectedRepositories: GithubRepository[] = [];
+		const selectedRepositories: GithubRepositoryModel[] = [];
 		const allCategories = this.bookmarkManager
 			.categoryRepositories!.categories;
 

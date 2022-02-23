@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
 import { inject, injectable} from 'inversify';
 import { CREATE_CATEGORY } from '../consts/commands';
-import { TYPE_NAME_CATEGORY_MSG } from '../consts/messages';
+import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_NAME_PLACEHOLDER } from '../consts/messages';
 import { Command } from './base/command';
 import TYPES from './base/types';
 
@@ -22,12 +22,19 @@ export class CreateCategory implements Command {
   async execute() {
     await vscode.window.showInputBox({
       value: '',
-      placeHolder: TYPE_NAME_CATEGORY_MSG,
+      placeHolder: CATEGORY_NAME_PLACEHOLDER,
     })
     .then(name => {
-      if(name) {
-        this.bookmarkManager.addCategory(name);
-      }
+			let trimmedName = name?.trim();
+			if(typeof name === 'undefined') { // no action
+				return;
+			}
+			if(trimmedName === '') {
+				vscode.window.showErrorMessage(CATEGORY_ERR_NAME_REQUIRED);
+				return;	
+			}
+      
+			this.bookmarkManager.addCategory(trimmedName!);
     });
   }
 }

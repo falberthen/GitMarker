@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { Command, Uri } from 'vscode';
-import { CATEGORY_ICON, DARK_THEME, GITHUB_ICON, LIGHT_THEME } from '../consts/icons';
+import { CATEGORY_ICON, DARK_THEME, GITHUB_ICON, 
+	GITHUB_INACTIVE_ICON, LIGHT_THEME } from '../consts/icons';
 import { VIEW_ITEM_CATEGORY, VIEW_ITEM_REPOSITORY } from '../consts/application';
 import path = require('path');
 
@@ -11,7 +12,7 @@ export class TreeDataItem extends vscode.TreeItem {
 	url!: Uri;
 	cloneUrl!: string;
 
-	constructor(isRoot: boolean, label: string, children?: TreeDataItem[], command?: Command) {
+	constructor(isActive: boolean = true, isRoot: boolean, label: string, children?: TreeDataItem[], command?: Command) {
 		super(
 			label,
 			isRoot 
@@ -24,9 +25,13 @@ export class TreeDataItem extends vscode.TreeItem {
 			? VIEW_ITEM_CATEGORY 
 			: VIEW_ITEM_REPOSITORY;
 		
-		const icon = isRoot 
+		let icon = isRoot 
 			? CATEGORY_ICON 
 			: GITHUB_ICON;
+
+		icon = !isActive 
+			? GITHUB_INACTIVE_ICON 
+			: icon;
 
 		this.iconPath = {
 			light: path.join(__filename, '..', '..', '..', 'resources', LIGHT_THEME, icon),

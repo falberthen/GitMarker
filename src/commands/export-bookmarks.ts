@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
-import { ERROR_EXPORTING_MSG } from '../consts/messages';
+import { BOOKMARK_ERR_EXPORTING } from '../consts/messages';
 import { saveDialogOptions } from '../utils/dialog-options';
 import { EXPORT_BOOKMARKS } from '../consts/commands';
 import { Command } from './base/command';
 import BookmarkManager from '../services/bookmark-manager';
+import TYPES from './base/types';
 
 @injectable()
 export class ExportBookmarks implements Command {
@@ -40,8 +40,8 @@ export class ExportBookmarks implements Command {
 						});            
 					});					
 				} catch (error) {
-					vscode.window.showErrorMessage(ERROR_EXPORTING_MSG);
-				}         
+					vscode.window.showErrorMessage(BOOKMARK_ERR_EXPORTING);
+				}
 			}
 		});
 	}

@@ -5,13 +5,12 @@ import { CLONE_REPOSITORY } from '../consts/commands';
 import { TreeDataItem } from "../models/tree-data-item";
 import { openFolderOptions } from '../utils/dialog-options';
 import { 
-   DEFAULT_PATH_CFG, GITMARKER_CONFIG, 
-   TERMINAL_KEY, USE_DEFAULT_PATH_CFG 
+	DEFAULT_PATH_CFG, GITMARKER_CONFIG, 
+	TERMINAL_KEY, USE_DEFAULT_PATH_CFG 
 } from '../consts/application';
 import { 
-   DO_YOU_WANT_CLONE_MSG, 
-   GIT_CLONE_EXECUTED_MSG, 
-   NO_MSG, YES_MSG 
+	GIT_CLONE_QUESTION, GIT_CLONE_EXECUTED, 
+	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER 
 } from '../consts/messages';
 
 @injectable()
@@ -23,10 +22,10 @@ export class CloneRepository implements Command {
 
 	async execute(dataItem: TreeDataItem) {
 		vscode.window.showInformationMessage(
-			`${DO_YOU_WANT_CLONE_MSG}${dataItem.label}?`,
-			...[YES_MSG, NO_MSG]
+			`${GIT_CLONE_QUESTION}${dataItem.label}?`,
+			...[GENERIC_YES_ANSWER, GENERIC_NO_ANSWER]
 		).then((answer) => {
-			if (answer === 'Yes') {
+			if (answer === GENERIC_YES_ANSWER) {
 				this.pickClonePath(dataItem);
 			}
 		});
@@ -66,6 +65,6 @@ export class CloneRepository implements Command {
 		terminal.sendText(`cls`);
 		terminal.show();
 		terminal.sendText(`git clone ${dataItem?.cloneUrl} ${path}\\${dataItem.label}`);
-		vscode.window.showInformationMessage(`${GIT_CLONE_EXECUTED_MSG}${dataItem.label}`);
+		vscode.window.showInformationMessage(`${GIT_CLONE_EXECUTED}${dataItem.label}`);
 	}
 }
