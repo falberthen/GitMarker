@@ -5,7 +5,6 @@ import { CommandsManager } from './services/command-manager';
 import ContextManager from './services/context-manager';
 
 export async function activate(context: vscode.ExtensionContext) {
-
 	ContextManager.init(context);
 	const cmdManager = container
 		.get<CommandsManager>(TYPES.commandManager);

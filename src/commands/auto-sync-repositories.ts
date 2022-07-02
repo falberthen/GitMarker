@@ -5,7 +5,7 @@ import { Command } from './base/command';
 import { ENABLE_AUTO_SYNC, GITMARKER_CONFIG } from '../consts/application';
 import { DateTimeHelper } from '../utils/datetime-helper';
 import { GitHubApiClient } from '../services/github-api-client';
-import { GithubRepository } from '../models/github-repository';
+import { GithubRepositoryModel } from '../models/github-repository-model';
 import BookmarkManager from '../services/bookmark-manager';
 import TYPES from './base/types';
 
@@ -32,14 +32,14 @@ export class AutoSyncRepositories implements Command {
 
 	async execute(synchronize: boolean | undefined) {		
 		if(synchronize) {
-			// Request rate limit - it needs to be at least 1 minute outdated
+			// Request rate limit needs to be at least 1 minute outdated to request an update
 			const minimumWaitSync = 1;
 			const reposToSync = this.bookmarkManager
-         .categoryRepositories!.repositories
-			.filter(r => 
-				this.dateTimeHelper.getTimeDiff(r.lastSyncDate)
-				.minutes > minimumWaitSync
-			);
+				.categoryRepositories!.repositories
+				.filter(r => 
+					this.dateTimeHelper.getTimeDiff(r.lastSyncDate)
+					.minutes > minimumWaitSync
+				);
 
 			if(reposToSync.length > 0) {
 				await this.syncRepositories(reposToSync);
@@ -47,27 +47,33 @@ export class AutoSyncRepositories implements Command {
 		}
 	}
 
-	async syncRepositories(reposToSync: GithubRepository[]) {
-		const tasks: Promise<GithubRepository>[] = [];
+	async syncRepositories(reposToSync: GithubRepositoryModel[]) {
+		const tasks: [Promise<GithubRepositoryModel>, GithubRepositoryModel][] = [];
 		reposToSync.forEach(repository => {
-			if(repository) {
-				var getRepositoryTask = this.gitHubApiClient.getById(repository.id);
-				tasks.push(getRepositoryTask);
-			}			
+			var getRepositoryTask = this.gitHubApiClient
+				.getById(repository.id);
+			tasks.push([getRepositoryTask, repository]);
 		});
 		
 		const callUpdateTasks = async () => {
-			for (const task of tasks) {					
-				const repository = await task
-				.catch(error => {
-					if(error.response && error.response.status === 403){
-						this.gitHubApiClient.accessTokenManager!.showPatWarning();		
+			for (const task of tasks) {				
+				// executing promise	
+				const repository = await task[0]
+				.catch(error => {					
+					if(error.response && error.response.data.block.reason !== 'unavailable') {
+						vscode.window.showErrorMessage(error.response.data.message);				
 					}
 				});
 				
-				if(repository) {
+				if(repository) { // update went well
 					this.bookmarkManager.updateRepository(repository);
-				}				
+				}
+				else {
+					// repository is no longer available on GitHub
+					var inactiveRepository = task[1];
+					inactiveRepository.isActive = false;
+					this.bookmarkManager.updateRepository(inactiveRepository);
+				}
 			}
 		};
 

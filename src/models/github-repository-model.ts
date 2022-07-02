@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { Uri } from 'vscode';
 
-export class GithubRepository {
+export class GithubRepositoryModel {
 	id: string;
 	name: string;
 	fullName!: string;
@@ -14,11 +14,13 @@ export class GithubRepository {
 	url: Uri;
 	stargazersCount!: number;
 	forks!: number;
+	isActive:boolean;
 
-	public constructor(id: string, name: string,  url: Uri) {
+	public constructor(id: string, name: string,  url: Uri, isActive: boolean = true) {
 		this.id = id;
 		this.name = name;
 		this.url = url;	
+		this.isActive = isActive;
 		this.setCloneUrl();
 	}
 

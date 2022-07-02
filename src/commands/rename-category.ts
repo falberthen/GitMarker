@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
+import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
-import { TYPE_NAME_CATEGORY_MSG } from '../consts/messages';
+import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_PLEASE_SELECT } from '../consts/messages';
 import { TreeDataItem } from '../models/tree-data-item';
 import { RENAME_CATEGORY } from '../consts/commands';
 import { Command } from './base/command';
-import TYPES from './base/types';
-import { Category } from '../models/category';
+import { CategoryModel } from '../models/category-model';
 
 @injectable()
 export class RenameCategory implements Command {
@@ -22,17 +22,26 @@ export class RenameCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
-		const existingCategory: Category = this.bookmarkManager.categoryRepositories!.categories
+		const existingCategory: CategoryModel = this.bookmarkManager
+			.categoryRepositories!.categories
 			?.filter(ec => ec.id === dataItem.id)[0];
 		
-		let newName = await vscode.window.showInputBox({
+		await vscode.window.showInputBox({
 			value: existingCategory.name,
-			placeHolder:  `${TYPE_NAME_CATEGORY_MSG}`,
-		});
-	
-		if(typeof newName !== 'undefined' && newName) {
+			placeHolder:  `${CATEGORY_PLEASE_SELECT}`,
+		})
+		.then(async newName => {
+			let trimmedNewName = newName?.trim();
+			if(typeof newName === 'undefined') { // no action
+				return;
+			}
+			if(trimmedNewName === '') {
+				vscode.window.showErrorMessage(CATEGORY_ERR_NAME_REQUIRED);
+				return;
+			}
+
 			this.bookmarkManager
-				.renameCategory(dataItem, newName);
-		}
+					.renameCategory(dataItem, trimmedNewName!);
+		});
 	}
 }

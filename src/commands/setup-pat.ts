@@ -2,8 +2,9 @@ import * as vscode from 'vscode';
 import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
 import { 
-	ACCESS_TOKEN_SET_MSG, 
-	TYPE_ACCESS_TOKEN_PLACEHOLDER 
+	PAT_ERR_INVALID, 
+	TYPE_ACCESS_TOKEN_PLACEHOLDER,
+	ACCESS_TOKEN_SET_SUCCESS
 } from '../consts/messages';
 import { SETUP_PAT } from '../consts/commands';
 import { Command } from './base/command';
@@ -27,10 +28,17 @@ export class SetAccessToken implements Command {
 			value: '',
 			placeHolder: TYPE_ACCESS_TOKEN_PLACEHOLDER,
 		}).then(async token => {
-			if(typeof token !== 'undefined' && token) {
-				await this.accessTokenManager.storeToken(token);
-				vscode.window.showInformationMessage(ACCESS_TOKEN_SET_MSG);
+			let trimmedToken = token?.trim();
+			if(typeof trimmedToken === 'undefined') { // no action
+				return;
 			}
+			if(trimmedToken === '') {
+				vscode.window.showErrorMessage(PAT_ERR_INVALID);
+				return;	
+			}
+
+			await this.accessTokenManager.storeToken(trimmedToken);
+			vscode.window.showInformationMessage(ACCESS_TOKEN_SET_SUCCESS);
 		});
 	}
 }

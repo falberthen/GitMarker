@@ -1,15 +1,17 @@
+import * as vscode from 'vscode';
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import TYPES from '../commands/base/types';
 import container from '../inversify.config';
-import { GithubRepository } from "../models/github-repository";
+import { GithubRepositoryModel } from "../models/github-repository-model";
 import { DateTimeHelper } from '../utils/datetime-helper';
 import { inject, injectable } from 'inversify';
 import { PersonalAccessTokenManager } from './pat-manager';
+import { REPOSITORY_ERR_NOT_AVAILABLE } from '../consts/messages';
 
 export interface ISearchResult {
 	total: number,
 	page: number,
-	repositories: GithubRepository[]
+	repositories: GithubRepositoryModel[]
 }
 
 @injectable()
@@ -30,22 +32,28 @@ export class GitHubApiClient {
 		const client = await this.buildAxiosClient();
 		let total = 0;
 
-		const data = await client.get(url).then((response: any) => {
-			total = response.data.total_count;	
-			return response.data.items.map((val: any) => ({
-				id: val.id,
-				name: val.name,
-				fullName: val.full_name,
-				ownerName: val.owner?.login,
-				description: val.description,
-				url: val.html_url,
-				stargazersCount: val.stargazers_count,
-				language:val.language,
-				forks: val.forks,
-				license: val.license,
-				lastSyncDate: this.dateTimeHelper.getDateTimeNow()
-			}));						
-		});
+		const data = await client.get(url)
+			.then((response: any) => {
+				total = response.data.total_count;	
+				return response.data.items.map((val: any) => ({
+					id: val.id,
+					name: val.name,
+					fullName: val.full_name,
+					ownerName: val.owner?.login,
+					description: val.description,
+					url: val.html_url,
+					stargazersCount: val.stargazers_count,
+					language:val.language,
+					forks: val.forks,
+					license: val.license,
+					lastSyncDate: this.dateTimeHelper.getDateTimeNow()
+				}));			
+			})
+			.catch(error => {
+				if(error.response){
+					this.showCustomResponseMessage(error.response);					
+				}
+			});
 
 		return { 
 			page:pageNumber, 
@@ -55,22 +63,28 @@ export class GitHubApiClient {
 	}
 
 	async getById(repositoryId: string) {
-		let repo!: GithubRepository;
+		let repo!: GithubRepositoryModel;
 		const url = `/repositories/${repositoryId}`;
 		const client = await this.buildAxiosClient();
 
-		await client.get(url).then((response: any) => {			
-			const data = response.data;
-			repo = new GithubRepository(data.id, data.name, data.html_url);
-			repo.ownerName = data.owner?.login;
-			repo.fullName = data.full_name;
-			repo.description = data.description;
-			repo.stargazersCount = data.stargazers_count;
-			repo.language = data.language;
-			repo.forks = data.forks;
-			repo.license = data.license;
-			repo.lastSyncDate = this.dateTimeHelper.getDateTimeNow();
-		});
+		await client.get(url)
+			.then((response: any) => {			
+				const data = response.data;
+				repo = new GithubRepositoryModel(data.id, data.name, data.html_url);
+				repo.ownerName = data.owner?.login;
+				repo.fullName = data.full_name;
+				repo.description = data.description;
+				repo.stargazersCount = data.stargazers_count;
+				repo.language = data.language;
+				repo.forks = data.forks;
+				repo.license = data.license;
+				repo.lastSyncDate = this.dateTimeHelper.getDateTimeNow();
+			})
+			.catch(error => {
+				if(error.response){
+					this.showCustomResponseMessage(error.response);					
+				}			
+			});
 
 		return repo;
 	}
@@ -92,5 +106,18 @@ export class GitHubApiClient {
 			});
 		
 		return axios.create(config);
-	}	
+	}
+
+	private showCustomResponseMessage(response: any) {
+		switch(response.status) {
+			case 403: 
+			this.accessTokenManager!.showPatWarning();
+			break;
+			case 404:
+				vscode.window.showErrorMessage(REPOSITORY_ERR_NOT_AVAILABLE);
+			break;
+			default: 
+				vscode.window.showErrorMessage(response.data.message);			
+		}
+	}
 }

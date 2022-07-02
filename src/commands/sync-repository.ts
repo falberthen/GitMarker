@@ -6,7 +6,8 @@ import { SYNC_REPOSITORY } from '../consts/commands';
 import { TreeDataItem } from '../models/tree-data-item';
 import { GitHubApiClient } from '../services/github-api-client';
 import { Command } from './base/command';
-import { REPOSITORY_NOT_AVAILABLE } from '../consts/messages';
+import { REPOSITORY_ERR_NOT_AVAILABLE } from '../consts/messages';
+import { GithubRepositoryModel } from '../models/github-repository-model';
 
 @injectable()
 export class SyncRepository implements Command {
@@ -28,29 +29,20 @@ export class SyncRepository implements Command {
 			await this.gitHubApiClient
 			.getById(repositoryId)
 			.then(updatedRepository => {
-				if(updatedRepository) {
-					this.bookmarkManager
-						.updateRepository(updatedRepository);
-				}		
-			})
-			.catch(error => {
-				if(error.response){
-					this.showCustomResponseMessage(error.response);					
+				if(!updatedRepository) {
+					// repository is no longer available
+					vscode.window.showErrorMessage(REPOSITORY_ERR_NOT_AVAILABLE);
+					// setting an inactive repository
+					updatedRepository = new GithubRepositoryModel(
+						dataItem.customId!, 
+						dataItem.label!.toString(), 
+						dataItem.url, 
+						false);
 				}
+				
+				this.bookmarkManager
+					.updateRepository(updatedRepository);
 			});
-		}
-	}
-
-	private showCustomResponseMessage(response: any) {
-		switch(response.status) {
-			case 403: 
-			this.gitHubApiClient.accessTokenManager!.showPatWarning();
-			break;
-			case 404:
-				vscode.window.showErrorMessage(REPOSITORY_NOT_AVAILABLE);
-			break;
-			default: 
-				vscode.window.showErrorMessage(response.data.message);			
 		}
 	}
 }

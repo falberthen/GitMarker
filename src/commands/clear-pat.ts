@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
 import { DELETE_PAT } from '../consts/commands';
-import { CLEAR_PAT_MSG, NO_MSG, PAT_CLEARED_SUCCESS, YES_MSG } from '../consts/messages';
+import { PAT_CLEAR_QUESTION, PAT_CLEARED_SUCCESS,
+	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/messages';
 import { Command } from './base/command';
 import { PersonalAccessTokenManager } from '../services/pat-manager';
 
@@ -21,11 +22,11 @@ export class ClearPAT implements Command {
 
 	async execute() {
 		vscode.window.showInformationMessage(
-			CLEAR_PAT_MSG,
-			...[YES_MSG, NO_MSG]
+			PAT_CLEAR_QUESTION,
+			...[GENERIC_YES_ANSWER, GENERIC_NO_ANSWER]
 		)
 		.then((answer) => {
-			if (answer === 'Yes') {
+			if (answer === GENERIC_YES_ANSWER) {
 				this.accessTokenManager.deleteToken()
 				.then(() => {
 					vscode.window.showInformationMessage(PAT_CLEARED_SUCCESS);
