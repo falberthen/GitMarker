@@ -2,7 +2,7 @@
 	"name": "gitmarker",
 	"displayName": "GitMarker",
 	"description": "Bookmarking GitHub repositories",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"publisher": "Falberthen",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
@@ -203,6 +203,7 @@
 				},
 				{
 					"command": "gitmarker.clearPAT",
+					"when": "view == gitmarkerView",
 					"group": "group@4"
 				},
 				{

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-<br>
+---
 
 ## [0.1.0] - 2021-08-14
 ### Added
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Better grouping for "..." view/title menu.
 
-<br>
+---
 
 ## [1.0.0] - 2021-08-19
 ### Added
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the way the data is organized and stored, resulting in a way smaller export file.
 - Centralized the search on GitHub at the top navigation menu for a better UI.
 
-<br>
+---
 
 ## [1.1.0] - 2021-08-20
 ### Added
@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exchanged centralized search icon.
 
-<br>
+---
 
 ## [1.2.0] - 2021-09-02
 ### Added
@@ -64,14 +64,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the requirement to have a PAT for searching.
 
-<br>
+---
 
 ## [1.4.0] - 2021-09-06
 ### Added
 
 - Implemented *Pagination* for searching repositories with GitHubApi.
 
-<br>
+---
 
 ## [1.5.0] - 2021-09-10
 ### Added
@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented right-bottom StatusBarItem allowing the user to reuse the latest cached search result.
 - Added repository count number beside each Category.
 
-<br>
+---
 
 ## [1.6.0] - 2021-09-11
 ### Added
@@ -87,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented AutoSync feature for synchronizing repositories when the extension is active.
 it can be enabled/disabled from the extension settings.
 
-<br>
+---
 
 ## [1.6.4] - 2021-10-16
 ### Changed
@@ -95,11 +95,15 @@ it can be enabled/disabled from the extension settings.
 - Removed dependency of the class-validator package after potential security vulnerabilities were found.
 - Improved error handling for inactive/non-available bookmarked repositories.
 
+---
+
 ## [1.6.5] - 2022-02-22
 ### Changed
 - Updated all dependencies.
 
-## [1.7.0] - 2022-02-22
+---
+
+## [1.7.0/1.7.1] - 2022-02-22
 
 ### Added
 - Implemented `inactive` reddish icon to indicate no-longer available repositories.
@@ -107,6 +111,13 @@ it can be enabled/disabled from the extension settings.
 
 ### Changed
 - Fixed bug that cleared the categories when importing an invalid bookmark.
-- Fixed bug that prevented creating categories right away after using clear-all.
+- Fixed bug that prevented creating categories right away after clearing them all.
 - Insured input trimming for category naming.
-- Improved code standards and constants.
+- Improved code standards and internal constants.
+
+---
+
+## [1.7.2] - 2022-10-09
+
+### Changed
+- Fixed a bug that allowed clearPAT to be shown outside the extension.
