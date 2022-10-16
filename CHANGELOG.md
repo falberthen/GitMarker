@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2021-08-14
 ### Added
-
+`[Minor]`
 - Import bookmarks feature.
 - Export bookmarks feature.
 - Added owner's name into repository tooltip.
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2021-08-19
 ### Added
-
+`[Major]`
 - If you sync a repository, it will do it for all its existing references within other categories.
 
 ### Changed
@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2021-08-20
 ### Added
-
+`[Minor]`
 - Git Clone feature.
 - Settings for defining default clone path and, when use it.
 
@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [1.2.0] - 2021-09-02
+`[Minor]`
 ### Added
 
 - Settings for defining the number of search results per page when searching repositories.
@@ -56,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <br>
 
 ## [1.3.0] - 2021-09-03
+`[Minor]`
 ### Added
 
 - Implemented *Clear PAT* option
@@ -67,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [1.4.0] - 2021-09-06
+`[Minor]`
 ### Added
 
 - Implemented *Pagination* for searching repositories with GitHubApi.
@@ -74,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [1.5.0] - 2021-09-10
+`[Minor]`
 ### Added
 
 - Implemented right-bottom StatusBarItem allowing the user to reuse the latest cached search result.
@@ -82,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [1.6.0] - 2021-09-11
+`[Minor]`
 ### Added
 
 - Implemented AutoSync feature for synchronizing repositories when the extension is active.
@@ -90,6 +95,7 @@ it can be enabled/disabled from the extension settings.
 ---
 
 ## [1.6.4] - 2021-10-16
+`[Patch]`
 ### Changed
 
 - Removed dependency of the class-validator package after potential security vulnerabilities were found.
@@ -98,13 +104,14 @@ it can be enabled/disabled from the extension settings.
 ---
 
 ## [1.6.5] - 2022-02-22
+`[Patch]`
 ### Changed
 - Updated all dependencies.
 
 ---
 
 ## [1.7.0/1.7.1] - 2022-02-22
-
+`[Patch]`
 ### Added
 - Implemented `inactive` reddish icon to indicate no-longer available repositories.
 - Appended current date [yyyy-MM-dd] to the export json file name.
@@ -118,6 +125,21 @@ it can be enabled/disabled from the extension settings.
 ---
 
 ## [1.7.2] - 2022-10-09
-
+`[Patch]`
 ### Changed
 - Fixed a bug that allowed clearPAT to be shown outside the extension.
+
+---
+
+## [1.7.3] - 2022-10-16
+`[Patch]`
+### Changed
+- Fixed a bug that prevented auto-syncing all bookmarks if having some inactive bookmarks.
+
+---
+
+## [1.7.4/1.7.5] - 2022-10-28
+`[Patch]`
+### Changed
+- Updated all dependencies.
+- Updated README.md

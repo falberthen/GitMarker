@@ -1,59 +1,36 @@
-# GitMarker for Visual Studio Code
-by Felipe Henrique (Falberthen)
-
-[![](https://vsmarketplacebadge.apphb.com/version-short/Falberthen.gitmarker.svg)](https://marketplace.visualstudio.com/items?itemName=Falberthen.gitmarker)
-[![](https://vsmarketplacebadge.apphb.com/downloads-short/Falberthen.gitmarker.svg)](https://marketplace.visualstudio.com/items?itemName=Falberthen.gitmarker)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/Falberthen.gitmarker.svg)](https://marketplace.visualstudio.com/items?itemName=Falberthen.gitmarker)
+## GitMarker for Visual Studio Code
 
 <p align="center">
-  <br />
-  <img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/resources/gitmarker.png" alt="GitMarker Logo" />
+	<a href="https://marketplace.visualstudio.com/items?itemName=Falberthen.gitmarker" target="_blank">
+		<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/resources/gitmarker.png" alt="GitMarker Logo" />
+	</a>
 </p>
 
+<br/>
 
-GitMarker is a [Visual Studio Code](https://code.visualstudio.com/) [extension](https://marketplace.visualstudio.com/VSCode) to ease GitHub users searching and bookmarking GitHub repositories, grouping them by categories you create.
-In addition to offering quick access to your bookmarked repositories, it highlights some relevant metadata you might want to keep tracked.
+<a href="https://marketplace.visualstudio.com/items?itemName=Falberthen.gitmarker" target="_blank">GitMarker</a> is an extension for `Visual Studio Code` to ease GitHub users searching and bookmarking repositories and grouping them by custom categories. In addition, it highlights some relevant metadata you want to keep track of, such as stars, licenses, forks, and so on.
 
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/welcome.png">
+Did you like it? Please give it a star ⭐ and support the project.
 
-<br>
+---
+
+<br/>
+<img src="/images/gitmarker-1.gif">
+<br/>
+<img src="/images/gitmarker-2.gif">
+<br/>
+<img src="/images/gitmarker-3.gif">
+<br/>
+<img src="/images/gitmarker-4.gif">
+<br/>
 
 ## Features
+You can easily search repositories on GitHub by a term and add the selected results to categories you created. Results will be cached until next search.
+- Synchronize to update with the latest repository data, one by one, or enable the Auto Sync feature!
+- You will know if a bookmarked repository was deleted or became private by the author.
+- Manage your bookmarks with Export and Import.
+- GIT clone capabilities (GIT installed is required)
 
-### Search on GitHub
-#### You can easily search them on GitHub by a term and, add the selected results to categories.
-
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/repo-search.png">
-
-<br>
-
-### Data synchronization
-#### Synchronize to update with the latest repository data, one by one, or enable the Auto Sync feature!
-
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/my-repos.png"> 
-
-#### When syncing, you will always know if a bookmark repository was deleted or got private through reddish icons:
-
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/no-longer-active-repos.png"> 
-
-<br>
-
-### Export and Import bookmarks
-
-#### You can easily keep your bookmarks saved in a generated `JSON` file, for re-import later.
-
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/menu-options.png"> 
-
-<br>
-
-### GIT capabilities (GIT installed is required)
-
-#### Clone a bookmarked repository with a few clicks to a specified folder!
-
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone.png"> 
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/clone-into-folder.png"> 
-
-<br>
 
 ### Setup settings
 
@@ -62,20 +39,18 @@ In addition to offering quick access to your bookmarked repositories, it highlig
 - *Use Default Clone Path*: enables/disables using the Default Clone Path, defined above. `default: false`.
 - *Search Results Per Page*: sets the number of records per page when searching repositories on GitHub. `maximum: 100`.
 
-<img src="https://raw.githubusercontent.com/falberthen/gitmarker/master/images/settings.png"> 
-
-<br>
+<br/>
 
 ## Notes
-
 GitMarker uses [GitHub API](https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api) for its features, like searching and synchronizing repositories. According to the documentation:
 
 > Unauthenticated clients can make 60 requests per hour. To get more requests per hour, we'll need to authenticate. In fact, doing anything interesting with the GitHub API requires authentication.
 
 I recommend you set a [Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) on GitMarker to have the best experience. Once it's all set, GitMarker stores it in the <b>secret storage</b> to ensure your token will not be read or misused by other extensions.
 
-<br>
+<br/>
 
-## Change Log
+## Change Log and development
+The extension was fully developed with <a href="https://www.typescriptlang.org/" target="_blank">Typescript</a> using Visual Studio Code and its <a href="https://code.visualstudio.com/api" target="_blank">Extension API</a>. You can learn more about the process with <a href="https://falberthen.github.io/posts/gitmarker-pt1/" target="_blank">this</a> series of articles, which I detail step by step.
 
-[Check Changelog](CHANGELOG.md)
+[Check the changelog](CHANGELOG.md) if you're interested in following the development progression, new features added, and bug fixes.
