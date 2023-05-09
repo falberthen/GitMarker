@@ -14,9 +14,13 @@ export class GithubRepositoryModel {
 	url: Uri;
 	stargazersCount!: number;
 	forks!: number;
-	isActive:boolean;
+	isActive: boolean = true;
 
-	public constructor(id: string, name: string,  url: Uri, isActive: boolean = true) {
+	public constructor(
+		id: string, 
+		name: string, 
+		url: Uri, 
+		isActive: boolean) {
 		this.id = id;
 		this.name = name;
 		this.url = url;	

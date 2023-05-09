@@ -13,8 +13,13 @@ export class DateTimeHelper {
 		return DateTime.now();
 	}
 
-	getTimeDiff(dateTime: DateTime): Duration {
-		const date = DateTime.fromISO(dateTime.toString());   
-		return DateTime.now().diff(date, ["minutes"]);
+	getTimeMinutesDiff(dateTime: DateTime): Duration {
+		if(dateTime){
+			const date = DateTime.fromISO(dateTime.toString());   
+			const diff = DateTime.now().diff(date, ["minutes"]);
+			return diff;
+		}
+	
+		return this.getDateTimeNow().diff(this.getDateTimeNow(), ["minutes"]);
 	}
 }

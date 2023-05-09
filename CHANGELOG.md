@@ -143,3 +143,12 @@ it can be enabled/disabled from the extension settings.
 ### Changed
 - Updated all dependencies.
 - Updated README.md
+
+---
+
+## [1.7.6/1.7.7] - 2023-05-09
+`[Patch]`
+### Changed
+- Fixed issue with DateTimeHelper affecting the auto-sync when breaking due to nullability.
+- Fixed issue with deactivated repository icon.
+- Small UI improvements like repository tooltips and messages.

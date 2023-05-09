@@ -6,7 +6,6 @@ import { GithubRepositoryModel } from "../models/github-repository-model";
 import { DateTimeHelper } from '../utils/datetime-helper';
 import { inject, injectable } from 'inversify';
 import { PersonalAccessTokenManager } from './pat-manager';
-import { REPOSITORY_ERR_NOT_AVAILABLE } from '../consts/messages';
 
 export interface ISearchResult {
 	total: number,
@@ -34,10 +33,11 @@ export class GitHubApiClient {
 
 		const data = await client.get(url)
 			.then((response: any) => {
-				total = response.data.total_count;	
+				total = response.data.total_count;
 				return response.data.items.map((val: any) => ({
 					id: val.id,
 					name: val.name,
+					isActive: !(val.disabled || val.archived),
 					fullName: val.full_name,
 					ownerName: val.owner?.login,
 					description: val.description,
@@ -70,7 +70,13 @@ export class GitHubApiClient {
 		await client.get(url)
 			.then((response: any) => {			
 				const data = response.data;
-				repo = new GithubRepositoryModel(data.id, data.name, data.html_url);
+				var isDisabled = data.disabled || data.archived;
+				repo = new GithubRepositoryModel(
+					data.id, 
+					data.name, 
+					data.html_url,
+					!isDisabled);
+					
 				repo.ownerName = data.owner?.login;
 				repo.fullName = data.full_name;
 				repo.description = data.description;
@@ -114,7 +120,6 @@ export class GitHubApiClient {
 			this.accessTokenManager!.showPatWarning();
 			break;
 			case 404:
-				vscode.window.showErrorMessage(REPOSITORY_ERR_NOT_AVAILABLE);
 			break;
 			default: 
 				vscode.window.showErrorMessage(response.data.message);			

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { QuickInputButton, Uri } from "vscode";
 import { inject, injectable } from 'inversify';
 import { GithubRepositoryModel } from '../models/github-repository-model';
-import { CATEGORY_PLEASE_SELECT } from '../consts/messages';
+import { CATEGORY_PLEASE_SELECT } from '../consts/constants-messages';
 import { CategoryModel } from '../models/category-model';
 import { GitHubApiClient, ISearchResult } from './github-api-client';
 import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';

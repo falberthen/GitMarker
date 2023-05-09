@@ -4,7 +4,7 @@ import TYPES from '../commands/base/types';
 import { CONTEXT_CATEGORY_COUNT, GITMARKER_VIEW, SET_CONTEXT } from '../consts/application';
 import { TOOLTIP_FORKS, TOOLTIP_FORKS_LBL, TOOLTIP_LANGUAGE, 
 			TOOLTIP_LASTSYNC, TOOLTIP_LICENSE, TOOLTIP_OWNED_BY, 
-			TOOLTIP_STARGAZERS, TOOLTIP_STARGAZERS_LBL } from '../consts/messages';
+			TOOLTIP_STARGAZERS, TOOLTIP_STARGAZERS_LBL } from '../consts/constants-messages';
 import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
 import { GithubRepositoryModel } from '../models/github-repository-model';
 import { TreeDataItem } from '../models/tree-data-item';
@@ -84,11 +84,7 @@ export class TreeViewManager {
 
 		// Tooltip rows
 		let toolTipItems: string[] = [];
-			
-		if(repository.description) {
-			toolTipItems.push(`${repository.description}${newLine}`);
-		}
-
+		
 		if(repository.ownerName) {
 			toolTipItems.push(`${TOOLTIP_OWNED_BY}${repository.ownerName}`);
 		}
@@ -108,12 +104,14 @@ export class TreeViewManager {
 		if(repository.license) {
 			toolTipItems.push(`${TOOLTIP_LICENSE}${repository.license.name}`);	
 		}
-
-		if(repository.lastSyncDate) {
-			toolTipItems.push(`${newLine}`);
-			toolTipItems.push(`${TOOLTIP_LASTSYNC}${this.dateTimeHelper.formatDate(repository.lastSyncDate)}`);
-		}
 		
+		if(repository.lastSyncDate) {
+			toolTipItems.push(` ${TOOLTIP_LASTSYNC}${this.dateTimeHelper.formatDate(repository.lastSyncDate)}`);
+		}
+
+		if(repository.description) {
+			toolTipItems.push(`${newLine}${repository.description}`);
+		}
 		return toolTipItems.join(newLine); 
 	}
 

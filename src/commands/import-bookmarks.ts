@@ -4,7 +4,7 @@ import {
 	BOOKMARK_IMPORT_QUESTION, 
 	BOOKMARK_ERR_IMPORTING, 
 	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER 
-} from '../consts/messages';
+} from '../consts/constants-messages';
 import { plainToClass } from 'class-transformer';
 import { GithubRepositoryModel } from '../models/github-repository-model';
 import { openDialogOptions } from '../utils/dialog-options';

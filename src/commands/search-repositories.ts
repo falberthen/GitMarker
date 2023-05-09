@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { 
 	RESULTS_FOR_TERM,REPOSITORY_ERR_NOT_FOUND, 
 	TYPE_SEARCH_TERM_PLACEHOLDER, RESULTS_SHOW_RESULTS_FOUND 
-} from '../consts/messages';
+} from '../consts/constants-messages';
 import { PICK_CACHED_RESULTS, SEARCH_REPOSITORIES } from '../consts/commands';
 import { GitHubApiClient } from '../services/github-api-client';
 import { Command } from './base/command';

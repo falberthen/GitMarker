@@ -5,7 +5,7 @@ import {
 	PAT_ERR_INVALID, 
 	TYPE_ACCESS_TOKEN_PLACEHOLDER,
 	ACCESS_TOKEN_SET_SUCCESS
-} from '../consts/messages';
+} from '../consts/constants-messages';
 import { SETUP_PAT } from '../consts/commands';
 import { Command } from './base/command';
 import { PersonalAccessTokenManager } from '../services/pat-manager';

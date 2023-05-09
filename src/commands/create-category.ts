@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
 import { inject, injectable} from 'inversify';
 import { CREATE_CATEGORY } from '../consts/commands';
-import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_NAME_PLACEHOLDER } from '../consts/messages';
+import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_NAME_PLACEHOLDER } from '../consts/constants-messages';
 import { Command } from './base/command';
 import TYPES from './base/types';
 

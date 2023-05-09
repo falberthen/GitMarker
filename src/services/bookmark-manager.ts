@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import TYPES from '../commands/base/types';
 import { inject, injectable } from 'inversify';
 import { CONTEXT_CATEGORY_COUNT, FAVORITE_REPOS_KEY, SET_CONTEXT } from '../consts/application';
-import { GENERIC_ERR_ALREADY_EXISTS, CATEGORY_ERR_ALREADY_EXISTS } from '../consts/messages';
+import { GENERIC_ERR_ALREADY_EXISTS, CATEGORY_ERR_ALREADY_EXISTS } from '../consts/constants-messages';
 import { CategoryModel } from '../models/category-model';
 import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
 import { GithubRepositoryModel } from '../models/github-repository-model';
@@ -115,7 +115,7 @@ export default class BookmarkManager {
 
 		// Removing repositories from category
 		category.repositories.forEach(repositoryId => {
-			this.checkDeleteRepository(dataItem.id!, repositoryId);
+			this.deleteMatchedRepository(dataItem.id!, repositoryId);
 		});
 
 		const index = this.categoryRepositories!.categories
@@ -127,7 +127,7 @@ export default class BookmarkManager {
 	}
 
 	removeRepository(dataItem: TreeDataItem) {
-		this.checkDeleteRepository(dataItem.parentId, dataItem.customId);
+		this.deleteMatchedRepository(dataItem.parentId, dataItem.customId);
 		this.storeAndRefreshProvider();		
 	}
 
@@ -161,7 +161,7 @@ export default class BookmarkManager {
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, categoryCount);
 	}
 
-	private checkDeleteRepository(categoryId: string, repositoryId: string) {
+	private deleteMatchedRepository(categoryId: string, repositoryId: string) {
 		// Removing it from the category
 		const category = this.categoryRepositories!.categories
 			?.filter(c => c.id === categoryId)[0];

@@ -6,7 +6,7 @@ import { SYNC_REPOSITORY } from '../consts/commands';
 import { TreeDataItem } from '../models/tree-data-item';
 import { GitHubApiClient } from '../services/github-api-client';
 import { Command } from './base/command';
-import { REPOSITORY_ERR_NOT_AVAILABLE } from '../consts/messages';
+import { REPOSITORY_ERR_NOT_AVAILABLE, REPOSITORY_UPDATED } from '../consts/constants-messages';
 import { GithubRepositoryModel } from '../models/github-repository-model';
 
 @injectable()
@@ -31,17 +31,24 @@ export class SyncRepository implements Command {
 			.then(updatedRepository => {
 				if(!updatedRepository) {
 					// repository is no longer available
-					vscode.window.showErrorMessage(REPOSITORY_ERR_NOT_AVAILABLE);
-					// setting an inactive repository
 					updatedRepository = new GithubRepositoryModel(
 						dataItem.customId!, 
 						dataItem.label!.toString(), 
 						dataItem.url, 
 						false);
+
+						const errorMsg = REPOSITORY_ERR_NOT_AVAILABLE
+							.replace('{repo-name}', updatedRepository.name);
+						vscode.window.showErrorMessage(errorMsg);
 				}
-				
-				this.bookmarkManager
-					.updateRepository(updatedRepository);
+				else {
+					const successMsg = REPOSITORY_UPDATED
+						.replace('{repo-name}', updatedRepository.name);					
+					vscode.window.showInformationMessage(successMsg);
+
+					this.bookmarkManager
+						.updateRepository(updatedRepository);
+				}
 			});
 		}
 	}

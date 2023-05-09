@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
 import { inject, injectable} from 'inversify';
 import { GENERIC_QUESTION_REMOVING,
-	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/messages';
+	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/constants-messages';
 import { REMOVE_CATEGORY } from '../consts/commands';
 import { TreeDataItem } from '../models/tree-data-item';
 import { Command } from './base/command';

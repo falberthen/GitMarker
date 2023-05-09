@@ -35,9 +35,9 @@ export class AutoSyncRepositories implements Command {
 			// Request rate limit needs to be at least 1 minute outdated to request an update
 			const minimumWaitSync = 1;
 			const reposToSync = this.bookmarkManager
-				.categoryRepositories?.repositories.filter(r => r.isActive 
-					&& this.dateTimeHelper.getTimeDiff(r.lastSyncDate).minutes > minimumWaitSync);
-
+				.categoryRepositories?.repositories.filter(r => 
+					this.dateTimeHelper.getTimeMinutesDiff(r.lastSyncDate).minutes > minimumWaitSync);
+			
 			if(reposToSync!.length > 0) {
 				await this.syncRepositories(reposToSync!);
 			}

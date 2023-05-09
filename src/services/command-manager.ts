@@ -4,7 +4,7 @@ import { multiInject, injectable } from 'inversify';
 import { Command } from '../commands/base/command';
 
 @injectable()
-export class CommandsManager {
+export class CommandManager {
 	constructor(
 		@multiInject(TYPES.command) 
 		private commands: Command[]

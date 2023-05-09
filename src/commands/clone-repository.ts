@@ -11,7 +11,7 @@ import {
 import { 
 	GIT_CLONE_QUESTION, GIT_CLONE_EXECUTED, 
 	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER 
-} from '../consts/messages';
+} from '../consts/constants-messages';
 
 @injectable()
 export class CloneRepository implements Command {

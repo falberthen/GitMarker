@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { inject, injectable} from 'inversify';
-import { BOOKMARK_ERR_EXPORTING } from '../consts/messages';
+import { BOOKMARK_ERR_EXPORTING } from '../consts/constants-messages';
 import { saveDialogOptions } from '../utils/dialog-options';
 import { EXPORT_BOOKMARKS } from '../consts/commands';
 import { Command } from './base/command';

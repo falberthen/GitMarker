@@ -12,7 +12,13 @@ export class TreeDataItem extends vscode.TreeItem {
 	url!: Uri;
 	cloneUrl!: string;
 
-	constructor(isActive: boolean = true, isRoot: boolean, label: string, children?: TreeDataItem[], command?: Command) {
+	constructor(
+		isActive: boolean, 
+		isRoot: boolean, 
+		label: string, 
+		children?: TreeDataItem[], 
+		command?: Command) {
+			
 		super(
 			label,
 			isRoot 

@@ -16,7 +16,7 @@ export const PAT_ERR_INVALID = 'Please type a valid PAT';
 export const PAT_CLEAR_QUESTION = 'Are you sure you want to clear your PAT?';
 export const PAT_CLEARED_SUCCESS = 'PAT cleared with success!';
 export const REPOSITORY_ERR_NOT_FOUND = 'No repositories found for';
-export const REPOSITORY_ERR_NOT_AVAILABLE = 'This repository is no longer available.';
+export const REPOSITORY_ERR_NOT_AVAILABLE = '{repo-name} is no longer available.';
 export const RESULTS_SHOW_RESULTS_FOUND = 'Click to show';
 export const RESULTS_FOR_TERM = 'Results found for';
 
@@ -32,11 +32,14 @@ export const TYPE_SEARCH_TERM_PLACEHOLDER = 'Type a term to search on GitHub';
 export const TYPE_ACCESS_TOKEN_PLACEHOLDER = 'Type your GitHub personal access token';
 
 // UI
-export const TOOLTIP_OWNED_BY = ' 🧍  Owned by ';
+export const TOOLTIP_OWNED_BY = '🧍Owned by ';
 export const TOOLTIP_STARGAZERS = '⭐ ';
 export const TOOLTIP_STARGAZERS_LBL = ' stars';
-export const TOOLTIP_FORKS = ' 🍴  ';
+export const TOOLTIP_FORKS = '🍴 ';
 export const TOOLTIP_FORKS_LBL = ' forks';
 export const TOOLTIP_LICENSE = '📝 ';
 export const TOOLTIP_LANGUAGE = '🧬 Written in ';
 export const TOOLTIP_LASTSYNC = 'Last sync: ';
+
+// Repositories
+export const REPOSITORY_UPDATED = '{repo-name} was sync with success!.';

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import BookmarkManager from '../services/bookmark-manager';
 import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
-import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_PLEASE_SELECT } from '../consts/messages';
+import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_PLEASE_SELECT } from '../consts/constants-messages';
 import { TreeDataItem } from '../models/tree-data-item';
 import { RENAME_CATEGORY } from '../consts/commands';
 import { Command } from './base/command';

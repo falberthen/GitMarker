@@ -4,7 +4,7 @@ import { SecretStorage } from "vscode";
 import { ACCESS_TOKEN_SECRET, GITHUB_TOKEN_DOC } from "../consts/application";
 import { injectable } from 'inversify';
 import { ACCESS_TOKEN_REQUIRED, OPTION_CHECK_GITHUB_DOC, 
-				 OPTION_SET_TOKEN_NOW_MSG } from '../consts/messages';
+				 OPTION_SET_TOKEN_NOW_MSG } from '../consts/constants-messages';
 import { SETUP_PAT } from '../consts/commands';
 
 @injectable()

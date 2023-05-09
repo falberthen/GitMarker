@@ -3,7 +3,7 @@ import TYPES from './commands/base/types';
 import BookmarkManager from './services/bookmark-manager';
 import { Container } from 'inversify';
 import { CreateCategory } from './commands/create-category';
-import { CommandsManager } from './services/command-manager';
+import { CommandManager } from './services/command-manager';
 import { RemoveCategory } from './commands/remove-category';
 import { RenameCategory } from './commands/rename-category';
 import { SearchRepositories } from './commands/search-repositories';
@@ -28,6 +28,7 @@ import { AutoSyncRepositories } from './commands/auto-sync-repositories';
 
 const container = new Container();
 
+// Commands
 container.bind<Command>(TYPES.command).to(CreateCategory);
 container.bind<Command>(TYPES.command).to(RenameCategory);
 container.bind<Command>(TYPES.command).to(RemoveCategory);
@@ -44,7 +45,8 @@ container.bind<Command>(TYPES.command).to(HowToCreatePat);
 container.bind<Command>(TYPES.command).to(PickCachedResults);
 container.bind<Command>(TYPES.command).to(AutoSyncRepositories);
 
-container.bind<CommandsManager>(TYPES.commandManager).to(CommandsManager);
+// Services
+container.bind<CommandManager>(TYPES.commandManager).to(CommandManager);
 container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);
 container.bind<PersonalAccessTokenManager>(TYPES.patManager).to(PersonalAccessTokenManager);
 container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManager);
