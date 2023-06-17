@@ -152,3 +152,9 @@ it can be enabled/disabled from the extension settings.
 - Fixed issue with DateTimeHelper affecting the auto-sync when breaking due to nullability.
 - Fixed issue with deactivated repository icon.
 - Small UI improvements like repository tooltips and messages.
+
+## [1.7.8] - 2023-06-14
+`[Patch]`
+### Changed
+- Improved PAT (Token) validation check to prevent rate limit issues when
+AutoSyncing.

@@ -8,15 +8,15 @@ import {
 } from '../consts/constants-messages';
 import { SETUP_PAT } from '../consts/commands';
 import { Command } from './base/command';
-import { PersonalAccessTokenManager } from '../services/pat-manager';
+import { PersonalAccessTokenService } from '../services/pat-service';
 
 @injectable()
 export class SetAccessToken implements Command {
 
 	constructor
 	(
-		@inject(TYPES.patManager) 
-		private accessTokenManager: PersonalAccessTokenManager
+		@inject(TYPES.patService) 
+		private accessTokenService: PersonalAccessTokenService
 	) {}
 
 	get id() {
@@ -37,7 +37,7 @@ export class SetAccessToken implements Command {
 				return;	
 			}
 
-			await this.accessTokenManager.storeToken(trimmedToken);
+			await this.accessTokenService.storeToken(trimmedToken);
 			vscode.window.showInformationMessage(ACCESS_TOKEN_SET_SUCCESS);
 		});
 	}

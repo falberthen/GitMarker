@@ -5,7 +5,7 @@ import { BOOKMARK_ERR_EXPORTING } from '../consts/constants-messages';
 import { saveDialogOptions } from '../utils/dialog-options';
 import { EXPORT_BOOKMARKS } from '../consts/commands';
 import { Command } from './base/command';
-import BookmarkManager from '../services/bookmark-manager';
+import { BookmarkService } from '../services/bookmark-service';
 import TYPES from './base/types';
 
 @injectable()
@@ -13,8 +13,8 @@ export class ExportBookmarks implements Command {
 
 	constructor
 	(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService
 	) {}
 	
 	get id() {
@@ -25,7 +25,7 @@ export class ExportBookmarks implements Command {
 		await vscode.window.showSaveDialog(saveDialogOptions)
 		.then(file => {
 			if(file) {
-				const categoryRepositories = this.bookmarkManager.categoryRepositories;		
+				const categoryRepositories = this.bookmarkService.categoryRepositories;		
 				const serializedObj = JSON.stringify(categoryRepositories);
 
 				try {

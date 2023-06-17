@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import TYPES from './commands/base/types';
 import container from './inversify.config';
-import { CommandManager } from './services/command-manager';
-import ContextManager from './services/context-manager';
+import { CommandService } from './services/command-service';
+import { ContextService } from './services/context-service';
 
 export async function activate(context: vscode.ExtensionContext) {
-	ContextManager.init(context);
-	const cmdManager = container
-		.get<CommandManager>(TYPES.commandManager);
+	ContextService.init(context);
+	const commandService = container
+		.get<CommandService>(TYPES.commandService);
 
-	cmdManager.registerCommands(context);
+		commandService.registerCommands(context);
 }
 
 export function deactivate() {}

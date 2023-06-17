@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import BookmarkManager from '../services/bookmark-manager';
+import { BookmarkService } from '../services/bookmark-service';
 import { inject, injectable} from 'inversify';
 import { GENERIC_QUESTION_REMOVING, 
 	GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/constants-messages';
@@ -13,8 +13,8 @@ export class RemoveRepository implements Command {
 
 	constructor
 	(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService
 	) {}
 	
 	get id() {
@@ -29,7 +29,7 @@ export class RemoveRepository implements Command {
 		)
 		.then((answer) => {
 			if (answer === GENERIC_YES_ANSWER) {
-				this.bookmarkManager
+				this.bookmarkService
 					.removeRepository(dataItem);
 			}
 		});

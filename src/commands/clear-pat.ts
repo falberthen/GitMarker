@@ -5,15 +5,15 @@ import { DELETE_PAT } from '../consts/commands';
 import { PAT_CLEAR_QUESTION, PAT_CLEARED_SUCCESS,
 				 GENERIC_YES_ANSWER, GENERIC_NO_ANSWER } from '../consts/constants-messages';
 import { Command } from './base/command';
-import { PersonalAccessTokenManager } from '../services/pat-manager';
+import { PersonalAccessTokenService } from '../services/pat-service';
 
 @injectable()
 export class ClearPAT implements Command {
 
 	constructor
 	(
-		@inject(TYPES.patManager) 
-		private accessTokenManager: PersonalAccessTokenManager
+		@inject(TYPES.patService) 
+		private accessTokenService: PersonalAccessTokenService
 	) {}
 
 	get id() {
@@ -27,7 +27,7 @@ export class ClearPAT implements Command {
 		)
 		.then((answer) => {
 			if (answer === GENERIC_YES_ANSWER) {
-				this.accessTokenManager.deleteToken()
+				this.accessTokenService.deleteToken()
 				.then(() => {
 					vscode.window.showInformationMessage(PAT_CLEARED_SUCCESS);
 				});				

@@ -1,9 +1,8 @@
 import 'reflect-metadata';
 import TYPES from './commands/base/types';
-import BookmarkManager from './services/bookmark-manager';
 import { Container } from 'inversify';
 import { CreateCategory } from './commands/create-category';
-import { CommandManager } from './services/command-manager';
+import { CommandService } from './services/command-service';
 import { RemoveCategory } from './commands/remove-category';
 import { RenameCategory } from './commands/rename-category';
 import { SearchRepositories } from './commands/search-repositories';
@@ -16,15 +15,17 @@ import { ImportBookmarks } from './commands/import-bookmarks';
 import { ClearAllCategories } from './commands/clear-all-categories';
 import { HowToCreatePat } from './commands/how-to-create-pat';
 import { Command } from './commands/base/command';
-import { TreeViewManager } from './services/tree-view-manager';
-import { PersonalAccessTokenManager } from './services/pat-manager';
-import { DataStorageManager } from './services/data-storage-manager';
+import { TreeViewService } from './services/tree-view-service';
+import { PersonalAccessTokenService } from './services/pat-service';
+import { DataStorageService } from './services/data-storage-service';
 import { DateTimeHelper } from './utils/datetime-helper';
 import { GitHubApiClient } from './services/github-api-client';
 import { ClearPAT } from './commands/clear-pat';
-import { SearchResultManager } from './services/search-result-manager';
+import { SearchResultService } from './services/search-result-service';
+import { BookmarkService } from './services/bookmark-service';
 import { PickCachedResults } from './commands/pick-cached-results';
 import { AutoSyncRepositories } from './commands/auto-sync-repositories';
+import { AxioClientService } from './services/axio-client-service';
 
 const container = new Container();
 
@@ -46,13 +47,14 @@ container.bind<Command>(TYPES.command).to(PickCachedResults);
 container.bind<Command>(TYPES.command).to(AutoSyncRepositories);
 
 // Services
-container.bind<CommandManager>(TYPES.commandManager).to(CommandManager);
-container.bind<TreeViewManager>(TYPES.treeViewManager).to(TreeViewManager);
-container.bind<PersonalAccessTokenManager>(TYPES.patManager).to(PersonalAccessTokenManager);
-container.bind<DataStorageManager>(TYPES.dataStorageManager).to(DataStorageManager);
+container.bind<CommandService>(TYPES.commandService).to(CommandService);
+container.bind<TreeViewService>(TYPES.treeViewService).to(TreeViewService);
+container.bind<PersonalAccessTokenService>(TYPES.patService).to(PersonalAccessTokenService);
+container.bind<DataStorageService>(TYPES.dataStorageService).to(DataStorageService);
 container.bind<DateTimeHelper>(TYPES.dateTimeHelper).to(DateTimeHelper);
 container.bind<GitHubApiClient>(TYPES.gitHubApiClient).to(GitHubApiClient);
-container.bind<BookmarkManager>(TYPES.bookmarkManager).to(BookmarkManager).inSingletonScope();
-container.bind<SearchResultManager>(TYPES.searchResultManager).to(SearchResultManager).inSingletonScope();
+container.bind<BookmarkService>(TYPES.bookmarkService).to(BookmarkService).inSingletonScope();
+container.bind<SearchResultService>(TYPES.searchResultService).to(SearchResultService).inSingletonScope();
+container.bind<AxioClientService>(TYPES.axioClientService).to(AxioClientService);
 
 export default container;

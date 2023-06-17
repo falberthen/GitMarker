@@ -2,15 +2,15 @@ import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
 import { PICK_CACHED_RESULTS } from '../consts/commands';
 import { Command } from './base/command';
-import { SearchResultManager } from '../services/search-result-manager';
+import { SearchResultService } from '../services/search-result-service';
 
 @injectable()
 export class PickCachedResults implements Command {
 
 	constructor
 	(
-		@inject(TYPES.searchResultManager)
-		private searchResultManager: SearchResultManager,		
+		@inject(TYPES.searchResultService)
+		private searchResultManager: SearchResultService,		
 	) {}
 
 	get id() {

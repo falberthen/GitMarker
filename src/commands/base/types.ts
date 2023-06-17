@@ -1,13 +1,14 @@
 const TYPES = {
 	command: Symbol("Command"),
-	commandManager: Symbol("CommandManager"),
-	dataStorageManager: Symbol("DataStorageManager"),
-	treeViewManager: Symbol("TreeViewManager"),
-	patManager: Symbol("PatManager"),
+	commandService: Symbol("CommandService"),
+	dataStorageService: Symbol("DataStorageService"),
+	treeViewService: Symbol("TreeViewService"),
+	patService: Symbol("PatService"),
 	dateTimeHelper: Symbol("DateTimeHelper"),
 	gitHubApiClient: Symbol("GitHubApiClient"),
-	bookmarkManager: Symbol("BookmarkManager"),
-	searchResultManager: Symbol("SearchResultManager")
+	bookmarkService: Symbol("BookmarkService"),
+	searchResultService: Symbol("SearchResultService"),
+	axioClientService: Symbol("AxioClientService")
 };
 
 export default TYPES;

@@ -8,12 +8,12 @@ import { GitHubApiClient, ISearchResult } from './github-api-client';
 import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';
 import { PageSelectedItems, PavigationButton, RepoPickItem } from '../models/repo-pick-item';
 import { NavDirection } from '../consts/nav-direction';
-import ContextManager from './context-manager';
-import BookmarkManager from './bookmark-manager';
+import { ContextService } from './context-service';
+import { BookmarkService } from './bookmark-service';
 import TYPES from '../commands/base/types';
 
 @injectable()
-export class SearchResultManager {
+export class SearchResultService {
   private searchResults: ISearchResult[] = [];
 	private quickPick: vscode.QuickPick<RepoPickItem> | undefined;
 	private pageSelectedItems: PageSelectedItems[] = [];
@@ -24,8 +24,8 @@ export class SearchResultManager {
 	private searchTerm: string | undefined;
 
 	constructor(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService,
 		@inject(TYPES.gitHubApiClient) 
 		private githubApiClient: GitHubApiClient
 	) {
@@ -121,7 +121,7 @@ export class SearchResultManager {
 	}
 
   private buildQuickPickButtons() : QuickInputButton[]{
-    const context = ContextManager.instance.context;
+    const context = ContextService.instance.context;
     const nextButton = new PavigationButton(
       NavDirection.right,
       {
@@ -156,7 +156,7 @@ export class SearchResultManager {
   }
 
   private buildWaitingButton() : QuickInputButton[] {
-    const context = ContextManager.instance.context;
+    const context = ContextService.instance.context;
     const nextButtonInactive = new PavigationButton(
       NavDirection.waiting,
       {
@@ -263,7 +263,7 @@ export class SearchResultManager {
 
 	private async onDidAccept() {
 		const selectedRepositories: GithubRepositoryModel[] = [];
-		const allCategories = this.bookmarkManager
+		const allCategories = this.bookmarkService
 			.categoryRepositories!.categories;
 
 		// getting GitHubRepositories from searchResults
@@ -282,14 +282,14 @@ export class SearchResultManager {
 			
 		// No need for selecting a category
 		if(allCategories.length === 1) {
-			return this.bookmarkManager
+			return this.bookmarkService
 				.bookmarkRepositories(allCategories[0].id, selectedRepositories); 
 		}
 
 		// Selecting category
 		await this.pickCategory(allCategories).then(category => {
 			if(category) {
-				return this.bookmarkManager
+				return this.bookmarkService
 				.bookmarkRepositories(category.id, selectedRepositories);
 			}			
 		});

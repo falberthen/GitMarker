@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import BookmarkManager from '../services/bookmark-manager';
+import { BookmarkService } from '../services/bookmark-service';
 import { inject, injectable} from 'inversify';
 import { CREATE_CATEGORY } from '../consts/commands';
 import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_NAME_PLACEHOLDER } from '../consts/constants-messages';
@@ -11,8 +11,8 @@ export class CreateCategory implements Command {
 
   constructor
 	(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		@inject(TYPES.bookmarkService) 
+		private bookmarkManager: BookmarkService,
 	) {}
 
   get id() {

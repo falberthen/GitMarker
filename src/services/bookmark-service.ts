@@ -7,18 +7,18 @@ import { CategoryModel } from '../models/category-model';
 import { CategoriesRepositoriesModel } from '../models/categories-repositories-model';
 import { GithubRepositoryModel } from '../models/github-repository-model';
 import { TreeDataItem } from '../models/tree-data-item';
-import { DataStorageManager } from './data-storage-manager';
-import { TreeViewManager } from './tree-view-manager';
+import { DataStorageService } from './data-storage-service';
+import { TreeViewService } from './tree-view-service';
 
 @injectable()
-export default class BookmarkManager {
+export class BookmarkService {
 	categoryRepositories: CategoriesRepositoriesModel | undefined;
 
 	constructor(
-		@inject(TYPES.treeViewManager) 
-		private treeViewManager: TreeViewManager,
-		@inject(TYPES.dataStorageManager) 
-		private dataStorageManager: DataStorageManager
+		@inject(TYPES.treeViewService) 
+		private treeViewService: TreeViewService,
+		@inject(TYPES.dataStorageService) 
+		private dataStorageService: DataStorageService
 	) {			
 		this.loadStoredData();
 	}
@@ -74,7 +74,7 @@ export default class BookmarkManager {
 	}
 
 	loadStoredData() {
-		const storedCategories = this.dataStorageManager
+		const storedCategories = this.dataStorageService
 			.getValue<CategoriesRepositoriesModel>(FAVORITE_REPOS_KEY);
 
 		this.categoryRepositories = storedCategories 
@@ -84,7 +84,7 @@ export default class BookmarkManager {
 		vscode.commands.executeCommand(SET_CONTEXT, CONTEXT_CATEGORY_COUNT, 
 			this.categoryRepositories.categories);
 
-		this.treeViewManager
+		this.treeViewService
 			.buildDataProviderItems(this.categoryRepositories);
 	}
 	
@@ -146,12 +146,12 @@ export default class BookmarkManager {
 
 	storeAndRefreshProvider() {
 		// Store updated values
-		this.dataStorageManager
+		this.dataStorageService
 			.setValue<CategoriesRepositoriesModel>(FAVORITE_REPOS_KEY, 
 				this.categoryRepositories!);
 
 		// Refreshing all data items	
-		this.treeViewManager
+		this.treeViewService
 			.buildDataProviderItems(this.categoryRepositories!);
 
 		let categoryCount = this.categoryRepositories 

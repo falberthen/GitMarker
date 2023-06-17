@@ -12,7 +12,7 @@ import { DateTimeHelper } from '../utils/datetime-helper';
 import { TreeDataItemProvider } from './tree-data-item-provider';
 
 @injectable()
-export class TreeViewManager {
+export class TreeViewService {
 	private dataProvider: TreeDataItemProvider;
 	private treeView: any;
 

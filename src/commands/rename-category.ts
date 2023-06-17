@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import BookmarkManager from '../services/bookmark-manager';
 import TYPES from './base/types';
 import { inject, injectable} from 'inversify';
 import { CATEGORY_ERR_NAME_REQUIRED, CATEGORY_PLEASE_SELECT } from '../consts/constants-messages';
@@ -7,14 +6,15 @@ import { TreeDataItem } from '../models/tree-data-item';
 import { RENAME_CATEGORY } from '../consts/commands';
 import { Command } from './base/command';
 import { CategoryModel } from '../models/category-model';
+import { BookmarkService } from '../services/bookmark-service';
 
 @injectable()
 export class RenameCategory implements Command {
 
 	constructor
 	(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService
 	) {}
 	
 	get id() {
@@ -22,7 +22,7 @@ export class RenameCategory implements Command {
 	}
 
 	async execute(dataItem: TreeDataItem) {
-		const existingCategory: CategoryModel = this.bookmarkManager
+		const existingCategory: CategoryModel = this.bookmarkService
 			.categoryRepositories!.categories
 			?.filter(ec => ec.id === dataItem.id)[0];
 		
@@ -40,7 +40,7 @@ export class RenameCategory implements Command {
 				return;
 			}
 
-			this.bookmarkManager
+			this.bookmarkService
 					.renameCategory(dataItem, trimmedNewName!);
 		});
 	}

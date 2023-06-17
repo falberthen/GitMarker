@@ -6,8 +6,9 @@ import { ENABLE_AUTO_SYNC, GITMARKER_CONFIG } from '../consts/application';
 import { DateTimeHelper } from '../utils/datetime-helper';
 import { GitHubApiClient } from '../services/github-api-client';
 import { GithubRepositoryModel } from '../models/github-repository-model';
-import BookmarkManager from '../services/bookmark-manager';
+import { BookmarkService } from '../services/bookmark-service';
 import TYPES from './base/types';
+import { AxioClientService } from '../services/axio-client-service';
 
 @injectable()
 export class AutoSyncRepositories implements Command {
@@ -17,12 +18,15 @@ export class AutoSyncRepositories implements Command {
 		private gitHubApiClient: GitHubApiClient,
 		@inject(TYPES.dateTimeHelper) 
 		private dateTimeHelper: DateTimeHelper,
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService,
+		@inject(TYPES.axioClientService) 
+			private axioClientService: AxioClientService
 	) {
 		const autoSyncEnabled = vscode.workspace
       .getConfiguration(GITMARKER_CONFIG)
       .get<boolean>(ENABLE_AUTO_SYNC);
+
 		this.execute(autoSyncEnabled);
 	}
 
@@ -30,11 +34,14 @@ export class AutoSyncRepositories implements Command {
 		return AUTO_SYNC_REPOSITORIES;
 	}
 
-	async execute(synchronize: boolean | undefined) {		
-		if(synchronize) {
+	async execute(synchronize: boolean | undefined) {
+		const [, isAuthorized] = await this.axioClientService
+			.buildAxiosClient();
+		
+		if(synchronize && isAuthorized) {
 			// Request rate limit needs to be at least 1 minute outdated to request an update
 			const minimumWaitSync = 1;
-			const reposToSync = this.bookmarkManager
+			const reposToSync = this.bookmarkService
 				.categoryRepositories?.repositories.filter(r => 
 					this.dateTimeHelper.getTimeMinutesDiff(r.lastSyncDate).minutes > minimumWaitSync);
 			
@@ -63,13 +70,13 @@ export class AutoSyncRepositories implements Command {
 				});
 				
 				if(repository) { // update went well
-					this.bookmarkManager.updateRepository(repository);
+					this.bookmarkService.updateRepository(repository);
 				}
 				else {
 					// repository is no longer available on GitHub
 					var inactiveRepository = task[1];
 					inactiveRepository.isActive = false;
-					this.bookmarkManager.updateRepository(inactiveRepository);
+					this.bookmarkService.updateRepository(inactiveRepository);
 				}
 			}
 		};

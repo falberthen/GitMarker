@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import ContextManager from './context-manager';
+import { ContextService } from './context-service';
 import { SecretStorage } from "vscode";
 import { ACCESS_TOKEN_SECRET, GITHUB_TOKEN_DOC } from "../consts/application";
 import { injectable } from 'inversify';
@@ -8,11 +8,11 @@ import { ACCESS_TOKEN_REQUIRED, OPTION_CHECK_GITHUB_DOC,
 import { SETUP_PAT } from '../consts/commands';
 
 @injectable()
-export class PersonalAccessTokenManager {
+export class PersonalAccessTokenService {
 	private secretStorage: SecretStorage;
 
-	constructor(){
-		this.secretStorage = ContextManager.instance
+	constructor() {
+		this.secretStorage = ContextService.instance
 			.secrets;
 	}
 

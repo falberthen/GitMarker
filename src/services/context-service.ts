@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-export default class ContextManager {
-	private static _instance: ContextManager;
+export class ContextService {
+	private static _instance: ContextService;
 	context: vscode.ExtensionContext;
 
 	constructor(context: vscode.ExtensionContext) {	
@@ -9,11 +9,11 @@ export default class ContextManager {
 	}
 
 	static init(context: vscode.ExtensionContext): void {
-		ContextManager._instance = new ContextManager(context);
+		ContextService._instance = new ContextService(context);
 	}
 
-	static get instance(): ContextManager {
-		return ContextManager._instance;
+	static get instance(): ContextService {
+		return ContextService._instance;
 	}
 
 	get secrets() {

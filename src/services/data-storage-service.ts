@@ -1,13 +1,13 @@
-import ContextManager from "./context-manager";
+import { ContextService } from "./context-service";
 import { injectable } from "inversify";
 import { Memento } from "vscode";
 
 @injectable()
-export class DataStorageManager {
+export class DataStorageService {
 	private storage: Memento;
 
 	constructor() {
-		this.storage = ContextManager.instance.
+		this.storage = ContextService.instance.
 			context.globalState;
 	}   
 

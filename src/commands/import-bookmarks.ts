@@ -12,7 +12,7 @@ import { CategoriesRepositoriesModel } from '../models/categories-repositories-m
 import { IMPORT_BOOKMARKS } from '../consts/commands';
 import { inject, injectable } from 'inversify';
 import { Command } from './base/command';
-import BookmarkManager from '../services/bookmark-manager';
+import { BookmarkService } from '../services/bookmark-service';
 import TYPES from './base/types';
 
 @injectable()
@@ -20,8 +20,8 @@ export class ImportBookmarks implements Command {
 
 	constructor
 	(
-		@inject(TYPES.bookmarkManager) 
-		private bookmarkManager: BookmarkManager,
+		@inject(TYPES.bookmarkService) 
+		private bookmarkService: BookmarkService,
 	) {}
 	
 	get id() {
@@ -29,11 +29,11 @@ export class ImportBookmarks implements Command {
 	}
 
 	async execute() {
-		if(!this.bookmarkManager.categoryRepositories) {
-			this.bookmarkManager.categoryRepositories = new CategoriesRepositoriesModel();
+		if(!this.bookmarkService.categoryRepositories) {
+			this.bookmarkService.categoryRepositories = new CategoriesRepositoriesModel();
 		}
 
-		const hasRepositories = this.bookmarkManager
+		const hasRepositories = this.bookmarkService
 			.categoryRepositories!.repositories.length > 0;
 
 		if(hasRepositories) {
@@ -93,8 +93,8 @@ export class ImportBookmarks implements Command {
 				categoriesRepositories!.repositories[index] = repository;
 			}
 
-			this.bookmarkManager.categoryRepositories = categoriesRepositories;
-			this.bookmarkManager.storeAndRefreshProvider();
+			this.bookmarkService.categoryRepositories = categoriesRepositories;
+			this.bookmarkService.storeAndRefreshProvider();
 		});		
 	}
 }

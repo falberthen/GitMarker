@@ -9,7 +9,7 @@ import { PICK_CACHED_RESULTS, SEARCH_REPOSITORIES } from '../consts/commands';
 import { GitHubApiClient } from '../services/github-api-client';
 import { Command } from './base/command';
 import { GITMARKER_CONFIG, SEARCH_RESULTS_NUMBER } from '../consts/application';
-import { SearchResultManager } from '../services/search-result-manager';
+import { SearchResultService } from '../services/search-result-service';
 import { StatusBarItem } from 'vscode';
 
 @injectable()
@@ -18,12 +18,11 @@ export class SearchRepositories implements Command {
 
 	constructor
 	(
-		@inject(TYPES.searchResultManager)
-		private searchResultManager: SearchResultManager,
+		@inject(TYPES.searchResultService)
+		private searchResultManager: SearchResultService,
 		@inject(TYPES.gitHubApiClient)
 		private githubApiClient: GitHubApiClient
-	) {
-	}
+	) {}
 
 	get id() {
 		return SEARCH_REPOSITORIES;
